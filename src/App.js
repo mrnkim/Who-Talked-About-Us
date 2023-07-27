@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import IndexForm from "./IndexForm";
+import SearchForm from "./SearchForm";
+import UploadForm from "./UploadForm";
+import { useEffect, useState } from "react";
+import TwelveLabsApi from "./api";
 
 function App() {
+  const [indexes, setIndexes] = useState({
+    data: null,
+    isLoading: true,
+  });
+  console.log("🚀 > App > indexes=", indexes);
+
+  useEffect(function fetchIndexesWhenMounted() {
+    async function fetchIndexes() {
+      const response = await TwelveLabsApi.getIndexes();
+      setIndexes({ data: response, isLoading: false });
+    }
+    fetchIndexes();
+  }, []);
+
+  if (indexes.isLoading) return <i>Loading...</i>;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <IndexForm indexes={indexes.data} setIndexes={setIndexes} />
+      {/* <UploadForm index={newIndex.data._id} /> */}
+      {/* <SearchForm /> */}
     </div>
   );
 }
