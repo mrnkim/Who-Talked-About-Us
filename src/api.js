@@ -43,7 +43,7 @@ class TwelveLabsApi {
       const { data: response } = resp;
       console.log(`Status code: ${resp.status}`);
       console.log(response);
-      return resp;
+      return resp.data;
     } catch (error) {
       console.error(`Error: ${error}`);
     }

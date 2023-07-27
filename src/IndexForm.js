@@ -1,11 +1,15 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import InputForm from "./InputForm";
 import TwelveLabsApi from "./api";
 import { Alert } from "react-bootstrap";
 
-function IndexForm({ indexes, setIndexes }) {
+function IndexForm({ indexes, setIndexes, addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    console.log(indexes);
+  }, [indexes]);
 
   /** Update form input. */
   function handleChange(evt) {
@@ -16,15 +20,10 @@ function IndexForm({ indexes, setIndexes }) {
   /** Call parent function and clear form. */
   async function handleSubmit(evt) {
     evt.preventDefault();
-    setIndexName(indexName.trim());
-
-    if (!indexName) {
-      setError("Please enter index name");
-    } else {
-      const response = await TwelveLabsApi.createIndex(indexName);
-      setIndexes([...indexes, { ...response, index_name: indexName }]);
-    }
+    const trimmedIndexName = indexName.trim();
+    const newIndex = await addIndex(trimmedIndexName);
   }
+
   return (
     <div>
       <InputForm

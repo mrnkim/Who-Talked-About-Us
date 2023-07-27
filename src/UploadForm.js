@@ -9,6 +9,7 @@ function UploadForm(index) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState("");
 
+
   /** Update form input. */
   function handleChange(evt) {
     const input = evt.target;
@@ -24,7 +25,7 @@ function UploadForm(index) {
       setError("Please enter the url of a video");
     } else {
       console.log("🚀 > UploadForm > index=", index.index);
-      console.log("🚀 > UploadForm > inputUrl=", inputUrl)
+      console.log("🚀 > UploadForm > inputUrl=", inputUrl);
 
       const response = await TwelveLabsApi.uploadVideo(index.index, inputUrl);
       console.log("🚀 > handleSubmit > response=", response);
