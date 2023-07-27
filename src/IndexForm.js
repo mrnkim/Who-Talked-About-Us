@@ -1,9 +1,8 @@
 import { React, useState, useEffect } from "react";
 import InputForm from "./InputForm";
-import TwelveLabsApi from "./api";
 import { Alert } from "react-bootstrap";
 
-function IndexForm({ indexes, setIndexes, addIndex }) {
+function IndexForm({ indexes, addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 

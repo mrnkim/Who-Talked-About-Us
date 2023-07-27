@@ -11,9 +11,8 @@ function App() {
     data: null,
     isLoading: true,
   });
-  console.log("🚀 > App > indexes=", indexes);
 
-  useEffect(function fetchIndexesWhenMounted() {
+  useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
       const response = await TwelveLabsApi.getIndexes();
       const filteredResponse = response.map((index) => ({
@@ -27,7 +26,6 @@ function App() {
 
   async function addIndex(indexName) {
     const newIndex = await TwelveLabsApi.createIndex(indexName);
-    console.log("🚀 > addIndex > newIndex=", newIndex);
     setIndexes((indexes) => ({
       data: [...indexes.data, { ...newIndex, index_name: indexName }],
       isLoading: false,
@@ -37,15 +35,11 @@ function App() {
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
     <div className="App">
-      <IndexForm
-        indexes={indexes.data}
-        setIndexes={setIndexes}
-        addIndex={addIndex}
-      />
-      {indexes.data &&
-        indexes.data.map((index) => <Library key={index._id} data={index} />)}
-      {/* <UploadForm index={newIndex.data._id} /> */}
-      {/* <SearchForm /> */}
+      <IndexForm indexes={indexes.data} addIndex={addIndex} />
+      <div>
+        {indexes.data &&
+          indexes.data.map((index) => <Library key={index._id} data={index} />)}
+      </div>
     </div>
   );
 }

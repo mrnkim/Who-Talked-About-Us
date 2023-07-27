@@ -49,6 +49,42 @@ class TwelveLabsApi {
     }
   }
 
+  static async getVideos() {
+    const config = {
+      method: "GET",
+      url: "https://api.twelvelabs.io/v1.1/tasks",
+      headers: this.headers,
+    };
+
+    try {
+      const response = await axios.request(config);
+      console.log(response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async getVideo(ID) {
+    const config = {
+      method: "GET",
+      url: `https://api.twelvelabs.io/v1.1/tasks/${ID}`,
+      headers: {
+        ...this.headers,
+        "Content-Type":
+          "multipart/form-data; boundary=---011000010111000001101001",
+      },
+    };
+
+    try {
+      const response = await axios.request(config);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   static async uploadVideo(INDEX_ID, VIDEO_URL) {
     console.log(
       "🚀 > TwelveLabsApi > uploadVideo > INDEX_ID, VIDEO_URL=",
