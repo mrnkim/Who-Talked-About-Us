@@ -22,7 +22,7 @@ function UploadForm({ index, upload }) {
     if (!inputUrl) {
       setError("Please enter the url of a video");
     } else {
-      console.log("🚀 > UploadForm > inputUrl=", inputUrl)
+      console.log("🚀 > UploadForm > inputUrl=", inputUrl);
       const response = await upload(index, inputUrl);
       console.log("🚀 > handleSubmit > response=", response);
       setResponse(response);
@@ -35,8 +35,8 @@ function UploadForm({ index, upload }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={inputUrl}
-        type="vidUrl"
-        buttonText="Upload Video"
+        type="Enter a video url"
+        buttonText="Upload"
       />
       {error && (
         <Alert variant="danger" dismissible>

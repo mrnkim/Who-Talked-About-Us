@@ -16,7 +16,12 @@ function IndexForm({ indexes, addIndex }) {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
-    const newIndex = await addIndex(trimmedIndexName);
+
+    if (!trimmedIndexName) {
+      setError("Please enter the name of an index");
+    } else {
+      const newIndex = await addIndex(trimmedIndexName);
+    }
   }
 
   return (
@@ -25,7 +30,7 @@ function IndexForm({ indexes, addIndex }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={indexName}
-        type="indexName"
+        type="Enter an index name"
         buttonText="Create Index"
       />
 

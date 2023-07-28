@@ -18,7 +18,6 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > getIndexes > response=", response);
       return response.data.data;
     } catch (error) {
       console.error(error);
@@ -41,7 +40,6 @@ class TwelveLabsApi {
         { headers: this.headers }
       );
       const { data: response } = resp;
-      console.log("🚀 > TwelveLabsApi > createIndex > resp=", resp);
       return resp.data;
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -57,7 +55,6 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > getVideos > response=", response);
       return response.data.data;
     } catch (error) {
       console.error(error);
@@ -77,7 +74,6 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > getVideo > response=", response);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -102,7 +98,6 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > searchVideo > response=", response);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -119,10 +114,6 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log(
-        "🚀 > TwelveLabsApi > checkStatus > status=",
-        response.data.status
-      );
       return response.data;
     } catch (error) {
       console.error(error);
@@ -148,10 +139,7 @@ class TwelveLabsApi {
 
       let resp = await axios(config);
       let response = await resp.data;
-      console.log("🚀 > TwelveLabsApi > uploadVideo > response=", response);
       const VIDEO_ID = response.video_id;
-      console.log("🚀 > TwelveLabsApi > uploadVideo > VIDEO_ID=", VIDEO_ID);
-      console.log(response);
       return response;
     } catch (error) {
       console.error(`Error: ${error}`);

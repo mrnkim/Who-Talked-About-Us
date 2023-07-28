@@ -25,7 +25,7 @@ function SearchForm({ index, search }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={query}
-        type="search"
+        type="Enter a search term"
         buttonText="Search"
       />
     </div>

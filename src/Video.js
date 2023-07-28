@@ -3,9 +3,8 @@ import TwelveLabsApi from "./api";
 import VideoPlayer from "./VideoPlayer";
 
 function Video({ index_id, video_id, start = 0, end: propEnd = 0 }) {
-  console.log("Received start prop in Video component: ", start);
-
   const [videoData, setVideoData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [end, setEnd] = useState(null);
   const [options, setOptions] = useState({
     controls: true,
@@ -17,6 +16,7 @@ function Video({ index_id, video_id, start = 0, end: propEnd = 0 }) {
 
   useEffect(() => {
     async function fetchVideoData() {
+      setIsLoading(true);
       const data = await TwelveLabsApi.getVideo(index_id, video_id);
       setVideoData(data);
       const endTime = propEnd !== 0 ? propEnd : data?.metadata?.duration ?? 0;
@@ -33,12 +33,12 @@ function Video({ index_id, video_id, start = 0, end: propEnd = 0 }) {
           ],
         }));
       }
+      setIsLoading(false);
     }
     fetchVideoData();
   }, [index_id, video_id, start, propEnd]);
 
-  if (!videoData || end == null) return <i>Loading...</i>;
-
+  if (isLoading) return <i>Loading...</i>;
   return <VideoPlayer end={end} options={options} />;
 }
 

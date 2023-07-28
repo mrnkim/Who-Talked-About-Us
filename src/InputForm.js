@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 
-function InputForm({handleSubmit, handleChange, input, type, buttonText}) {
+function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
   return (
     <Container className="mt-5">
       <Row style={{ display: "flex", justifyContent: "center" }}>
-        <Col sm={4}>
+        <Col sm={12} md={8} lg={8}>
           <Form className="d-flex" onSubmit={handleSubmit}>
             <Form.Control
               type={type}
@@ -15,6 +15,7 @@ function InputForm({handleSubmit, handleChange, input, type, buttonText}) {
               onChange={handleChange}
               value={input}
               aria-label={type}
+              style={{ width: "60%", fontSize: "1em" }}
             />
             <Button
               style={{ marginLeft: "3px" }}

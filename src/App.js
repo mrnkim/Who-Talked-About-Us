@@ -5,6 +5,9 @@ import UploadForm from "./UploadForm";
 import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api";
 import Library from "./Library";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
 
 function App() {
   const [indexes, setIndexes] = useState({
@@ -15,11 +18,7 @@ function App() {
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
       const response = await TwelveLabsApi.getIndexes();
-      const filteredResponse = response.map((index) => ({
-        _id: index._id,
-        index_name: index.index_name,
-      }));
-      setIndexes({ data: filteredResponse, isLoading: false });
+      setIndexes({ data: response, isLoading: false });
     }
     fetchIndexes();
   }, []);
@@ -35,11 +34,21 @@ function App() {
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
     <div className="App">
-      <IndexForm indexes={indexes.data} addIndex={addIndex} />
-      <div>
+      <Container className="m-auto p-3">
+        <h1 className="m-3">UGC Analyzer</h1>
+      </Container>
+      <Container className="m-auto p-3">
+        <IndexForm indexes={indexes.data} addIndex={addIndex} />
+      </Container>
+
+      <Container className="m-auto p-3">
         {indexes.data &&
-          indexes.data.map((index) => <Library key={index._id} data={index} />)}
-      </div>
+          indexes.data.map((index) => (
+            <div className="mb-3" key={index._id}>
+              <Library data={index} className="mb-3" />
+            </div>
+          ))}
+      </Container>
     </div>
   );
 }
