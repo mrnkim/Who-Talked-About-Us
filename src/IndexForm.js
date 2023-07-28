@@ -6,10 +6,6 @@ function IndexForm({ indexes, addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    console.log(indexes);
-  }, [indexes]);
-
   /** Update form input. */
   function handleChange(evt) {
     const input = evt.target;

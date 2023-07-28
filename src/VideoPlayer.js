@@ -3,23 +3,38 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
 
-function VideoPlayer({ options }) {
+function VideoPlayer({ options, end }) {
   const videoNode = useRef(null);
+  const player = useRef(null);
+  const endAsNumber = Number(end);
 
   useEffect(() => {
     if (videoNode.current) {
-      const player = videojs(
+      player.current = videojs(
         videoNode.current,
         options,
         function onPlayerReady() {
           console.log("onPlayerReady", this);
         }
       );
+
+      player.current.currentTime(options.start);
+
+      player.current.on("timeupdate", function () {
+        if (player.current.currentTime() > endAsNumber) {
+          console.log("Pausing video...");
+          player.current.currentTime(endAsNumber);
+          player.current.pause();
+        }
+      });
+
       return () => {
-        player.dispose();
+        if (player.current) {
+          player.current.dispose();
+        }
       };
     }
-  }, [options]);
+  }, [options, end]);
 
   return (
     <div className="video-wrapper">
