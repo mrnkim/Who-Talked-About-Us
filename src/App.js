@@ -31,6 +31,16 @@ function App() {
     }));
   }
 
+  async function deleteIndex(indexId) {
+    if (window.confirm("Are you sure you want to delete this index?")) {
+      await TwelveLabsApi.deleteIndex(indexId);
+      setIndexes((prevState) => ({
+        ...prevState,
+        data: prevState.data.filter((index) => index._id !== indexId),
+      }));
+    }
+  }
+
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
     <div className="App">
@@ -40,12 +50,16 @@ function App() {
       <Container className="m-auto p-3">
         <IndexForm indexes={indexes.data} addIndex={addIndex} />
       </Container>
-
       <Container className="m-auto p-3">
         {indexes.data &&
           indexes.data.map((index) => (
             <div className="mb-3" key={index._id}>
-              <Library data={index} className="mb-3" />
+              <Library
+                index={index}
+                className="mb-3"
+                deleteIndex={deleteIndex}
+                key={index._id}
+              />
             </div>
           ))}
       </Container>

@@ -1,8 +1,16 @@
 import { React, useEffect, useState } from "react";
 import TwelveLabsApi from "./api";
 import VideoPlayer from "./VideoPlayer";
+import { Button } from "react-bootstrap";
 
-function Video({ index_id, video_id, start = 0, end: propEnd = 0 }) {
+function Video({
+  index_id,
+  video_id,
+  start = 0,
+  end: propEnd = 0,
+  deleteVideo,
+  showDeleteButton,
+}) {
   const [videoData, setVideoData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [end, setEnd] = useState(null);
@@ -39,7 +47,22 @@ function Video({ index_id, video_id, start = 0, end: propEnd = 0 }) {
   }, [index_id, video_id, start, propEnd]);
 
   if (isLoading) return <i>Loading...</i>;
-  return <VideoPlayer end={end} options={options} />;
+  return (
+    <div>
+      <VideoPlayer end={end} options={options} />
+      <div className="m-1">
+        {showDeleteButton && (
+          <Button
+            size="sm"
+            variant="danger"
+            onClick={() => deleteVideo(index_id, video_id)}
+          >
+            Delete
+          </Button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Video;

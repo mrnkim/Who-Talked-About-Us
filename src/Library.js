@@ -2,18 +2,15 @@ import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import SearchForm from "./SearchForm";
 import TwelveLabsApi from "./api";
-import Video from "./Video";
 import VideoList from "./VideoList";
-import SearchResult from "./SearchResult";
 import UploadForm from "./UploadForm";
 import { Container, Row, Col } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
+import SearchResultList from "./SearchResultList";
 
-function Library({ data }) {
-  const currIndex = data._id;
+function Library({ index, deleteIndex }) {
+  const currIndex = index._id;
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
-  console.log("🚀 > Library > videos=", videos);
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,
@@ -23,8 +20,7 @@ function Library({ data }) {
     status: null,
   });
   const [isUploading, setUploading] = useState(false);
-
-  console.log("🚀 > Library > taskResponse=", taskResponse);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   useEffect(() => {
     if (taskResponse.status === "ready") {
@@ -35,13 +31,14 @@ function Library({ data }) {
     }
   }, [taskResponse]);
 
-  useEffect(function fetchVideosOnMount() {
-    async function fetchVideos() {
-      const responses = await TwelveLabsApi.getVideos(currIndex);
-      setVideos({ data: responses, isLoading: false });
-    }
+  useEffect(() => {
     fetchVideos();
   }, []);
+
+  async function fetchVideos() {
+    const responses = await TwelveLabsApi.getVideos(currIndex);
+    setVideos({ data: responses, isLoading: false });
+  }
 
   async function searchVideo(indexId, query) {
     const result = await TwelveLabsApi.searchVideo(indexId, query);
@@ -49,6 +46,7 @@ function Library({ data }) {
       data: [...result?.data],
       isLoading: false,
     });
+    setSearchPerformed(true);
   }
 
   async function uploadVideo(indexId, videoUrl) {
@@ -63,9 +61,18 @@ function Library({ data }) {
 
       if (response.status === "ready") {
         setUploading(false);
+        fetchVideos();
         clearInterval(intervalId);
       }
     }, 5000);
+  }
+
+  async function deleteVideo(indexId, videoId) {
+    await TwelveLabsApi.deleteVideo(indexId, videoId);
+    setVideos((prevState) => ({
+      ...prevState,
+      data: prevState.data.filter((video) => video._id !== videoId),
+    }));
   }
 
   const handleClick = () => {
@@ -74,82 +81,69 @@ function Library({ data }) {
 
   return (
     <div>
-      <Row>
-        <Button variant="secondary" onClick={handleClick}>
-          {data.index_name}
-        </Button>
+      <Row className="align-items-center">
+        <Col>
+          <Button
+            variant="secondary"
+            onClick={handleClick}
+            style={{ width: "100%" }}
+          >
+            {index.index_name}
+          </Button>
+        </Col>
+        <Col xs="auto">
+          <Button variant="danger" onClick={() => deleteIndex(currIndex)}>
+            Delete
+          </Button>
+        </Col>
       </Row>
       {showComponents && (
         <div>
-          {searchResults.data && (
-            <div>
-              <h2 className="m-5">🔎 Search Results</h2>
-              <Container className="m-5">
-                <SearchForm index={currIndex} search={searchVideo} />
-              </Container>
-              <Container fluid className="m-3">
-                <Row>
-                  {searchResults.data.map((data) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      lg={4}
-                      xl={3}
-                      className="mb-4"
-                      key={uuidv4()}
-                    >
-                      <Video
-                        index_id={currIndex}
-                        video_id={data.video_id}
-                        start={data.start}
-                        end={data.end}
-                      />
-                      Start: {data.start}, End: {data.end}, Confidence:{" "}
-                      <span
-                        style={{
-                          color:
-                            data.confidence === "high"
-                              ? "green"
-                              : data.confidence === "medium"
-                              ? "orange"
-                              : "red",
-                        }}
-                      >
-                        {data.confidence}
-                      </span>
-                    </Col>
-                  ))}
-                </Row>
-              </Container>
-            </div>
-          )}
+          <div>
+            <h2 className="m-5">🔎 Search Results</h2>
+            <Container className="m-5">
+              <SearchForm index={currIndex} search={searchVideo} />
+            </Container>
+            <Container fluid className="m-3">
+              <Row>
+                {searchPerformed &&
+                  !searchResults.isLoading &&
+                  searchResults.data.length === 0 && <p>No results found</p>}
+                {searchResults.data && (
+                  <SearchResultList
+                    searchResults={searchResults}
+                    index_id={currIndex}
+                  />
+                )}
+              </Row>
+            </Container>
+          </div>
           <div>
             <div>
               <h2>📹 All Videos</h2>
               <Container className="m-5">
                 <UploadForm index={currIndex} upload={uploadVideo} />
                 <Row className="m-3">
+                  {isUploading && (
+                    <p>It might take a couple of minutes to finish uploading</p>
+                  )}
                   {isUploading && taskResponse.status && (
-                    <p>{taskResponse.status}...</p>
+                    <div>
+                      <p>Status: {taskResponse.status}...</p>
+                    </div>
                   )}
                 </Row>
               </Container>
             </div>
             <Container fluid className="m-3">
               <Row>
-                {videos.data &&
-                  videos.data.map((data) => (
-                    <Col
-                      sm={12}
-                      md={6}
-                      lg={4}
-                      xl={3}
-                      className="mb-4"
-                      key={data._id}
-                    >
-                      <Video index_id={currIndex} video_id={data._id} />
-                    </Col>
-                  ))}
+                {videos.data && (
+                  <VideoList
+                    index_id={currIndex}
+                    videos={videos}
+                    deleteVideo={deleteVideo}
+                  />
+                )}
               </Row>
             </Container>
           </div>

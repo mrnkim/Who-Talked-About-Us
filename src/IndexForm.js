@@ -20,7 +20,7 @@ function IndexForm({ indexes, addIndex }) {
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
-      const newIndex = await addIndex(trimmedIndexName);
+      addIndex(trimmedIndexName);
     }
   }
 

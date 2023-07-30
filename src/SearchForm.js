@@ -1,11 +1,10 @@
 import { React, useState } from "react";
 import InputForm from "./InputForm";
-import TwelveLabsApi from "./api";
+import { Alert } from "react-bootstrap";
 
 function SearchForm({ index, search }) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
-  const [showComponents, setShowComponents] = useState(false);
 
   /** Update form input. */
   function handleChange(evt) {
@@ -17,7 +16,12 @@ function SearchForm({ index, search }) {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedQuery = query.trim();
-    const response = await search(index, trimmedQuery);
+
+    if (!trimmedQuery) {
+      setError("Please enter the search term");
+    } else {
+      search(index, trimmedQuery);
+    }
   }
   return (
     <div>
@@ -28,6 +32,11 @@ function SearchForm({ index, search }) {
         type="Enter a search term"
         buttonText="Search"
       />
+      {error && (
+        <Alert variant="danger" dismissible>
+          {error}
+        </Alert>
+      )}
     </div>
   );
 }

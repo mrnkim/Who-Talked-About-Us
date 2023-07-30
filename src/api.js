@@ -146,6 +146,36 @@ class TwelveLabsApi {
       console.error(`Error response: ${error.response.data}`);
     }
   }
+
+  static async deleteVideo(indexId, videoUrl) {
+    const config = {
+      method: "DELETE",
+      url: `${API_URL}/indexes/${indexId}/videos/${videoUrl}`,
+      headers: this.headers,
+    };
+    console.log("🚀 > TwelveLabsApi > deleteVideo > config=", config)
+    try {
+      const response = await axios.request(config);
+      console.log("🚀 > TwelveLabsApi > deleteVideo > response=", response)
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  static async deleteIndex(indexId) {
+    const config = {
+      method: "DELETE",
+      url: `${API_URL}/indexes/${indexId}`,
+      headers: this.headers,
+    };
+    try {
+      const response = await axios.request(config);
+      console.log("🚀 > TwelveLabsApi > deleteIndex > response=", response)
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default TwelveLabsApi;
