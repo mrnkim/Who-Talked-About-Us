@@ -7,7 +7,17 @@ import { Container, Row, Col } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 
-function Library({ index, deleteIndex }) {
+/** Show video list and videos, search
+ *
+ * - indexes: list of indexes and loading status
+ *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
+ *            {_id: '2', index_name: 'testIndex2', index_options: Array(4),...}]
+ *          , isLoading: true }
+ *
+ * App -> { IndexForm, VideoIndex }
+ */
+
+function VideoIndex({ index, deleteIndex }) {
   const currIndex = index._id;
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
@@ -15,7 +25,7 @@ function Library({ index, deleteIndex }) {
     data: [],
     isLoading: true,
   });
-  console.log("🚀 > Library > searchResults=", searchResults);
+  console.log("🚀 > VideoIndex > searchResults=", searchResults);
   const [taskResponse, setTaskResponse] = useState({
     video_id: null,
     status: null,
@@ -159,4 +169,4 @@ function Library({ index, deleteIndex }) {
   );
 }
 
-export default Library;
+export default VideoIndex;

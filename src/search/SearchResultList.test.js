@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import SearchResultList from "../SearchResultList.js";
-import { SEARCH_RESULT } from "./_testCommon.js";
+import SearchResultList from "./SearchResultList.js";
+import { SEARCH_RESULT } from "../common/_testCommon.js";
 
 it("renders without crashing", function () {
   render(<SearchResultList searchResults={SEARCH_RESULT} />);

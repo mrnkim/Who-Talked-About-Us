@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import SearchForm from "../search/SearchForm.js";
+import SearchForm from "./SearchForm";
 
 it("renders without crashing", function () {
   render(<SearchForm />);

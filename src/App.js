@@ -2,22 +2,24 @@ import "./App.css";
 import IndexForm from "./indexes/IndexForm";
 import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api/api";
-import Library from "./indexes/Library";
+import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 
-
-
-
-
-
-
+/** UGC Analyzer application
+ *
+ * - indexes: list of indexes and loading status
+ *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
+ *            {_id: '2', index_name: 'testIndex2', index_options: Array(4),...}]
+ *          , isLoading: true }
+ *
+ * App -> { IndexForm, VideoIndex }
+ */
 
 function App() {
   const [indexes, setIndexes] = useState({
     data: null,
     isLoading: true,
   });
-  console.log("🚀 > App > indexes=", indexes);
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
@@ -27,6 +29,7 @@ function App() {
     fetchIndexes();
   }, []);
 
+  /** Triggered by index form submit; creates/adds a new index */
   async function addIndex(indexName) {
     const newIndex = await TwelveLabsApi.createIndex(indexName);
     setIndexes((indexes) => ({
@@ -35,6 +38,7 @@ function App() {
     }));
   }
 
+  /** Triggered in VideoIndex component; removes an index */
   async function deleteIndex(indexId) {
     if (window.confirm("Are you sure you want to delete this index?")) {
       await TwelveLabsApi.deleteIndex(indexId);
@@ -58,7 +62,7 @@ function App() {
         {indexes.data &&
           indexes.data.map((index) => (
             <div className="mb-3" key={index._id}>
-              <Library
+              <VideoIndex
                 index={index}
                 className="mb-3"
                 deleteIndex={deleteIndex}

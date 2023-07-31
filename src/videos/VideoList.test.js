@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import VideoList from "../VideoList.js";
-import { TEST_VIDEOS } from "./_testCommon.js";
+import VideoList from "./VideoList.js";
+import { TEST_VIDEOS } from "../common/_testCommon.js";
 
 it("renders without crashing", function () {
   render(<VideoList videos={TEST_VIDEOS} />);

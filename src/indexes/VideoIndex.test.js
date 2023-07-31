@@ -1,10 +1,10 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import Library from "../indexes/Library";
+import VideoIndex from "./VideoIndex";
 import TwelveLabsApi from "../api/api";
 
-jest.mock("../api"); // This line mocks the TwelveLabsApi module
+jest.mock("../api/api"); // This line mocks the TwelveLabsApi module
 
-describe("Library", () => {
+describe("VideoIndex", () => {
   beforeEach(() => {
     // This will reset the mock status before each test.
     TwelveLabsApi.getVideos.mockClear();
@@ -19,13 +19,13 @@ describe("Library", () => {
   };
 
   test("should render without crashing", () => {
-    render(<Library index={index} />);
+    render(<VideoIndex index={index} />);
   });
 
   test("should fetch videos on mount", async () => {
     TwelveLabsApi.getVideos.mockResolvedValue([]);
 
-    render(<Library index={index} />);
+    render(<VideoIndex index={index} />);
 
     await waitFor(() =>
       expect(TwelveLabsApi.getVideos).toHaveBeenCalledTimes(1)
@@ -35,7 +35,7 @@ describe("Library", () => {
   test("should call deleteIndex when Delete button is clicked", () => {
     const deleteIndexMock = jest.fn();
     const { getByText } = render(
-      <Library index={index} deleteIndex={deleteIndexMock} />
+      <VideoIndex index={index} deleteIndex={deleteIndexMock} />
     );
 
     const deleteButton = getByText("Delete");

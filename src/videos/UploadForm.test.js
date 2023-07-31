@@ -1,19 +1,19 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import InputForm from "../common/InputForm.js";
+import UploadForm from "./UploadForm.js";
 
 it("renders without crashing", function () {
-  render(<InputForm />);
+  render(<UploadForm />);
 });
 
 it("matches snapshot", function () {
-  const { container } = render(<InputForm />);
+  const { container } = render(<UploadForm />);
   expect(container).toMatchSnapshot();
 });
 
 it("has the correct element and text", function () {
-  const { container } = render(<InputForm />);
+  const { container } = render(<UploadForm />);
 
   const button = container.querySelector("Button");
-  expect(button.getAttribute("type")).toEqual("submit");
+  expect(button.textContent).toBe("Upload");
 });

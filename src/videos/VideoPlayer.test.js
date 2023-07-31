@@ -1,7 +1,7 @@
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
-import VideoPlayer from "../VideoPlayer.js";
-import { TEST_OPTIONS } from "./_testCommon.js";
+import { render } from "@testing-library/react";
+import VideoPlayer from "./VideoPlayer.js";
+import { TEST_OPTIONS } from "../common/_testCommon.js";
 
 it("renders without crashing", function () {
   render(<VideoPlayer options={TEST_OPTIONS} />);

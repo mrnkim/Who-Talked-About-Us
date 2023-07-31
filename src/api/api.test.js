@@ -1,4 +1,4 @@
-import TwelveLabsApi from "../api/api";
+import TwelveLabsApi from "./api";
 import axios from "axios";
 
 jest.mock("axios");
