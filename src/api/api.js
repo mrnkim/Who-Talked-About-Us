@@ -3,12 +3,18 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
 const API_KEY = process.env.REACT_APP_API_KEY;
 
+/** API Class
+ *
+ * Static class tying together methods used to get/send to to the API.
+ *
+ */
 class TwelveLabsApi {
-  // Declare the `headers` object containing your API key
+  /** Declare the `headers` object containing your API key */
   static headers = {
     "x-api-key": API_KEY,
   };
 
+  /** Get indexes of a user */
   static async getIndexes() {
     const config = {
       method: "GET",
@@ -18,18 +24,17 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > getIndexes > response=", response);
       return response.data.data;
     } catch (error) {
       console.error(error);
     }
   }
 
+  /** Creates an index */
   static async createIndex(indexName) {
     const INDEXES_URL = `${API_URL}/indexes`;
     const INDEX_NAME = indexName;
 
-    // Make a POST request to the `indexes` endpoint, passing the `x-api-key` header parameter
     try {
       const resp = await axios.post(
         INDEXES_URL,
@@ -47,6 +52,22 @@ class TwelveLabsApi {
     }
   }
 
+  /** Deletes an index */
+  static async deleteIndex(indexId) {
+    const config = {
+      method: "DELETE",
+      url: `${API_URL}/indexes/${indexId}`,
+      headers: this.headers,
+    };
+    try {
+      const response = await axios.request(config);
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /** Get all videos of an index */
   static async getVideos(index_id) {
     const config = {
       method: "GET",
@@ -62,6 +83,7 @@ class TwelveLabsApi {
     }
   }
 
+  /** Get a details on a video */
   static async getVideo(index_id, video_id) {
     const config = {
       method: "GET",
@@ -81,6 +103,7 @@ class TwelveLabsApi {
     }
   }
 
+  /** Search videos with a given query */
   static async searchVideo(indexId, query) {
     const config = {
       method: "POST",
@@ -104,6 +127,8 @@ class TwelveLabsApi {
       console.error(error);
     }
   }
+
+  /** Checks status of a task (e.g., video upload task) */
   static async checkStatus(taskId) {
     const config = {
       method: "GET",
@@ -121,6 +146,7 @@ class TwelveLabsApi {
     }
   }
 
+  /** Uploads a video with a given url */
   static async uploadVideo(indexId, videoUrl) {
     try {
       let formData = new FormData();
@@ -140,7 +166,6 @@ class TwelveLabsApi {
 
       let resp = await axios(config);
       let response = await resp.data;
-      const VIDEO_ID = response.video_id;
       return response;
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -148,6 +173,7 @@ class TwelveLabsApi {
     }
   }
 
+  /** Deletes a video */
   static async deleteVideo(indexId, videoUrl) {
     const config = {
       method: "DELETE",
@@ -158,20 +184,6 @@ class TwelveLabsApi {
     try {
       const response = await axios.request(config);
       console.log("🚀 > TwelveLabsApi > deleteVideo > response=", response);
-      return response;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  static async deleteIndex(indexId) {
-    const config = {
-      method: "DELETE",
-      url: `${API_URL}/indexes/${indexId}`,
-      headers: this.headers,
-    };
-    try {
-      const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > deleteIndex > response=", response);
       return response;
     } catch (error) {
       console.error(error);

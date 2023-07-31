@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
  * - indexes: list of indexes and loading status
  *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
  *            {_id: '2', index_name: 'testIndex2', index_options: Array(4),...}]
- *          , isLoading: true }
+ *          , isLoading: false }
  *
  * App -> { IndexForm, VideoIndex }
  */
@@ -29,7 +29,7 @@ function App() {
     fetchIndexes();
   }, []);
 
-  /** Triggered by index form submit; creates/adds a new index */
+  /** Triggered by index form submit; create/adds a new index */
   async function addIndex(indexName) {
     const newIndex = await TwelveLabsApi.createIndex(indexName);
     setIndexes((indexes) => ({

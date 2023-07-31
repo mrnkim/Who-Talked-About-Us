@@ -1,6 +1,12 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 
+/** User input form
+ *
+ * { UploadForm, SearchForm } -> InputForm
+ *
+ */
+
 function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
   return (
     <Container className="mt-5">

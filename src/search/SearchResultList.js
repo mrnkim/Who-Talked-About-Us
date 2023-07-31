@@ -1,7 +1,12 @@
 import React from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import Video from "../videos/Video";
 import { v4 as uuidv4 } from "uuid";
+
+/** Shows search results
+ *
+ *  VideoIndex -> SearchResultList -> Video
+ */
 
 function SearchResultList({ index_id, searchResults }) {
   return searchResults.data.map((data) => (

@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+<a id="readme-top"></a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. About The Application
 
-## Available Scripts
+UGC Analyzer is a video-searching platform where a user can:
 
-In the project directory, you can run:
+- Create an index (a library of the videos)
+- Upload videos by URLS, and
+- Search specific timelines of a video, or videos by a keyword.
 
-### `npm start`
+This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for the rich, contextual video search. Twelve Labs is an AI-powered video understanding platform that extracts various types of information from videos, such as movement and actions, objects and people, sound, text on screen, and speech.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Product Name Screen Shot][product-screenshot]
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Built With
 
-### `npm test`
+- JavaScript
+- React
+- React Bootstrap
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Component Design
 
-### `npm run build`
+![Component Design Screen Shot][component-design]
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### To-Dos
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Add more tests (or automate)
+- Improve error handling and add data validations
+- Allow a user to customize index options
+- Improve UI showing upload status
+- Refactor api.js to reduce code redundancy
+- Show all videos (currently capped at 10 videos)
+- Explore bulk video uploads
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### `npm run eject`
+## 2. Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Generate and save API Key
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate your API Key
+2. Check the current API Base URL at [Twelve Labs API Reference](https://docs.twelvelabs.io/reference/api-reference) and update the version as needed
+3. Create .env file and store/update the values of API_KEY and API_URL
+   ```
+   .env
+   REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
+   REACT_APP_API_KEY=YOUR_API_KEY
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Start the App
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Clone the current repo
+2. Install and start the client
+   ```sh
+   npm install
+   npm start
+   ```
 
-## Learn More
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 3. Use Case
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Social media marketing for a brand
 
-### Code Splitting
+Discovering the right YouTube or TikTok influencer for your brand is crucial. The most effective influencer partnerships typically evolve organically, with influencers who already use or discuss your products or brand. However, pinpointing these influencers can be challenging, especially as YouTube and TikTok searches often miss content where your brand name isn't explicitly mentioned in video titles or descriptions.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a keyword (e.g., your brand name), you can identify videos that discuss or feature your brand/products, pinpointing the exact moments these references occur.
 
-### Analyzing the Bundle Size
+Follow this simple guide on how to use the UGC Analyzer:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Begin by uploading videos to the app using their URLs. To do this, you first need to convert the YouTube URL to a 360.mp4 URL at [ssyoutube](https://ssyoutube.com/en718gk/), then shorten the URL using [tinyurl](https://tinyurl.com/app).
 
-### Making a Progressive Web App
+- Once the videos are uploaded, you can conduct a search using any keyword. Here are some suggestions:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  - Enter your brand name and discover who's already talking about you in their videos
+  - Enter your competitors' brand names to see what types of influencers they're attracting and the types of audiences they're reaching
 
-### Advanced Configuration
+- The search results will display videos where your keyword is mentioned or featured, offering a wealth of potential influencers and content creators for you to engage with
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Based on these results, you can prioritize influencers and begin your outreach efforts, forging partnerships that can expand your brand reach and influence
 
-### Deployment
+Remember, success in influencer marketing is all about forming authentic partnerships!
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[product-screenshot]: public/screenshot.png
+[component-design]: public/component%20Design_UGC.png

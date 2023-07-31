@@ -2,7 +2,7 @@ import { render, fireEvent, waitFor } from "@testing-library/react";
 import VideoIndex from "./VideoIndex";
 import TwelveLabsApi from "../api/api";
 
-jest.mock("../api/api"); // This line mocks the TwelveLabsApi module
+jest.mock("../api/api"); 
 
 describe("VideoIndex", () => {
   beforeEach(() => {

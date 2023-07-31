@@ -3,25 +3,32 @@ import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
 import Video from "./Video";
 
+/** Form to upload a new video to an index
+ *
+ * - inputUrl: an URL of a video that updates based on the user input
+ *   "https://tinyurl.com/example"
+ *
+ * VideoIndex -> UploadForm -> InputForm
+ */
+
 function UploadForm({ index, upload }) {
   const [inputUrl, setInputUrl] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState("");
 
-  /** Update form input. */
+  /** Updates form input */
   function handleChange(evt) {
     const input = evt.target;
     setInputUrl(input.value);
   }
 
-  /** Call parent function and clear form. */
+  /** Calls parent function to upload a video */
   async function handleSubmit(evt) {
     evt.preventDefault();
 
     if (!inputUrl) {
       setError("Please enter the url of a video");
     } else {
-      console.log("🚀 > UploadForm > inputUrl=", inputUrl);
       const response = await upload(index, inputUrl);
       console.log("🚀 > handleSubmit > response=", response);
       setResponse(response);

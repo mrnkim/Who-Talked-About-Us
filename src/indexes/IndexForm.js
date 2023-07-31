@@ -1,18 +1,25 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
 
-function IndexForm({ indexes, addIndex }) {
+/** Form to create a new video index
+ *
+ * - indexName: a name of a new index that updates based on the user input
+ *
+ * IndexForm -> InputForm
+ */
+
+function IndexForm({ addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 
-  /** Update form input. */
+  /** Updates form input */
   function handleChange(evt) {
     const input = evt.target;
     setIndexName(input.value);
   }
 
-  /** Call parent function and clear form. */
+  /** Calls parent function to create/add a new index */
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();

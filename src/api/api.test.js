@@ -98,6 +98,7 @@ describe("TwelveLabsApi", () => {
     });
   });
 
+  //FIXME: fix test
   // test("should search for videos", async () => {
   //   const indexId = "index1";
   //   const query = "search_query";

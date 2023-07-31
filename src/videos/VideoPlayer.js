@@ -3,6 +3,8 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
 
+/** Shows a video player  */
+
 function VideoPlayer({ options, end }) {
   const videoNode = useRef(null);
   const player = useRef(null);

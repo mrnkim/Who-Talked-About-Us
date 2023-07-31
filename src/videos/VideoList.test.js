@@ -20,6 +20,7 @@ it("shows loading", function () {
   });
 });
 
+//FIXME: fix test 
 // it("shows delete button", async function () {
 //   const deleteVideo = jest.fn(); // mock function
 //   render(<VideoList videos={TEST_VIDEOS} deleteVideo={deleteVideo} />);
