@@ -48,7 +48,7 @@ function Video({
 
   if (isLoading) return <i>Loading...</i>;
   return (
-    <div>
+    <div data-video-id={video_id}>
       <VideoPlayer end={end} options={options} />
       <div className="m-1">
         {showDeleteButton && (

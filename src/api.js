@@ -18,6 +18,7 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
+      console.log("🚀 > TwelveLabsApi > getIndexes > response=", response);
       return response.data.data;
     } catch (error) {
       console.error(error);
@@ -153,10 +154,10 @@ class TwelveLabsApi {
       url: `${API_URL}/indexes/${indexId}/videos/${videoUrl}`,
       headers: this.headers,
     };
-    console.log("🚀 > TwelveLabsApi > deleteVideo > config=", config)
+    console.log("🚀 > TwelveLabsApi > deleteVideo > config=", config);
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > deleteVideo > response=", response)
+      console.log("🚀 > TwelveLabsApi > deleteVideo > response=", response);
       return response;
     } catch (error) {
       console.error(error);
@@ -170,7 +171,7 @@ class TwelveLabsApi {
     };
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > deleteIndex > response=", response)
+      console.log("🚀 > TwelveLabsApi > deleteIndex > response=", response);
       return response;
     } catch (error) {
       console.error(error);

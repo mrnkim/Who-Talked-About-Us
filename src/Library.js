@@ -15,6 +15,7 @@ function Library({ index, deleteIndex }) {
     data: [],
     isLoading: true,
   });
+  console.log("🚀 > Library > searchResults=", searchResults);
   const [taskResponse, setTaskResponse] = useState({
     video_id: null,
     status: null,
@@ -78,6 +79,7 @@ function Library({ index, deleteIndex }) {
   const handleClick = () => {
     setShowComponents(!showComponents);
   };
+  console.log("Is UploadForm rendered?", showComponents && <UploadForm />);
 
   return (
     <div>
@@ -122,7 +124,11 @@ function Library({ index, deleteIndex }) {
             <div>
               <h2>📹 All Videos</h2>
               <Container className="m-5">
-                <UploadForm index={currIndex} upload={uploadVideo} />
+                <UploadForm
+                  index={currIndex}
+                  upload={uploadVideo}
+                  data-testid="upload-form"
+                />
                 <Row className="m-3">
                   {isUploading && (
                     <p>It might take a couple of minutes to finish uploading</p>

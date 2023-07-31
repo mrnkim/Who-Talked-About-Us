@@ -15,6 +15,7 @@ function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
               onChange={handleChange}
               value={input}
               aria-label={type}
+              data-testid="search-input"
               style={{ width: "60%", fontSize: "1em" }}
             />
             <Button

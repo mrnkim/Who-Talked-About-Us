@@ -1,6 +1,5 @@
 import { React, useState } from "react";
 import InputForm from "./InputForm";
-import TwelveLabsApi from "./api";
 import { Alert } from "react-bootstrap";
 import Video from "./Video";
 
@@ -37,6 +36,7 @@ function UploadForm({ index, upload }) {
         input={inputUrl}
         type="Enter a video url"
         buttonText="Upload"
+        data-testid="upload-form"
       />
       {error && (
         <Alert variant="danger" dismissible>

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<div>
+  <div>
+    <div
+      class="mt-5 container"
+    >
+      <div
+        class="row"
+        style="display: flex; justify-content: center;"
+      >
+        <div
+          class="col-lg-8 col-md-8 col-sm-12"
+        >
+          <form
+            class="d-flex"
+          >
+            <input
+              aria-label="Enter an index name"
+              class="form-control"
+              data-testid="search-input"
+              id="Enter an index name"
+              name="Enter an index name"
+              placeholder="Enter an index name"
+              style="width: 60%; font-size: 1em;"
+              type="Enter an index name"
+              value=""
+            />
+            <button
+              class="rounded btn btn-primary"
+              style="margin-left: 3px;"
+              type="submit"
+            >
+              Create Index
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

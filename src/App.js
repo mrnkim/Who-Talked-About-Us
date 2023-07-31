@@ -14,6 +14,7 @@ function App() {
     data: null,
     isLoading: true,
   });
+  console.log("🚀 > App > indexes=", indexes)
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
