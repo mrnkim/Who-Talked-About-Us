@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import TwelveLabsApi from "../api";
+import TwelveLabsApi from "../api/api";
 import App from "../App";
 import { TEST_INDEXES } from "./_testCommon";
 

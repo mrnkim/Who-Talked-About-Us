@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import SearchForm from "../SearchForm.js";
+import SearchForm from "../search/SearchForm.js";
 
 it("renders without crashing", function () {
   render(<SearchForm />);
@@ -55,4 +55,3 @@ it("displays an error message when the form is submitted with empty input", func
   const errorMessage = getByText("Please enter the search term");
   expect(errorMessage).toBeInTheDocument();
 });
-

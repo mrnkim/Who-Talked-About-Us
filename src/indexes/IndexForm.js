@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import InputForm from "./InputForm";
+import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
 
 function IndexForm({ indexes, addIndex }) {

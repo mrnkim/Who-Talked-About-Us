@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import IndexForm from "../IndexForm";
+import IndexForm from "../indexes/IndexForm";
 
 it("renders without crashing", function () {
   render(<IndexForm />);

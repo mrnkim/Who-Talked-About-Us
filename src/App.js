@@ -1,20 +1,23 @@
 import "./App.css";
-import IndexForm from "./IndexForm";
-import SearchForm from "./SearchForm";
-import UploadForm from "./UploadForm";
+import IndexForm from "./indexes/IndexForm";
 import { useEffect, useState } from "react";
-import TwelveLabsApi from "./api";
-import Library from "./Library";
+import TwelveLabsApi from "./api/api";
+import Library from "./indexes/Library";
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+
+
+
+
+
+
+
 
 function App() {
   const [indexes, setIndexes] = useState({
     data: null,
     isLoading: true,
   });
-  console.log("🚀 > App > indexes=", indexes)
+  console.log("🚀 > App > indexes=", indexes);
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {

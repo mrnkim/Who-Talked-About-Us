@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import InputForm from "./InputForm";
+import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
 import Video from "./Video";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import Video from "./Video";
+import Video from "../videos/Video";
 import { v4 as uuidv4 } from "uuid";
 
 function SearchResultList({ index_id, searchResults }) {

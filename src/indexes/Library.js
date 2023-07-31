@@ -1,11 +1,11 @@
 import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import SearchForm from "./SearchForm";
-import TwelveLabsApi from "./api";
-import VideoList from "./VideoList";
-import UploadForm from "./UploadForm";
+import SearchForm from "../search/SearchForm";
+import TwelveLabsApi from "../api/api";
+import UploadForm from "../videos/UploadForm";
 import { Container, Row, Col } from "react-bootstrap";
-import SearchResultList from "./SearchResultList";
+import SearchResultList from "../search/SearchResultList";
+import VideoList from "../videos/VideoList";
 
 function Library({ index, deleteIndex }) {
   const currIndex = index._id;

@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import UploadForm from "../UploadForm.js";
+import UploadForm from "../videos/UploadForm.js";
 
 it("renders without crashing", function () {
   render(<UploadForm />);

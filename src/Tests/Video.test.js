@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
-import Video from "../Video.js";
+import Video from "../videos/Video.js";
 import { TEST_VIDEOS } from "./_testCommon.js";
 
 it("renders without crashing", function () {

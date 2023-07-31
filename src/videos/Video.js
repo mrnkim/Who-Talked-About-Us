@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import TwelveLabsApi from "./api";
+import TwelveLabsApi from "../api/api";
 import VideoPlayer from "./VideoPlayer";
 import { Button } from "react-bootstrap";
 

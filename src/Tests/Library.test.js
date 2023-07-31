@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import Library from "../Library";
-import TwelveLabsApi from "../api";
+import Library from "../indexes/Library";
+import TwelveLabsApi from "../api/api";
 
 jest.mock("../api"); // This line mocks the TwelveLabsApi module
 
