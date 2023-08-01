@@ -23,8 +23,6 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 ![Component Design Screen Shot][component-design]
 
 ### To-Dos
-
-- After deleting a video, it still shows (it disappears only after refreshing the page)
 - Add more tests (or automate)
 - Improve error handling and add data validations
 - Improve resetting search
