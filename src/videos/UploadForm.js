@@ -1,7 +1,6 @@
 import { React, useState } from "react";
 import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
-import Video from "./Video";
 
 /** Form to upload a new video to an index
  *
@@ -13,7 +12,6 @@ import Video from "./Video";
 
 function UploadForm({ index, upload }) {
   const [inputUrl, setInputUrl] = useState("");
-  const [response, setResponse] = useState(null);
   const [error, setError] = useState("");
 
   /** Updates form input */
@@ -31,7 +29,6 @@ function UploadForm({ index, upload }) {
     } else {
       const response = await upload(index, inputUrl);
       console.log("🚀 > handleSubmit > response=", response);
-      setResponse(response);
     }
   }
 
@@ -50,7 +47,6 @@ function UploadForm({ index, upload }) {
           {error}
         </Alert>
       )}
-      {response && <Video />}
     </div>
   );
 }

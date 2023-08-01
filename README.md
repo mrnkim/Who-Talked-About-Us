@@ -24,8 +24,10 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 ### To-Dos
 
+- After deleting a video, it still shows (it disappears only after refreshing the page)
 - Add more tests (or automate)
 - Improve error handling and add data validations
+- Improve resetting search
 - Allow a user to customize index options
 - Improve UI showing upload status
 - Refactor api.js to reduce code redundancy
@@ -64,22 +66,24 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 Discovering the right YouTube or TikTok influencer for your brand is crucial. The most effective influencer partnerships typically evolve organically, with influencers who already use or discuss your products or brand. However, pinpointing these influencers can be challenging, especially as YouTube and TikTok searches often miss content where your brand name isn't explicitly mentioned in video titles or descriptions.
 
-This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a keyword (e.g., your brand name), you can identify videos that discuss or feature your brand/products, pinpointing the exact moments these references occur.
+This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a simple keyword (e.g., your brand name) or specific descriptions (e.g., "applying mascara"), you can identify videos that discuss or feature your brand/products, pinpointing the exact moments these references occur.
 
 Follow this simple guide on how to use the UGC Analyzer:
 
-- Begin by uploading videos to the app using their URLs. To do this, you first need to convert the YouTube URL to a 360.mp4 URL at [ssyoutube](https://ssyoutube.com/en718gk/), then shorten the URL using [tinyurl](https://tinyurl.com/app).
+1. Begin by uploading videos to the app using their URLs. To do this, you first need to convert the YouTube URL to a 360.mp4 URL at [ssyoutube](https://ssyoutube.com/en718gk/), then shorten the URL using [tinyurl](https://tinyurl.com/app).
 
-- Once the videos are uploaded, you can conduct a search using any keyword. Here are some suggestions:
+2. Once the videos are uploaded, you can conduct a search using any keyword. Here are some suggestions:
 
-  - Enter your brand name and discover who's already talking about you in their videos
-  - Enter your competitors' brand names to see what types of influencers they're attracting and the types of audiences they're reaching
+   - Enter your brand name and discover who's already talking about you in their videos
+   - Enter your competitors' brand names to see what types of influencers they're attracting and the types of audiences they're reaching
+   - You can also search for very specific keywords such as "applying mascara" or "holding blue sunglasses"!
 
-- The search results will display videos where your keyword is mentioned or featured, offering a wealth of potential influencers and content creators for you to engage with
+3. The search results will display videos where your keyword is mentioned or featured, offering a wealth of potential influencers and content creators for you to engage with
 
-- Based on these results, you can prioritize influencers and begin your outreach efforts, forging partnerships that can expand your brand reach and influence
+4. Based on these results, you can prioritize influencers and begin your outreach efforts, forging partnerships that can expand your brand reach and influence
 
 Remember, success in influencer marketing is all about forming authentic partnerships!
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [product-screenshot]: public/screenshot.png

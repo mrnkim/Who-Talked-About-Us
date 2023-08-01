@@ -29,7 +29,7 @@ function App() {
     fetchIndexes();
   }, []);
 
-  /** Triggered by index form submit; create/adds a new index */
+  /** Triggered by index form submit; creates/adds a new index */
   async function addIndex(indexName) {
     const newIndex = await TwelveLabsApi.createIndex(indexName);
     setIndexes((indexes) => ({

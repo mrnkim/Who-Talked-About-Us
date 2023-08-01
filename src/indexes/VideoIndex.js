@@ -84,7 +84,6 @@ function VideoIndex({ index, deleteIndex }) {
   async function uploadVideo(indexId, videoUrl) {
     setUploading(true);
     const newTask = await TwelveLabsApi.uploadVideo(indexId, videoUrl);
-    console.log("🚀 > uploadVideo > newTask=", newTask);
 
     if (newTask) {
       const intervalId = setInterval(async () => {
@@ -108,12 +107,21 @@ function VideoIndex({ index, deleteIndex }) {
 
   /** Deletes a video from an index  */
   async function deleteVideo(indexId, videoId) {
-    await TwelveLabsApi.deleteVideo(indexId, videoId);
-    setVideos((prevState) => {
-      const newData = [...prevState.data];
-      const updatedVideos = newData.filter((video) => video._id !== videoId);
-      return { data: updatedVideos, isLoading: prevState.isLoading };
-    });
+    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId);
+    try {
+      const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
+      console.log("🚀 > deleteVideo > response=", response);
+      const updatedVideos = videos.data.filter(
+        (video) => video._id !== videoId
+      );
+      console.log("🚀 > deleteVideo > updatedVideos=", updatedVideos);
+      setVideos((videos) => ({
+        data: updatedVideos,
+        isLoading: false,
+      }));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /** Toggle whether to show or not show the components  */

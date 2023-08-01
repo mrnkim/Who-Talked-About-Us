@@ -83,7 +83,7 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get a details on a video */
+  /** Get details on a video */
   static async getVideo(index_id, video_id) {
     const config = {
       method: "GET",
@@ -174,17 +174,15 @@ class TwelveLabsApi {
   }
 
   /** Deletes a video */
-  static async deleteVideo(indexId, videoUrl) {
+  static async deleteVideo(indexId, videoId) {
     const config = {
       method: "DELETE",
-      url: `${API_URL}/indexes/${indexId}/videos/${videoUrl}`,
+      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: this.headers,
     };
-    console.log("🚀 > TwelveLabsApi > deleteVideo > config=", config);
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > deleteVideo > response=", response);
-      return response;
+      return response.status;
     } catch (error) {
       console.error(error);
     }

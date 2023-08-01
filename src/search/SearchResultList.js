@@ -1,7 +1,6 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 import Video from "../videos/Video";
-import { v4 as uuidv4 } from "uuid";
 
 /** Shows search results
  *
@@ -9,8 +8,8 @@ import { v4 as uuidv4 } from "uuid";
  */
 
 function SearchResultList({ index_id, searchResults }) {
-  return searchResults.data.map((data) => (
-    <Col sm={12} md={6} lg={4} xl={3} className="mb-4" key={uuidv4()}>
+  return searchResults.data.map((data, index) => (
+    <Col sm={12} md={6} lg={4} xl={3} className="mb-4" key={data._id + "-" + index}>
       <Video
         index_id={index_id}
         video_id={data.video_id}
