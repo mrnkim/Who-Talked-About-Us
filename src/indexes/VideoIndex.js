@@ -107,14 +107,12 @@ function VideoIndex({ index, deleteIndex }) {
 
   /** Deletes a video from an index  */
   async function deleteVideo(indexId, videoId) {
-    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId);
     try {
       const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
-      console.log("🚀 > deleteVideo > response=", response);
+      //TODO: add validation if response is success 
       const updatedVideos = videos.data.filter(
         (video) => video._id !== videoId
       );
-      console.log("🚀 > deleteVideo > updatedVideos=", updatedVideos);
       setVideos((videos) => ({
         data: updatedVideos,
         isLoading: false,

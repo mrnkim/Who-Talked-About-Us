@@ -23,10 +23,11 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 ![Component Design Screen Shot][component-design]
 
 ### To-Dos
+
 - Add more tests (or automate)
 - Improve error handling and add data validations
 - Improve resetting search
-- Allow a user to customize index options
+- Allow a user to customize index/search options
 - Improve UI showing upload status
 - Refactor api.js to reduce code redundancy
 - Show all videos (currently capped at 10 videos)
