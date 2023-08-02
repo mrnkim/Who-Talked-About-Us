@@ -2,7 +2,7 @@
 
 ## 1. About The Application
 
-UGC Analyzer is a video-searching platform where a user can:
+UGC(User Generated Content) Analyzer is a video-searching platform where a user can:
 
 - Create an index (a library of the videos)
 - Upload videos by URLS, and
