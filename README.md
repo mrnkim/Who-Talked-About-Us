@@ -2,7 +2,7 @@
 
 ## 1. About The Application
 
-UGC(User Generated Content) Analyzer is a video-searching platform where a user can:
+UGC(User-Generated Content) Analyzer is a video-searching platform where a user can:
 
 - Create an index (a library of the videos)
 - Upload videos by URLS, and
@@ -65,7 +65,7 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 Discovering the right YouTube or TikTok influencer for your brand is crucial. The most effective influencer partnerships typically evolve organically, with influencers who already use or discuss your products or brand. However, pinpointing these influencers can be challenging, especially as YouTube and TikTok searches often miss content where your brand name isn't explicitly mentioned in video titles or descriptions.
 
-This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a simple keyword (e.g., your brand name) or specific descriptions (e.g., "applying mascara"), you can identify videos that discuss or feature your brand/products, pinpointing the exact moments these references occur.
+This is where the UGC(User-Generated Content) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a simple keyword (e.g., your brand name) or specific descriptions (e.g., "applying mascara"), you can identify videos that discuss or feature your brand/products, pinpointing the exact moments these references occur.
 
 Follow this simple guide on how to use the UGC Analyzer:
 
