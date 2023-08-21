@@ -3,9 +3,17 @@ import { useState, useEffect } from "react";
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadForm from "../videos/UploadForm";
+import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
+
+// const SERVER_BASE_URL = new URL("http://localhost:4000");
+// const INDEX_ID_INFO_URL = new URL("/get-index-info", SERVER_BASE_URL);
+// const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
+// const CHANNEL_VIDEO_INFO_URL = new URL("/channel-video-info", SERVER_BASE_URL);
+// const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
+// const CHECK_TASKS_URL = new URL("/check-tasks", SERVER_BASE_URL);
 
 /** Show video list and videos, search form and search result list
  *
@@ -35,7 +43,7 @@ import VideoList from "../videos/VideoList";
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
  */
 
-function VideoIndex({ index, deleteIndex }) {
+function VideoIndex({ index, deleteIndex, index_id }) {
   const currIndex = index._id;
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
@@ -50,6 +58,7 @@ function VideoIndex({ index, deleteIndex }) {
   const [isUploading, setUploading] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [error, setError] = useState("");
+  const [indexedVideos, setIndexedVideos] = useState();
 
   useEffect(() => {
     if (taskResponse.status === "ready") {
@@ -82,6 +91,8 @@ function VideoIndex({ index, deleteIndex }) {
 
   /** Uploads video and check status of the uploading task every 5 seconds */
   async function uploadVideo(indexId, videoUrl) {
+    //download videos using ytdl
+
     setUploading(true);
     const newTask = await TwelveLabsApi.uploadVideo(indexId, videoUrl);
 
@@ -109,7 +120,7 @@ function VideoIndex({ index, deleteIndex }) {
   async function deleteVideo(indexId, videoId) {
     try {
       const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
-      //TODO: add validation if response is success 
+      //TODO: add validation if response is success
       const updatedVideos = videos.data.filter(
         (video) => video._id !== videoId
       );
@@ -170,11 +181,13 @@ function VideoIndex({ index, deleteIndex }) {
             <div>
               <h2>📹 All Videos</h2>
               <Container className="m-5">
-                <UploadForm
-                  index={currIndex}
-                  upload={uploadVideo}
-                  data-testid="upload-form"
+                <UploadYoutubeVideo
+                  indexedVideos={indexedVideos}
+                  setIndexedVideos={setIndexedVideos}
+                  index={index}
+                  index_id={index_id}
                 />
+
                 <Row className="m-3">
                   {isUploading && (
                     <p>It might take a couple of minutes to finish uploading</p>

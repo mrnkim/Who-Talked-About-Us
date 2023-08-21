@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
+// const { getIndexes } = require('./api/server');
 
 /** UGC Analyzer application
  *
@@ -20,6 +21,7 @@ function App() {
     data: null,
     isLoading: true,
   });
+  console.log("🚀 > App > indexes=", indexes)
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
@@ -64,6 +66,7 @@ function App() {
             <div className="mb-3" key={index._id}>
               <VideoIndex
                 index={index}
+                index_id={index._id}
                 className="mb-3"
                 deleteIndex={deleteIndex}
                 key={index._id}
