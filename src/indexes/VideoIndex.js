@@ -47,6 +47,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   const currIndex = index._id;
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
+  console.log("🚀 > VideoIndex > videos=", videos)
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,

@@ -33,6 +33,7 @@
     "web-vitals": "^2.1.4",
     "yt-channel-info": "^3.2.1",
     "ytdl-core": "^4.11.5",
+    "ytpl": "^2.3.0",
     "zlib": "^1.0.5"
   },
   "scripts": {

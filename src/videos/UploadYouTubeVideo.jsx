@@ -11,16 +11,19 @@ const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
 const JSON_VIDEO_INFO_URL = new URL('/json-video-info', SERVER_BASE_URL)
 const CHANNEL_VIDEO_INFO_URL = new URL('/channel-video-info', SERVER_BASE_URL)
+const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id}) {
     const [taskVideos, setTaskVideos] = useState(null)
+    console.log("🚀 > UploadYoutubeVideo > taskVideos=", taskVideos)
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
+    const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
     const [indexId, setIndexId] = useState(null)
     // const [indexName, setIndexName] = useState(null)
     const [searchQuery, setSearchQuery] = useState(null)
@@ -62,6 +65,10 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
         setYoutubeChannelId(event.target.value)
     }
 
+    const handlePlaylistUrlEntry = (event) => {
+        setYoutubePlaylistId(event.target.value)
+    }
+
     const handleIndexIdEntry = (event) => {
         setIndexId(event.target.value)
     }
@@ -79,7 +86,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
             }
         } else if (youtubeChannelId) {
             const response = await getChannelVideoInfo(youtubeChannelId)
-            console.log("🚀 > getInfo > response=", response)
+            console.log("🚀 > getInfo > youtubeChannelId response=", response)
+            setTaskVideos(response)
+        } else if (youtubePlaylistId) {
+            const response = await getPlaylistVideoInfo(youtubePlaylistId)
+            console.log("🚀 > getInfo > youtubePlaylistId response=", response)
             setTaskVideos(response)
         } else if (indexId) {
             const response = await getIndexInfo()
@@ -103,6 +114,14 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
         return await response.json()
     }
 
+    const getPlaylistVideoInfo = async () => {
+        const queryUrl = PLAYLIST_VIDEO_INFO_URL
+        queryUrl.searchParams.set('PLAYLIST_ID', youtubePlaylistId)
+        const response = await fetch(queryUrl.href)
+        console.log("🚀 > getPlaylistVideoInfo > response=", response)
+        return await response.json()
+    }
+
     const getIndexInfo = async () => {
         const queryUrl = INDEX_ID_INFO_URL
         queryUrl.searchParams.set('INDEX_ID', indexId)
@@ -112,7 +131,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
 
     const indexYouTubeVideos = async () => {
         updateApiElement()
-        const videoData = taskVideos.map(videoData => { return {url: videoData.video_url, title: videoData.title }})
+        const videoData = taskVideos.map(videoData => { return {url: videoData.video_url || videoData.url, title: videoData.title, authorName: videoData.author.name}})
         const requestData = {
             videoData: videoData,
             indexName: index,
@@ -260,10 +279,10 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
                 <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}>
                     <Container xs>
                         <Card>
-                            <a href={ video.video_url } target='_blank'>
+                            <a href={ video.video_url || video.url } target='_blank'>
                                 <Card.Img
                                     sx={{ height: '20vh' }}
-                                    src={ video.thumbnails[video.thumbnails.length-1].url }
+                                    src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
                                 />
                             </a>
 
@@ -333,6 +352,10 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
                         <TextField label='Channel ID' variant='standard' fullWidth onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId }/>
                     </Container>
 
+                    <Container sx={{mb: 3}} display='flex' xs={3}>
+                        <TextField label='Playlist ID' variant='standard' fullWidth onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId }/>
+                    </Container>
+
                     <Container display='flex' justifyContent='center' alignItems='center' xs>
                         <strong>Selected File:</strong>
                     </Container>
@@ -342,7 +365,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
                     </Container>
 
                     <Container display='flex' xs>
-                        <Button disabled={ (!selectedJSON && !youtubeChannelId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
+                        <Button disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
                             Submit
                         </Button>
                     </Container>

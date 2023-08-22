@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const ytdl = require("ytdl-core");
+const ytpl = require("ytpl");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
@@ -149,6 +150,18 @@ app.get("/channel-video-info", async (request, response, next) => {
   }
 });
 
+app.get("/playlist-video-info", async (request, response, next) => {
+  try {
+    const playlistVideos = await ytpl(request.query.PLAYLIST_ID);
+    console.log("🚀 > app.get > playlistVideos=", playlistVideos);
+
+    const playlistVideosDetail = playlistVideos.items;
+    response.json(playlistVideosDetail);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 app.post(
   "/download",
   bodyParser.urlencoded(),
@@ -157,6 +170,7 @@ app.post(
 
     try {
       const jsonVideos = request.body.videoData;
+      console.log("🚀 > jsonVideos=", jsonVideos)
       const indexName = request.body.indexName;
       const totalVideos = jsonVideos.length;
       console.log("🚀 > totalVideos=", totalVideos);
@@ -228,7 +242,10 @@ app.post(
       );
       console.log(videoIndexingResponses);
 
-      response.json({ taskIds: videoIndexingResponses, indexId: request.body.indexName._id });
+      response.json({
+        taskIds: videoIndexingResponses,
+        indexId: request.body.indexName._id,
+      });
     } catch (error) {
       next(error);
     }
