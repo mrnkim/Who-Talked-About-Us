@@ -8,13 +8,6 @@ import { Container, Row, Col, Alert } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 
-// const SERVER_BASE_URL = new URL("http://localhost:4000");
-// const INDEX_ID_INFO_URL = new URL("/get-index-info", SERVER_BASE_URL);
-// const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
-// const CHANNEL_VIDEO_INFO_URL = new URL("/channel-video-info", SERVER_BASE_URL);
-// const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
-// const CHECK_TASKS_URL = new URL("/check-tasks", SERVER_BASE_URL);
-
 /** Show video list and videos, search form and search result list
  *
  * - showComponents: state whether to show the components or not
@@ -45,9 +38,11 @@ import VideoList from "../videos/VideoList";
 
 function VideoIndex({ index, deleteIndex, index_id }) {
   const currIndex = index._id;
+  const [taskVideos, setTaskVideos] = useState(null);
+  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
-  console.log("🚀 > VideoIndex > videos=", videos)
+  console.log("🚀 > VideoIndex > videos=", videos);
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,
@@ -72,12 +67,59 @@ function VideoIndex({ index, deleteIndex, index_id }) {
 
   useEffect(() => {
     fetchVideos();
-  }, []);
+    updateMetadata();
+  }, [indexedVideos]);
 
   /** Fetches videos and update videos state */
   async function fetchVideos() {
     const responses = await TwelveLabsApi.getVideos(currIndex);
     setVideos({ data: responses, isLoading: false });
+  }
+
+  /*
+For each video,
+1. Get video id (Twelve Labs)
+2. Find matching video's channel name from taskVideos using title
+3. Make an API call to add meta data to video
+*/
+
+  async function updateMetadata() {
+    console.log("HERE!!!!!!!!!!");
+    console.log("🚀 > updateMetadata() > indexedVideos=", indexedVideos);
+    console.log("🚀 > updateMetadata() > taskVideos=", taskVideos);
+
+    // Iterate over videos.data
+    indexedVideos?.forEach((indexedVid) => {
+      // Find matching video in taskVideos
+      const matchingVid = taskVideos?.find(
+        (taskVid) => taskVid.metadata.filename === indexedVid.metadata.filename
+      );
+      console.log("🚀 > indexedVideos.forEach > matchingVid=", matchingVid);
+
+      // Check if matching video is found
+      if (matchingVid) {
+        const authorName = matchingVid.author.name;
+        console.log("🚀 > indexedVideos.forEach > authorName=", authorName);
+
+        const options = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_API_KEY,
+          },
+          body: JSON.stringify({ metadata: { author: authorName } }),
+        };
+
+        // Make API call to update metadata
+        fetch(
+          `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`,
+          options
+        )
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error(err));
+      }
+    });
   }
 
   /** Searches videos in an index with a given query*/
@@ -187,6 +229,8 @@ function VideoIndex({ index, deleteIndex, index_id }) {
                   setIndexedVideos={setIndexedVideos}
                   index={index}
                   index_id={index_id}
+                  taskVideos={taskVideos}
+                  setTaskVideos={setTaskVideos}
                 />
 
                 <Row className="m-3">

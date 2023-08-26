@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Button, Card, Container } from "react-bootstrap";
 import TextField from '@mui/material/TextField'
 import sanitize from 'sanitize-filename'
+import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
@@ -16,9 +17,8 @@ const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
-function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id}) {
-    const [taskVideos, setTaskVideos] = useState(null)
-    console.log("🚀 > UploadYoutubeVideo > taskVideos=", taskVideos)
+function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
+    console.log("🚀 > UploadYoutubeVideo > indexedVideos=", indexedVideos)
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
@@ -50,9 +50,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
             let apiRequestElement =
                 <Box>
                     <LinearProgress/>
-                    {/* <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
+                    <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
                         { text }
-                    </Typography> */}
+                    </Typography>
                 </Box>
                 setApiElement(apiRequestElement)
         } else {
@@ -124,7 +124,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
 
     const getIndexInfo = async () => {
         const queryUrl = INDEX_ID_INFO_URL
-        queryUrl.searchParams.set('INDEX_ID', indexId)
+        queryUrl.searchParams.set('INDEX_ID', index_id)
         const response = await fetch(queryUrl.href)
         return await response.json()
     }
@@ -215,8 +215,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
                     <Container xs>
                         <Card>
                             <Card.Img sx={{ objectFit: "contain" }}>
-                                <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'
-                                    light={ <img src={ video.hls.thumbnail_urls[0] } height='100%' width='100%'/> } playing/>
+                                <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%' playing/>
                             </Card.Img>
 
                         </Card>
@@ -269,9 +268,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id})
                 indexingStatus =
                     <>
                         { video.status === 'ready' ? null : waitingBar }
-                        {/* <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
+                        <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
                             { video.process ? `Indexing. ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
-                        </Typography> */}
+                        </Typography>
                     </>
             }
 
