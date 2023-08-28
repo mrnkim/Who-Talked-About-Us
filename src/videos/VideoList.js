@@ -1,6 +1,8 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 import Video from "./Video";
+import ReactPlayer from 'react-player'
+
 
 /** Shows list of the video in an index
  *

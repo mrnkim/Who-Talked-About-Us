@@ -210,8 +210,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     if (indexedVideos && !pendingApiRequest) {
         videos = indexedVideos.map(video => {
             let element =
-                <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
-                    <Container xs>
+            <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
+            <Container xs>
                         <Card>
                                 <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
 

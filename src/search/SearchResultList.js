@@ -8,6 +8,7 @@ import Video from "../videos/Video";
  */
 
 function SearchResultList({ index_id, searchResults }) {
+  
   return searchResults.data.map((data, index) => (
     <Col sm={12} md={6} lg={4} xl={3} className="mb-4" key={data._id + "-" + index}>
       <Video

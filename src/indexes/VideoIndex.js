@@ -8,6 +8,8 @@ import { Container, Row, Col, Alert } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import axios from "axios";
+import Badge from "react-bootstrap/Badge";
+import Stack from "react-bootstrap/Stack";
 
 /** Show video list and videos, search form and search result list
  *
@@ -48,6 +50,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
     data: [],
     isLoading: true,
   });
+  console.log("🚀 > VideoIndex > searchResults=", searchResults)
   const [taskResponse, setTaskResponse] = useState({
     video_id: null,
     status: null,
@@ -99,6 +102,8 @@ For each video,
         if (matchingVid) {
           const authorName = matchingVid.author.name;
           console.log("🚀 > indexedVideos.forEach > AUTHOR NAME=", authorName);
+          const youTubeUrl = matchingVid.video_url || matchingVid.url;
+          console.log("🚀 > updateMetadata > YouTubeUrl=", youTubeUrl);
           const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 
           const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`;
@@ -107,6 +112,7 @@ For each video,
           const data = {
             metadata: {
               author: authorName,
+              youTubeUrl: youTubeUrl,
             },
           };
 
@@ -270,6 +276,17 @@ For each video,
                   />
                 )}
               </Row>
+            </Container>
+            <Container fluid className="m-3">
+              <h2>👤 All Channels</h2>
+              <div style={{ display: "flex", gap: "10px" }}>
+                {videos &&
+                  videos.data.map((vid) => (
+                    <Badge key={vid._id} pill bg="primary">
+                      {vid.metadata.author}
+                    </Badge>
+                  ))}
+              </div>
             </Container>
           </div>
         </div>
