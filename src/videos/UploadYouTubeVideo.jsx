@@ -18,7 +18,6 @@ const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
-    console.log("🚀 > UploadYoutubeVideo > indexedVideos=", indexedVideos)
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
@@ -214,9 +213,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                 <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
                     <Container xs>
                         <Card>
-                            <Card.Img sx={{ objectFit: "contain" }}>
-                                <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%' playing/>
-                            </Card.Img>
+                                <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
 
                         </Card>
                     </Container>

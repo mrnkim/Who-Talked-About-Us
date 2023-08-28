@@ -7,6 +7,7 @@ import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
+import axios from "axios";
 
 /** Show video list and videos, search form and search result list
  *
@@ -85,41 +86,50 @@ For each video,
 
   async function updateMetadata() {
     console.log("HERE!!!!!!!!!!");
-    console.log("🚀 > updateMetadata() > indexedVideos=", indexedVideos);
-    console.log("🚀 > updateMetadata() > taskVideos=", taskVideos);
+    console.log("🚀 > updateMetadata() > INDEXED VIDEOS=", indexedVideos);
+    console.log("🚀 > updateMetadata() > TASK VIDEOS=", taskVideos);
+    if (indexedVideos) {
+      for (const indexedVid of indexedVideos) {
+        const matchingVid = taskVideos?.find(
+          (taskVid) =>
+            taskVid.metadata.filename === indexedVid.metadata.filename
+        );
+        console.log("🚀 > indexedVideos.forEach > matchingVid=", matchingVid);
 
-    // Iterate over videos.data
-    indexedVideos?.forEach((indexedVid) => {
-      // Find matching video in taskVideos
-      const matchingVid = taskVideos?.find(
-        (taskVid) => taskVid.metadata.filename === indexedVid.metadata.filename
-      );
-      console.log("🚀 > indexedVideos.forEach > matchingVid=", matchingVid);
+        if (matchingVid) {
+          const authorName = matchingVid.author.name;
+          console.log("🚀 > indexedVideos.forEach > AUTHOR NAME=", authorName);
+          const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 
-      // Check if matching video is found
-      if (matchingVid) {
-        const authorName = matchingVid.author.name;
-        console.log("🚀 > indexedVideos.forEach > authorName=", authorName);
+          const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`;
 
-        const options = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": process.env.REACT_APP_API_KEY,
-          },
-          body: JSON.stringify({ metadata: { author: authorName } }),
-        };
+          console.log("🚀 > updateMetadata > VIDEO_URL=", VIDEO_URL);
+          const data = {
+            metadata: {
+              author: authorName,
+            },
+          };
 
-        // Make API call to update metadata
-        fetch(
-          `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`,
-          options
-        )
-          .then((response) => response.json())
-          .then((data) => console.log(data))
-          .catch((err) => console.error(err));
+          const options = {
+            method: "PUT",
+            url: VIDEO_URL,
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": TWELVE_LABS_API_KEY,
+            },
+            data: data,
+          };
+          console.log("🚀 > updateMetadata > options=", options);
+
+          try {
+            const response = await axios.request(options);
+            console.log("Response from API:", response.status);
+          } catch (error) {
+            console.error("Error updating metadata:", error);
+          }
+        }
       }
-    });
+    }
   }
 
   /** Searches videos in an index with a given query*/

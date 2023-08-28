@@ -170,7 +170,7 @@ app.post(
 
     try {
       const jsonVideos = request.body.videoData;
-      console.log("🚀 > jsonVideos=", jsonVideos)
+      console.log("🚀 > jsonVideos=", jsonVideos);
       const indexName = request.body.indexName;
       const totalVideos = jsonVideos.length;
       console.log("🚀 > totalVideos=", totalVideos);
