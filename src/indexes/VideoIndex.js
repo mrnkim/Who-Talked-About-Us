@@ -50,7 +50,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
     data: [],
     isLoading: true,
   });
-  console.log("🚀 > VideoIndex > searchResults=", searchResults)
+  console.log("🚀 > VideoIndex > searchResults=", searchResults);
   const [taskResponse, setTaskResponse] = useState({
     video_id: null,
     status: null,
@@ -59,6 +59,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [error, setError] = useState("");
   const [indexedVideos, setIndexedVideos] = useState();
+  const [searchQuery, setSearchQuery] = useState(null);
 
   useEffect(() => {
     if (taskResponse.status === "ready") {
@@ -140,7 +141,8 @@ For each video,
 
   /** Searches videos in an index with a given query*/
   async function searchVideo(indexId, query) {
-    const result = await TwelveLabsApi.searchVideo(indexId, query);
+    setSearchQuery(query);
+    const result = await TwelveLabsApi.searchVideo(indexId, searchQuery);
     setSearchResults({
       data: [...result?.data],
       isLoading: false,
@@ -177,8 +179,10 @@ For each video,
 
   /** Deletes a video from an index  */
   async function deleteVideo(indexId, videoId) {
+    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId)
     try {
       const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
+      console.log("🚀 > deleteVideo > response=", response)
       //TODO: add validation if response is success
       const updatedVideos = videos.data.filter(
         (video) => video._id !== videoId
@@ -195,6 +199,11 @@ For each video,
   /** Toggle whether to show or not show the components  */
   function handleClick() {
     setShowComponents(!showComponents);
+  }
+
+  function reset() {
+    setShowComponents(true);
+    setSearchPerformed(false);
   }
 
   return (
@@ -215,25 +224,11 @@ For each video,
           </Button>
         </Col>
       </Row>
-      {showComponents && (
+      {showComponents && !searchPerformed && (
         <div>
           <div>
-            <h2 className="m-5">🔎 Search Results</h2>
             <Container className="m-5">
               <SearchForm index={currIndex} search={searchVideo} />
-            </Container>
-            <Container fluid className="m-3">
-              <Row>
-                {searchPerformed &&
-                  !searchResults.isLoading &&
-                  searchResults.data.length === 0 && <p>No results found</p>}
-                {searchResults.data && (
-                  <SearchResultList
-                    searchResults={searchResults}
-                    index_id={currIndex}
-                  />
-                )}
-              </Row>
             </Container>
           </div>
           <div>
@@ -281,7 +276,7 @@ For each video,
               <h2>👤 All Channels</h2>
               <div style={{ display: "flex", gap: "10px" }}>
                 {videos &&
-                  videos.data.map((vid) => (
+                  videos?.data?.map((vid) => (
                     <Badge key={vid._id} pill bg="primary">
                       {vid.metadata.author}
                     </Badge>
@@ -289,6 +284,27 @@ For each video,
               </div>
             </Container>
           </div>
+        </div>
+      )}
+      {searchPerformed && (
+        <div>
+          <h2 className="m-5">🔎 Search Results For "{searchQuery}" </h2>
+          <SearchForm index={currIndex} search={searchVideo} />
+          <Button onClick={reset}>Back to All Videos</Button>
+          <Container fluid className="m-3">
+            <Row>
+              {!searchResults.isLoading && searchResults.data.length === 0 && (
+                <p>No results found</p>
+              )}
+              {!searchResults.isLoading && searchResults.data.length > 0 && (
+                <SearchResultList
+                  searchResults={searchResults}
+                  index_id={currIndex}
+                  videos={videos}
+                />
+              )}
+            </Row>
+          </Container>
         </div>
       )}
     </div>
