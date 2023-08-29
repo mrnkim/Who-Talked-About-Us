@@ -1,6 +1,8 @@
 import React from "react";
 import { Col, Row, Badge, Container } from "react-bootstrap";
 import Video from "../videos/Video";
+import VideoSegmentPlayer from "../videos/VideoSegmentPlayer";
+import ReactPlayer from "react-player";
 
 function SearchResultList({ index_id, searchResults, videos }) {
   // Organize search results by author and video_id
@@ -39,8 +41,8 @@ function SearchResultList({ index_id, searchResults, videos }) {
   return (
     <div>
       {organizedResults &&
-        Object.entries(organizedResults).map(([videoAuthor, videos]) => {
-          const totalSearchResults = Object.values(videos).reduce(
+        Object.entries(organizedResults).map(([videoAuthor, authVids]) => {
+          const totalSearchResults = Object.values(authVids).reduce(
             (total, video) => total + video.length,
             0
           );
@@ -51,7 +53,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
                 {videoAuthor} ({totalSearchResults})
               </h2>
               <Row>
-                {Object.entries(videos).map(([videoTitle, results]) => (
+                {Object.entries(authVids).map(([videoTitle, results]) => (
                   <Container key={videoTitle}>
                     <h4 style={{ textAlign: "left" }}>
                       Video Title: {videoTitle} ({results.length})
@@ -64,14 +66,24 @@ function SearchResultList({ index_id, searchResults, videos }) {
                           lg={4}
                           xl={3}
                           className="mb-4"
-                          key={data._id + "-" + index}
+                          key={data.video_id + "-" + index}
                         >
-                          <Video
-                            index_id={index_id}
-                            video_id={data.video_id}
-                            start={data.start}
-                            end={data.end}
-                            showDeleteButton={false}
+                          {console.log("Data:", data)}
+                          {console.log("Videos Data:", authVids)}
+                          {console.log("Videos:", videos)}
+                          {console.log("results:", results)}
+                          <ReactPlayer
+                            url={
+                              `${
+                                videos.data.find(
+                                  (vid) => vid._id === results[0].video_id
+                                ).metadata.youtubeUrl
+                              }` + `?start=${data.start}&end=${data.end}`
+                            }
+                            controls
+                            width="100%"
+                            height="100%"
+                            light={data.thumbnail_url}
                           />
                           Start: {data.start}, End: {data.end}, Confidence:{" "}
                           <span
