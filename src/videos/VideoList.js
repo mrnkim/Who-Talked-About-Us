@@ -1,8 +1,7 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 import Video from "./Video";
-import ReactPlayer from 'react-player'
-
+import ReactPlayer from "react-player";
 
 /** Shows list of the video in an index
  *
@@ -10,21 +9,22 @@ import ReactPlayer from 'react-player'
  */
 
 function VideoList({ index_id, videos, deleteVideo }) {
-  return videos.data.map((data, index) => (
+  console.log("🚀 > VideoList > videos=", videos);
+  return videos.data.map((video, index) => (
     <Col
       sm={12}
       md={6}
       lg={4}
       xl={3}
       className="mb-4"
-      key={data._id + "-" + index}
+      key={video._id + "-" + index}
     >
-      <Video
-        index_id={index_id}
-        video_id={data._id}
-        deleteVideo={deleteVideo}
-        showDeleteButton={true}
-      />
+      <ReactPlayer
+        url={video.metadata.youtubeUrl}
+        controls
+        width="100%"
+        height="100%"
+      ></ReactPlayer>
     </Col>
   ));
 }

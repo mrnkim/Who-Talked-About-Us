@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Badge } from "react-bootstrap";
+import { Col, Row, Badge, Container } from "react-bootstrap";
 import Video from "../videos/Video";
 
 function SearchResultList({ index_id, searchResults, videos }) {
@@ -39,51 +39,62 @@ function SearchResultList({ index_id, searchResults, videos }) {
   return (
     <div>
       {organizedResults &&
-        Object.entries(organizedResults).map(([videoAuthor, videos]) => (
-          <div key={videoAuthor}>
-            <h2>Author: {videoAuthor}</h2>
-            <Row>
-              {Object.entries(videos).map(([videoTitle, results]) => (
-                <Col key={videoTitle}>
-                  <h3>Video Title: {videoTitle}</h3>
-                  <Row>
-                    {results.map((data, index) => (
-                      <Col
-                        sm={12}
-                        md={6}
-                        lg={4}
-                        xl={3}
-                        className="mb-4"
-                        key={data._id + "-" + index}
-                      >
-                        <Video
-                          index_id={index_id}
-                          video_id={data.video_id}
-                          start={data.start}
-                          end={data.end}
-                          showDeleteButton={false}
-                        />
-                        Start: {data.start}, End: {data.end}, Confidence:{" "}
-                        <span
-                          style={{
-                            color:
-                              data.confidence === "high"
-                                ? "green"
-                                : data.confidence === "medium"
-                                ? "orange"
-                                : "red",
-                          }}
+        Object.entries(organizedResults).map(([videoAuthor, videos]) => {
+          const totalSearchResults = Object.values(videos).reduce(
+            (total, video) => total + video.length,
+            0
+          );
+
+          return (
+            <div key={videoAuthor}>
+              <h2>
+                {videoAuthor} ({totalSearchResults})
+              </h2>
+              <Row>
+                {Object.entries(videos).map(([videoTitle, results]) => (
+                  <Container key={videoTitle}>
+                    <h4 style={{ textAlign: "left" }}>
+                      Video Title: {videoTitle} ({results.length})
+                    </h4>
+                    <Row>
+                      {results.map((data, index) => (
+                        <Col
+                          sm={12}
+                          md={6}
+                          lg={4}
+                          xl={3}
+                          className="mb-4"
+                          key={data._id + "-" + index}
                         >
-                          {data.confidence}
-                        </span>
-                      </Col>
-                    ))}
-                  </Row>
-                </Col>
-              ))}
-            </Row>
-          </div>
-        ))}
+                          <Video
+                            index_id={index_id}
+                            video_id={data.video_id}
+                            start={data.start}
+                            end={data.end}
+                            showDeleteButton={false}
+                          />
+                          Start: {data.start}, End: {data.end}, Confidence:{" "}
+                          <span
+                            style={{
+                              color:
+                                data.confidence === "high"
+                                  ? "green"
+                                  : data.confidence === "medium"
+                                  ? "orange"
+                                  : "red",
+                            }}
+                          >
+                            {data.confidence}
+                          </span>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Container>
+                ))}
+              </Row>
+            </div>
+          );
+        })}
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
         <div>
           <h2>Channels with no search results</h2>

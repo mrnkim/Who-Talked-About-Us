@@ -103,8 +103,8 @@ For each video,
         if (matchingVid) {
           const authorName = matchingVid.author.name;
           console.log("🚀 > indexedVideos.forEach > AUTHOR NAME=", authorName);
-          const youTubeUrl = matchingVid.video_url || matchingVid.url;
-          console.log("🚀 > updateMetadata > YouTubeUrl=", youTubeUrl);
+          const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
+          console.log("🚀 > updateMetadata > YouTubeUrl=", youtubeUrl);
           const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 
           const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`;
@@ -113,7 +113,7 @@ For each video,
           const data = {
             metadata: {
               author: authorName,
-              youTubeUrl: youTubeUrl,
+              youtubeUrl: youtubeUrl,
             },
           };
 
@@ -179,18 +179,18 @@ For each video,
 
   /** Deletes a video from an index  */
   async function deleteVideo(indexId, videoId) {
-    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId)
+    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId);
     try {
       const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
-      console.log("🚀 > deleteVideo > response=", response)
+      console.log("🚀 > deleteVideo > response=", response);
       //TODO: add validation if response is success
-      const updatedVideos = videos.data.filter(
-        (video) => video._id !== videoId
-      );
-      setVideos((videos) => ({
-        data: updatedVideos,
-        isLoading: false,
-      }));
+      // const updatedVideos = videos.data.filter(
+      //   (video) => video._id !== videoId
+      // );
+      // setVideos((videos) => ({
+      //   data: updatedVideos,
+      //   isLoading: false,
+      // }));
     } catch (err) {
       console.error(err);
     }
