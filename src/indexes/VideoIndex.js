@@ -195,10 +195,50 @@ For each video,
       console.error(err);
     }
   }
+  async function setAuthorDataToFalse() {
+    const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
+    console.log("🚀 > setAuthorDataToFalse > videos=", videos);
+    let count = 0; // Counter to keep track of the number of videos processed
+
+    for (let video of videos.data) {
+      const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${video._id}`;
+
+      const data = {
+        metadata: {
+          author: false,
+        },
+      };
+
+      const options = {
+        method: "PUT",
+        url: VIDEO_URL,
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": TWELVE_LABS_API_KEY,
+        },
+        data: data,
+      };
+
+      try {
+        const response = await axios.request(options);
+        console.log("Response from API:", response.status);
+        console.log("metadata:", video.metadata);
+
+        count++; // Increment the counter
+
+        if (count === 10) {
+          break; // Break the loop after processing 10 videos
+        }
+      } catch (error) {
+        console.error("Error updating metadata:", error);
+      }
+    }
+  }
 
   /** Toggle whether to show or not show the components  */
   function handleClick() {
     setShowComponents(!showComponents);
+    setAuthorDataToFalse();
   }
 
   function reset() {
