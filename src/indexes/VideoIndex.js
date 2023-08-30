@@ -89,9 +89,6 @@ For each video,
 */
 
   async function updateMetadata() {
-    console.log("HERE!!!!!!!!!!");
-    console.log("🚀 > updateMetadata() > INDEXED VIDEOS=", indexedVideos);
-    console.log("🚀 > updateMetadata() > TASK VIDEOS=", taskVideos);
     if (indexedVideos) {
       for (const indexedVid of indexedVideos) {
         const matchingVid = taskVideos?.find(
@@ -195,56 +192,59 @@ For each video,
       console.error(err);
     }
   }
-  async function setAuthorDataToFalse() {
-    const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-    console.log("🚀 > setAuthorDataToFalse > videos=", videos);
-    let count = 0; // Counter to keep track of the number of videos processed
+  // async function setAuthorDataToFalse() {
+  //   const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
+  //   let count = 0;
 
-    for (let video of videos.data) {
-      const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${video._id}`;
+  //   for (let video of videos.data) {
+  //     const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${video._id}`;
 
-      const data = {
-        metadata: {
-          author: false,
-        },
-      };
+  //     const data = {
+  //       metadata: {
+  //         author: false,
+  //       },
+  //     };
 
-      const options = {
-        method: "PUT",
-        url: VIDEO_URL,
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": TWELVE_LABS_API_KEY,
-        },
-        data: data,
-      };
+  //     const options = {
+  //       method: "PUT",
+  //       url: VIDEO_URL,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "x-api-key": TWELVE_LABS_API_KEY,
+  //       },
+  //       data: data,
+  //     };
 
-      try {
-        const response = await axios.request(options);
-        console.log("Response from API:", response.status);
-        console.log("metadata:", video.metadata);
+  //     try {
+  //       const response = await axios.request(options);
+  //       console.log("Response from API:", response.status);
+  //       console.log("metadata:", video.metadata);
 
-        count++; // Increment the counter
+  //       count++;
 
-        if (count === 10) {
-          break; // Break the loop after processing 10 videos
-        }
-      } catch (error) {
-        console.error("Error updating metadata:", error);
-      }
-    }
-  }
+  //       if (count === 10) {
+  //         break;
+  //       }
+  //     } catch (error) {
+  //       console.error("Error updating metadata:", error);
+  //     }
+  //   }
+  // }
 
   /** Toggle whether to show or not show the components  */
   function handleClick() {
     setShowComponents(!showComponents);
-    setAuthorDataToFalse();
   }
 
   function reset() {
     setShowComponents(true);
     setSearchPerformed(false);
   }
+
+  const uniqueAuthors = new Set();
+  videos?.data?.forEach((vid) => {
+    uniqueAuthors.add(vid.metadata.author);
+  });
 
   return (
     <div>
@@ -273,17 +273,22 @@ For each video,
           </div>
           <div>
             <div>
-              <h2>📹 All Videos</h2>
               <Container className="m-5">
-                <UploadYoutubeVideo
-                  indexedVideos={indexedVideos}
-                  setIndexedVideos={setIndexedVideos}
-                  index={index}
-                  index_id={index_id}
-                  taskVideos={taskVideos}
-                  setTaskVideos={setTaskVideos}
-                />
-
+                <Container fluid className="m-4 mt-5">
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <span style={{ fontSize: "1.5em" }}>📺 All Channels: </span>
+                    {[...uniqueAuthors].map((author) => (
+                      <Badge
+                        key={author}
+                        pill
+                        bg="success"
+                        style={{ fontSize: "1em", padding: "0.8em" }}
+                      >
+                        {author}
+                      </Badge>
+                    ))}
+                  </div>
+                </Container>
                 <Row className="m-3">
                   {isUploading && (
                     <p>It might take a couple of minutes to finish uploading</p>
@@ -301,7 +306,7 @@ For each video,
                 </Row>
               </Container>
             </div>
-            <Container fluid className="m-3">
+            <Container fluid className="m-3 mb-5">
               <Row>
                 {videos.data && (
                   <VideoList
@@ -312,25 +317,29 @@ For each video,
                 )}
               </Row>
             </Container>
-            <Container fluid className="m-3">
-              <h2>👤 All Channels</h2>
-              <div style={{ display: "flex", gap: "10px" }}>
-                {videos &&
-                  videos?.data?.map((vid) => (
-                    <Badge key={vid._id} pill bg="primary">
-                      {vid.metadata.author}
-                    </Badge>
-                  ))}
-              </div>
+            <Container fluid className="m-3 mb-5">
+              <h1 className="display-6">Add New Videos</h1>
+              <UploadYoutubeVideo
+                indexedVideos={indexedVideos}
+                setIndexedVideos={setIndexedVideos}
+                index={index}
+                index_id={index_id}
+                taskVideos={taskVideos}
+                setTaskVideos={setTaskVideos}
+              />
             </Container>
           </div>
         </div>
       )}
       {searchPerformed && (
         <div>
-          <h2 className="m-5">🔎 Search Results For "{searchQuery}" </h2>
+          <h1 className="mt-5 display-6">
+            🔎 Search Results For "{searchQuery}"{" "}
+          </h1>
           <SearchForm index={currIndex} search={searchVideo} />
-          <Button onClick={reset}>Back to All Videos</Button>
+          <Button onClick={reset} className="m-3">
+            Back to All Videos
+          </Button>
           <Container fluid className="m-3">
             <Row>
               {!searchResults.isLoading && searchResults.data.length === 0 && (

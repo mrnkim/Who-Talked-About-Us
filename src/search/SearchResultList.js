@@ -48,16 +48,20 @@ function SearchResultList({ index_id, searchResults, videos }) {
           );
 
           return (
-            <div key={videoAuthor}>
-              <h2>
-                {videoAuthor} ({totalSearchResults})
-              </h2>
+            <div key={videoAuthor} className="m-3">
+              <Badge
+                pill
+                bg="success"
+                style={{ fontSize: "1.5em", padding: "0.8em" }}
+              >
+                {videoAuthor} ({totalSearchResults} Mentions)
+              </Badge>
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
-                  <Container key={videoTitle}>
-                    <h4 style={{ textAlign: "left" }}>
-                      Video Title: {videoTitle} ({results.length})
-                    </h4>
+                  <Container key={videoTitle} className="m-2">
+                    <h5 style={{ textAlign: "left" }}>
+                      Video: {videoTitle} ({results.length})
+                    </h5>
                     <Row>
                       {results.map((data, index) => (
                         <Col
@@ -65,13 +69,9 @@ function SearchResultList({ index_id, searchResults, videos }) {
                           md={6}
                           lg={4}
                           xl={3}
-                          className="mb-4"
+                          className="m-1 mb-5"
                           key={data.video_id + "-" + index}
                         >
-                          {console.log("Data:", data)}
-                          {console.log("Videos Data:", authVids)}
-                          {console.log("Videos:", videos)}
-                          {console.log("results:", results)}
                           <ReactPlayer
                             url={
                               `${
@@ -85,19 +85,21 @@ function SearchResultList({ index_id, searchResults, videos }) {
                             height="100%"
                             light={data.thumbnail_url}
                           />
-                          Start: {data.start}, End: {data.end}, Confidence:{" "}
-                          <span
-                            style={{
-                              color:
-                                data.confidence === "high"
-                                  ? "green"
-                                  : data.confidence === "medium"
-                                  ? "orange"
-                                  : "red",
-                            }}
-                          >
-                            {data.confidence}
-                          </span>
+                          <div>
+                            Start: {data.start}, End: {data.end}, Confidence:{" "}
+                            <span
+                              style={{
+                                color:
+                                  data.confidence === "high"
+                                    ? "green"
+                                    : data.confidence === "medium"
+                                    ? "orange"
+                                    : "red",
+                              }}
+                            >
+                              {data.confidence}
+                            </span>
+                          </div>
                         </Col>
                       ))}
                     </Row>
@@ -109,9 +111,15 @@ function SearchResultList({ index_id, searchResults, videos }) {
         })}
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
         <div>
-          <h2>Channels with no search results</h2>
+          <h1 className="mb-4 display-6">❌ Channels with no search results</h1>
           {noResultAuthors.map((author, index) => (
-            <Badge key={index} className="mr-2">
+            <Badge
+              key={index}
+              className="mr-2"
+              pill
+              bg="success"
+              style={{ fontSize: "1.5em", padding: "0.8em" }}
+            >
               {author}
             </Badge>
           ))}

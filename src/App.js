@@ -21,7 +21,7 @@ function App() {
     data: null,
     isLoading: true,
   });
-  console.log("🚀 > App > indexes=", indexes)
+  console.log("🚀 > App > indexes=", indexes);
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
@@ -55,7 +55,9 @@ function App() {
   return (
     <div className="App">
       <Container className="m-auto p-3">
-        <h1 className="m-3">UGC Analyzer</h1>
+        <h1 className="m-3 display-5">
+          UGC Analyzer - Who Mentioned Our Brand?
+        </h1>
       </Container>
       <Container className="m-auto p-3">
         <IndexForm indexes={indexes.data} addIndex={addIndex} />

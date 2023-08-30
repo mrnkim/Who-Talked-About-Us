@@ -1,5 +1,5 @@
 import React from "react";
-import { Col } from "react-bootstrap";
+import { Col, Badge, Container } from "react-bootstrap";
 import Video from "./Video";
 import ReactPlayer from "react-player";
 
@@ -25,6 +25,12 @@ function VideoList({ index_id, videos, deleteVideo }) {
         width="100%"
         height="100%"
       ></ReactPlayer>
+      <div>
+        <Badge bg="success" pill style={{ marginRight: "0.5rem" }}>
+          {video.metadata.author}
+        </Badge>
+        <span>{video.metadata.filename.replace(".mp4", "")}</span>
+      </div>
     </Col>
   ));
 }

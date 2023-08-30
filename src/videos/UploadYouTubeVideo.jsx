@@ -32,18 +32,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         setSelectedJSON(event.target.files[0])
     }
 
-    // const handleReset = () => {
-    //     setIndexId(null)
-    //     setIndexedVideos(null)
-    //     setTaskVideos(null)
-    //     setSelectedJSON(null)
-    //     setYoutubeChannelId(null)
-    //     setPendingApiRequest(false)
-    //     setIndexName(null)
-    //     setSearchQuery(null)
-    //     setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
-    // }
-
     const updateApiElement = (text) => {
         if (text) {
             let apiRequestElement =
@@ -238,13 +226,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                             </Button>
                         </Container>
 
-
-
-                        {/* <Container>
-                            <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
-                                Reset
-                            </Button>
-                        </Container> */}
                     </Container>
 
                         { apiElement }
@@ -329,38 +310,33 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         color: '#fff',
         border: 'none',
         cursor: 'pointer'
-    }}>Select JSON URL File</label>
+    }}>Select JSON File</label>
     <input
         id="jsonFileInput"
         type='file'
         accept='.json'
         hidden
         onChange={handleJSONSelect}
-        disabled={!!youtubeChannelId || pendingApiRequest || !!indexId}
+        disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
     />
                     </Container>
-
-                    {/* <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Index ID' variant='standard' fullWidth onChange={ handleIndexIdEntry } disabled={ !!selectedJSON || !!youtubeChannelId }/>
-                    </Container> */}
-
-                    <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Channel ID' variant='standard' fullWidth onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId }/>
-                    </Container>
-
-                    <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Playlist ID' variant='standard' fullWidth onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId }/>
-                    </Container>
-
-                    <Container display='flex' justifyContent='center' alignItems='center' xs>
+                    <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-3 mb-2">
                         <strong>Selected File:</strong>
                     </Container>
 
-                    <Container display='flex' justifyContent='center' alignItems='center' xs>
+                    <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-1 mb-2">
                         { selectedJSON ? selectedJSON.name : 'None' }
                     </Container>
+                    <Container sx={{mb: 3}} display='flex' xs={3}>
+                        <TextField label='Channel ID' variant='standard' fullWidth onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
+                    </Container>
 
-                    <Container display='flex' xs>
+                    <Container sx={{mb: 3}} display='flex' xs={3}>
+                        <TextField label='Playlist ID' variant='standard' fullWidth onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
+                    </Container>
+
+
+                    <Container display='flex' xs className="mt-3">
                         <Button disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
                             Submit
                         </Button>
