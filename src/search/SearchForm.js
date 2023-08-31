@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import InputForm from "../common/InputForm";
 import { Alert } from "react-bootstrap";
 
@@ -30,8 +30,9 @@ function SearchForm({ index, search }) {
       search(index, trimmedQuery);
     }
   }
+
   return (
-    <div>
+    <div className="d-flex justify-content-center align-items-center">
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}

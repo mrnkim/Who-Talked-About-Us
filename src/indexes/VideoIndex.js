@@ -260,11 +260,24 @@ For each video,
         </Col>
         <Col xs="auto">
           <Button variant="danger" onClick={() => deleteIndex(currIndex)}>
-            Delete
+            <i class="bi bi-trash"></i>{" "}
           </Button>
         </Col>
       </Row>
-      {showComponents && !searchPerformed && (
+      {showComponents && videos.data.length === 0 && (
+        <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
+          <h1 className="display-6 m-5">Add New Videos</h1>
+          <UploadYoutubeVideo
+            indexedVideos={indexedVideos}
+            setIndexedVideos={setIndexedVideos}
+            index={index}
+            index_id={index_id}
+            taskVideos={taskVideos}
+            setTaskVideos={setTaskVideos}
+          />
+        </Container>
+      )}
+      {showComponents && !searchPerformed && videos.data.length > 0 && (
         <div>
           <div>
             <Container className="m-5">
@@ -275,14 +288,19 @@ For each video,
             <div>
               <Container className="m-5">
                 <Container fluid className="m-4 mt-5">
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <span style={{ fontSize: "1.5em" }}>📺 All Channels: </span>
+                  <div
+                    style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
+                  >
+                    <span style={{ fontSize: "1.5em" }}>
+                      {" "}
+                      All Channels in Index:{" "}
+                    </span>
                     {[...uniqueAuthors].map((author) => (
                       <Badge
                         key={author}
                         pill
                         bg="success"
-                        style={{ fontSize: "1em", padding: "0.8em" }}
+                        style={{ fontSize: "1em", padding: "0.5em" }}
                       >
                         {author}
                       </Badge>
@@ -306,7 +324,7 @@ For each video,
                 </Row>
               </Container>
             </div>
-            <Container fluid className="m-3 mb-5">
+            <Container fluid className="mb-5">
               <Row>
                 {videos.data && (
                   <VideoList
@@ -317,8 +335,8 @@ For each video,
                 )}
               </Row>
             </Container>
-            <Container fluid className="m-3 mb-5">
-              <h1 className="display-6">Add New Videos</h1>
+            <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
+              <h1 className="display-6 m-5">Add New Videos</h1>
               <UploadYoutubeVideo
                 indexedVideos={indexedVideos}
                 setIndexedVideos={setIndexedVideos}
@@ -337,7 +355,8 @@ For each video,
             🔎 Search Results For "{searchQuery}"{" "}
           </h1>
           <SearchForm index={currIndex} search={searchVideo} />
-          <Button onClick={reset} className="m-3">
+          <Button onClick={reset} className="m-5">
+            <i class="bi bi-arrow-counterclockwise"></i>
             Back to All Videos
           </Button>
           <Container fluid className="m-3">

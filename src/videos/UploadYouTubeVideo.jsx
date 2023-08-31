@@ -32,6 +32,17 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         setSelectedJSON(event.target.files[0])
     }
 
+    const handleReset = () => {
+        setIndexedVideos(null)
+        setTaskVideos(null)
+        setSelectedJSON(null)
+        setYoutubeChannelId(null)
+        setYoutubePlaylistId(null)
+        setPendingApiRequest(false)
+        setSearchQuery(null)
+        setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
+    }
+
     const updateApiElement = (text) => {
         if (text) {
             let apiRequestElement =
@@ -255,11 +266,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             let element =
                 <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}>
                     <Container xs>
-                        <Card>
+                        <Card  style={{ border: 'none', margin: "1em"}}>
                             <a href={ video.video_url || video.url } target='_blank'>
                                 <Card.Img
-                                    sx={{ height: '20vh' }}
                                     src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
+                                    style={{ width: '60%', height: '60%' }}
                                 />
                             </a>
 
@@ -273,21 +284,15 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             <>
                 <Container justifyContent='center' alignItems='center' direction='column' container disableEqualOverflow>
                     <Container direction='row' container sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifyContent='center' alignItems='end'>
-                        {/* <Container>
-                            <TextField label='Index Name' variant='standard' fullWidth onChange={ (event) => setIndexName(event.target.value)} disabled={ pendingApiRequest ? true : false }/>
-                        </Container> */}
-
-                        <Container>
-                            <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false }>
-                                Index Videos
+                        <Container className="m-3">
+                            <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
+                                Add Videos
+                            </Button>
+                            <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                                  Reset
                             </Button>
                         </Container>
-
-                        {/* <Container>
-                            <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
-                                Reset
-                            </Button>
-                        </Container> */}
                     </Container>
 
                         { apiElement }
@@ -302,37 +307,52 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         controls =
             <>
                 <Container display='flex' justifyContent='center' alignItems='center' container direction='column' xs>
-                    <Container display='flex' xs>
-                    <label htmlFor="jsonFileInput" style={{
-        display: 'inline-block',
-        padding: '10px 20px',
-        background: '#007bff',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer'
-    }}>Select JSON File</label>
-    <input
-        id="jsonFileInput"
-        type='file'
-        accept='.json'
-        hidden
-        onChange={handleJSONSelect}
-        disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
-    />
-                    </Container>
-                    <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-3 mb-2">
-                        <strong>Selected File:</strong>
-                    </Container>
+                    {/* <Container display='flex' xs> */}
+                    <Container display="flex" justifyContent='center' alignItems='center' >
+                        <label htmlFor="jsonFileInput" style={{
+                                                            display: 'inline-block',
+                                                            padding: '10px 20px',
+                                                            background: '#fff', // White background
+                                                            color: '#6C757D', // Font color in secondary
+                                                            border: '1px solid #6C757D', // Secondary outline
+                                                            borderRadius: '4px', // Rounded corners
+                                                            cursor: 'pointer',
+                                                            marginRight: '10px', // Added margin-right property
+                                                            transition: 'color 0.3s', // Added transition for smooth color change
+                                                            }}
+                                                            onMouseOver={(event) => {
+                                                                event.target.style.color = 'black'; // Change color on hover
+                                                              }}
+                                                              onMouseOut={(event) => {
+                                                                event.target.style.color = '#6C757D'; // Reset color when not hovering
+                                                              }}
+                                                            >
+                                                              Select JSON File
+                                                            </label>
+                        <input
+                        id="jsonFileInput"
+                        type='file'
+                        accept='.json'
+                        hidden
+                        onChange={handleJSONSelect}
+                        disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
+                        />
+                    {/* </Container> */}
 
-                    <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-1 mb-2">
+                    {/* <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-3 mb-2"> */}
+                        <strong>Selected File: </strong>
+                    {/* </Container> */}
+
+                    {/* <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-1 mb-2"> */}
                         { selectedJSON ? selectedJSON.name : 'None' }
+                    {/* </Container> */}
                     </Container>
                     <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Channel ID' variant='standard' fullWidth onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
+                        <TextField label='Channel ID' variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
                     </Container>
 
                     <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Playlist ID' variant='standard' fullWidth onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
+                        <TextField label='Playlist ID' variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
                     </Container>
 
 

@@ -53,7 +53,7 @@ function App() {
 
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
-    <div className="App">
+    <div className="App" style={{ maxWidth: "1200px", margin: "0 auto" }}>
       <Container className="m-auto p-3">
         <h1 className="m-3 display-5">
           UGC Analyzer - Who Mentioned Our Brand?

@@ -16,7 +16,7 @@ function VideoList({ index_id, videos, deleteVideo }) {
       md={6}
       lg={4}
       xl={3}
-      className="mb-4"
+      className="mb-5"
       key={video._id + "-" + index}
     >
       <ReactPlayer

@@ -52,14 +52,25 @@ function SearchResultList({ index_id, searchResults, videos }) {
               <Badge
                 pill
                 bg="success"
-                style={{ fontSize: "1.5em", padding: "0.8em" }}
+                style={{
+                  fontSize: "1em",
+                  padding: "0.5em",
+                  width: "100%",
+                  textAlign: "left",
+                }}
               >
                 {videoAuthor} ({totalSearchResults} Mentions)
               </Badge>
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
                   <Container key={videoTitle} className="m-2">
-                    <h5 style={{ textAlign: "left" }}>
+                    <h5
+                      style={{
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        margin: "1em",
+                      }}
+                    >
                       Video: {videoTitle} ({results.length})
                     </h5>
                     <Row>
@@ -110,15 +121,17 @@ function SearchResultList({ index_id, searchResults, videos }) {
           );
         })}
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
-        <div>
-          <h1 className="mb-4 display-6">❌ Channels with no search results</h1>
-          {noResultAuthors.map((author, index) => (
+        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+          <div style={{ fontSize: "1.5em" }}>
+            ❌ Channels with no search results:
+          </div>
+          {Array.from(new Set(noResultAuthors)).map((author, index) => (
             <Badge
               key={index}
               className="mr-2"
               pill
               bg="success"
-              style={{ fontSize: "1.5em", padding: "0.8em" }}
+              style={{ fontSize: "1em", padding: "0.5em" }}
             >
               {author}
             </Badge>
