@@ -48,7 +48,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             let apiRequestElement =
                 <Box>
                     <LinearProgress/>
-                    <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
+                    <Typography variant="body2" color="text.secondary" display='flex' alignitems='center'>
                         { text }
                     </Typography>
                 </Box>
@@ -210,7 +210,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         videos = indexedVideos.map(video => {
             let element =
             <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
-            <Container xs>
+            <Container>
                         <Card>
                                 <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
 
@@ -224,8 +224,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
         controls =
             <>
-                <Container justifyContent='center' alignItems='center' direction='column' container disableEqualOverflow>
-                    <Container direction='row' container sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifyContent='center' alignItems='end'>
+                <Container justifycontent='center' alignitems='center' direction='column' disableEqualOverflow>
+                    <Container direction='row' sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container>
                             <TextField label='Search' variant='standard' fullWidth
                                 disabled={ pendingApiRequest ? true : false } onChange={ (event) => setSearchQuery(event.target.value) }/>
@@ -242,7 +242,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         { apiElement }
 
 
-                    <Container direction='row' spacing={ 2 } justifyContent='center' alignItems='center' container sx={{m: '8vh'}}>
+                    <Container direction='row' spacing={ 2 } justifycontent='center' alignitems='center'  sx={{m: '8vh'}}>
                         { videos }
                     </Container>
                 </Container>
@@ -265,7 +265,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
             let element =
                 <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}>
-                    <Container xs>
+                    <Container>
                         <Card  style={{ border: 'none', margin: "1em"}}>
                             <a href={ video.video_url || video.url } target='_blank'>
                                 <Card.Img
@@ -282,14 +282,14 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
         controls =
             <>
-                <Container justifyContent='center' alignItems='center' direction='column' container disableEqualOverflow>
-                    <Container direction='row' container sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifyContent='center' alignItems='end'>
+                <Container justifycontent='center' alignitems='center' direction='column'  disableEqualOverflow>
+                    <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
                             <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
                                 Add Videos
                             </Button>
                             <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
-                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <i className="bi bi-arrow-counterclockwise"></i>
                                   Reset
                             </Button>
                         </Container>
@@ -298,7 +298,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         { apiElement }
 
 
-                    <Container direction='row' spacing={ 2 } justifyContent='center' alignItems='center' container sx={{m: '8vh'}}>
+                    <Container direction='row' spacing={ 2 } justifycontent='center' alignItems='center'  sx={{m: '8vh'}}>
                         { videos }
                     </Container>
                 </Container>
@@ -306,9 +306,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     } else {
         controls =
             <>
-                <Container display='flex' justifyContent='center' alignItems='center' container direction='column' xs>
+                <Container display='flex' justifycontent='center' alignitems='center'  direction='column'>
                     {/* <Container display='flex' xs> */}
-                    <Container display="flex" justifyContent='center' alignItems='center' >
+                    <Container display="flex" justifycontent='center' alignitems='center' >
                         <label htmlFor="jsonFileInput" style={{
                                                             display: 'inline-block',
                                                             padding: '10px 20px',
@@ -339,11 +339,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         />
                     {/* </Container> */}
 
-                    {/* <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-3 mb-2"> */}
+                    {/* <Container display='flex' justifyContent='center' alignitems='center' className="mt-3 mb-2"> */}
                         <strong>Selected File: </strong>
                     {/* </Container> */}
 
-                    {/* <Container display='flex' justifyContent='center' alignItems='center' xs className="mt-1 mb-2"> */}
+                    {/* <Container display='flex' justifyContent='center' alignitems='center' className="mt-1 mb-2"> */}
                         { selectedJSON ? selectedJSON.name : 'None' }
                     {/* </Container> */}
                     </Container>
@@ -356,7 +356,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                     </Container>
 
 
-                    <Container display='flex' xs className="mt-3">
+                    <Container display='flex' className="mt-3">
                         <Button disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
                             Submit
                         </Button>

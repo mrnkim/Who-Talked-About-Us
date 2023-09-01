@@ -118,6 +118,27 @@ app.get("/get-index-info", async (request, response, next) => {
   }
 });
 
+app.get("/fetch-videos", async (request, response, next) => {
+  try {
+    const indexId = request.query.INDEX_ID;
+    const headers = {
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": TWELVE_LABS_API_KEY,
+      },
+    };
+    console.log(indexId);
+    const videos = await TWELVE_LABS_API.get(
+      `/indexes/${indexId}/videos?&page_limit=50`,
+      headers
+    );
+    response.json(videos.data);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 app.get("/json-video-info", async (request, response, next) => {
   try {
     let url = request.query.URL;

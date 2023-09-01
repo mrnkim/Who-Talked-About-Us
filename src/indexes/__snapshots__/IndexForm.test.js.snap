@@ -4,7 +4,7 @@ exports[`matches snapshot 1`] = `
 <div>
   <div>
     <div
-      class="mt-5 container"
+      class="mt-5"
     >
       <div
         class="row"

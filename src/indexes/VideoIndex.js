@@ -39,6 +39,9 @@ import Stack from "react-bootstrap/Stack";
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
  */
 
+const SERVER_BASE_URL = new URL("http://localhost:4001");
+const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
+
 function VideoIndex({ index, deleteIndex, index_id }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
@@ -76,18 +79,15 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   }, [indexedVideos]);
 
   /** Fetches videos and update videos state */
-  async function fetchVideos() {
-    const responses = await TwelveLabsApi.getVideos(currIndex);
-    setVideos({ data: responses, isLoading: false });
-  }
+  const fetchVideos = async () => {
+    const queryUrl = FETCH_VIDEOS_URL;
+    queryUrl.searchParams.set("INDEX_ID", currIndex);
+    const response = await fetch(queryUrl.href);
+    const data = await response.json();
+    setVideos({ data: data.data, isLoading: false });
+  };
 
-  /*
-For each video,
-1. Get video id (Twelve Labs)
-2. Find matching video's channel name from taskVideos using title
-3. Make an API call to add meta data to video
-*/
-
+  /** Add "author" and "youtubeUrl" meta data to each video **/
   async function updateMetadata() {
     if (indexedVideos) {
       for (const indexedVid of indexedVideos) {
@@ -260,7 +260,7 @@ For each video,
         </Col>
         <Col xs="auto">
           <Button variant="danger" onClick={() => deleteIndex(currIndex)}>
-            <i class="bi bi-trash"></i>{" "}
+            <i className="bi bi-trash"></i>{" "}
           </Button>
         </Col>
       </Row>
@@ -356,7 +356,7 @@ For each video,
           </h1>
           <SearchForm index={currIndex} search={searchVideo} />
           <Button onClick={reset} className="m-5">
-            <i class="bi bi-arrow-counterclockwise"></i>
+            <i className="bi bi-arrow-counterclockwise"></i>
             Back to All Videos
           </Button>
           <Container fluid className="m-3">
