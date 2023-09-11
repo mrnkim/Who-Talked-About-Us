@@ -65,9 +65,6 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   const [error, setError] = useState("");
   const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState(null);
-  const location = useLocation(); // Get the current location object
-  const navigate = useNavigate(); // Get the history object for navigation
-  const [isAllIndexed, setIsAllIndexed] = useState(false);
 
   useEffect(() => {
     fetchVideos();
