@@ -227,7 +227,7 @@ app.post(
               console.error(error);
             }
           })
-        ).catch(next);
+        );
 
         console.log(
           `Submitting Videos For Indexing | Chunk ${

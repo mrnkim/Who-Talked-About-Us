@@ -104,7 +104,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
           console.log("🚀 > updateMetadata > YouTubeUrl=", youtubeUrl);
           const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 
-          const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${indexedVid._id}`;
+          const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
 
           console.log("🚀 > updateMetadata > VIDEO_URL=", VIDEO_URL);
           const data = {

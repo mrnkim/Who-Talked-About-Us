@@ -44,7 +44,7 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 3. Create .env file and store/update the values of API_KEY and API_URL
    ```
    .env
-   REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
+   REACT_APP_API_URL=https://api.twelvelabs.io/p/v1.1
    REACT_APP_API_KEY=YOUR_API_KEY
    ```
 

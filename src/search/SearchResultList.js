@@ -10,21 +10,21 @@ function SearchResultList({ index_id, searchResults, videos }) {
   console.log("🚀 > SearchResultList > organizedResults=", organizedResults);
   searchResults.data.forEach((result) => {
     const videoId = result.video_id;
-    const videoAuthor = videos.data.find((vid) => vid._id === videoId).metadata
-      .author;
-    const videoTitle = videos.data
-      .find((vid) => vid._id === videoId)
-      .metadata.filename.replace(".mp4", "");
+    const video = videos.data.find((vid) => vid._id === videoId);
+    if (video) {
+      const videoAuthor = video.metadata.author;
+      const videoTitle = video.metadata.filename.replace(".mp4", "");
 
-    if (!organizedResults[videoAuthor]) {
-      organizedResults[videoAuthor] = {};
+      if (!organizedResults[videoAuthor]) {
+        organizedResults[videoAuthor] = {};
+      }
+
+      if (!organizedResults[videoAuthor][videoTitle]) {
+        organizedResults[videoAuthor][videoTitle] = [];
+      }
+
+      organizedResults[videoAuthor][videoTitle].push(result);
     }
-
-    if (!organizedResults[videoAuthor][videoTitle]) {
-      organizedResults[videoAuthor][videoTitle] = [];
-    }
-
-    organizedResults[videoAuthor][videoTitle].push(result);
   });
 
   const noResultAuthors = [];
@@ -59,7 +59,8 @@ function SearchResultList({ index_id, searchResults, videos }) {
                   textAlign: "left",
                 }}
               >
-                {videoAuthor} ({totalSearchResults} Mentions)
+                {videoAuthor} ({totalSearchResults}{" "}
+                {totalSearchResults <= 1 ? "Mention" : "Mentions"})
               </Badge>
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
@@ -121,14 +122,14 @@ function SearchResultList({ index_id, searchResults, videos }) {
           );
         })}
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
-        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+        <div>
           <div style={{ fontSize: "1.5em" }}>
-            ❌ Channels with no search results:
+            ❌ Channels with no search results
           </div>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
             <Badge
               key={index}
-              className="mr-2"
+              className="m-1"
               pill
               bg="success"
               style={{ fontSize: "1em", padding: "0.5em" }}
