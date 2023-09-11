@@ -71,7 +71,6 @@ function App() {
                 index_id={index._id}
                 className="mb-3"
                 deleteIndex={deleteIndex}
-                key={index._id}
               />
             </div>
           ))}

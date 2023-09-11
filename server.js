@@ -243,7 +243,7 @@ app.post(
         ).catch(next);
 
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
-        console.log(chunkVideoIndexingResponses);
+        console.log("🚀 > chunkVideoIndexingResponses=", chunkVideoIndexingResponses)
 
         processedVideosCount += videoChunk.length;
 

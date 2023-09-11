@@ -19,6 +19,7 @@ const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
+    console.log("🚀 > UploadYoutubeVideo > pendingApiRequest,=", pendingApiRequest,)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
@@ -84,11 +85,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             }
         } else if (youtubeChannelId) {
             const response = await getChannelVideoInfo(youtubeChannelId)
-            console.log("🚀 > getInfo > youtubeChannelId response=", response)
             setTaskVideos(response)
         } else if (youtubePlaylistId) {
             const response = await getPlaylistVideoInfo(youtubePlaylistId)
-            console.log("🚀 > getInfo > youtubePlaylistId response=", response)
             setTaskVideos(response)
         } else if (indexId) {
             const response = await getIndexInfo()
@@ -108,7 +107,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         const queryUrl = CHANNEL_VIDEO_INFO_URL
         queryUrl.searchParams.set('CHANNEL_ID', youtubeChannelId)
         const response = await fetch(queryUrl.href)
-        console.log("🚀 > getChannelVideoInfo > response=", response)
         return await response.json()
     }
 
@@ -147,6 +145,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         const json = await response.json()
         console.log("🚀 > indexYouTubeVideos > json=", json)
         const taskIds = json.taskIds
+        console.log("🚀 > indexYouTubeVideos > taskIds=", taskIds)
         setIndexId(json.indexId)
         await monitorTaskIds(taskIds)
     }
@@ -206,65 +205,71 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             <LinearProgress/>
         </Box>
 
-    if (indexedVideos && !pendingApiRequest) {
-        videos = indexedVideos.map(video => {
-            let element =
-            <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
-            <Container>
-                        <Card>
-                                <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
+    // if (indexedVideos && !pendingApiRequest) {
+    //     videos = indexedVideos.map(video => {
+    //         let element =
+    //         <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
+    //         <Container>
+    //                     <Card>
+    //                             <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
 
-                        </Card>
-                    </Container>
-                </Container>
-            return element
-        })
+    //                     </Card>
+    //                 </Container>
+    //             </Container>
+    //         return element
+    //     })
 
-        console.log(searchOptions)
+    //     console.log(searchOptions)
 
-        controls =
-            <>
-                <Container justifycontent='center' alignitems='center' direction='column' disableEqualOverflow>
-                    <Container direction='row' sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
-                        <Container>
-                            <TextField label='Search' variant='standard' fullWidth
-                                disabled={ pendingApiRequest ? true : false } onChange={ (event) => setSearchQuery(event.target.value) }/>
-                        </Container>
+    //     controls =
+    //         <>
+    //             <Container justifycontent='center' alignitems='center' direction='column' disableEqualOverflow>
+    //                 <Container direction='row' sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
+    //                     <Container>
+    //                         <TextField label='Search' variant='standard' fullWidth
+    //                             disabled={ pendingApiRequest ? true : false } onChange={ (event) => setSearchQuery(event.target.value) }/>
+    //                     </Container>
 
-                        <Container>
-                            <Button component='label' disabled={ (pendingApiRequest || !searchQuery || !searchOptions) ? true : false }>
-                                Submit Search
-                            </Button>
-                        </Container>
+    //                     <Container>
+    //                         <Button component='label' disabled={ (pendingApiRequest || !searchQuery || !searchOptions) ? true : false }>
+    //                             Submit Search
+    //                         </Button>
+    //                     </Container>
 
-                    </Container>
+    //                 </Container>
 
-                        { apiElement }
+    //                     { apiElement }
 
 
-                    <Container direction='row' spacing={ 2 } justifycontent='center' alignitems='center'  sx={{m: '8vh'}}>
-                        { videos }
-                    </Container>
-                </Container>
-            </>
-    } else if (taskVideos) {
+    //                 <Container direction='row' spacing={ 2 } justifycontent='center' alignitems='center'  sx={{m: '8vh'}}>
+    //                     { videos }
+    //                 </Container>
+    //             </Container>
+    //         </>
+    // } else
+    if (taskVideos) {
         let indexingStatus
 
         videos = taskVideos.map(video => {
             if (video.status) {
-                let indexingMessage = video.status === 'ready' ? <> Done Indexing  </> : 'Waiting...'
+                let indexingMessage = video.status === 'ready' ? <p> Done Indexing  </p> : <p>'Waiting...'</p>
 
                 indexingStatus =
                     <>
+
                         { video.status === 'ready' ? null : waitingBar }
-                        <Typography variant="body2" color="text.secondary" display='flex' alignItems='center'>
-                            { video.process ? `Indexing. ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
-                        </Typography>
+                        <div>
+                        <Container variant="body2" color="text.secondary" display='flex' alignItems='center'>
+                            { video.process ? `Indexing... ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
+                        </Container>
+                            </div>
+
                     </>
             }
 
             let element =
-                <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}>
+                <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}
+                >
                     <Container>
                         <Card  style={{ border: 'none', margin: "1em"}}>
                             <a href={ video.video_url || video.url } target='_blank'>
@@ -273,8 +278,10 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                                     style={{ width: '60%', height: '60%' }}
                                 />
                             </a>
-
                         </Card>
+                    </Container>
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+                         { indexingStatus || (pendingApiRequest ? "Downloading and Submitting for Indexing" : null) }
                     </Container>
                 </Container>
             return element

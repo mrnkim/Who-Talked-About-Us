@@ -1,5 +1,7 @@
 import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom"; // Import the necessary dependencies for handling query parameters
+
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadForm from "../videos/UploadForm";
@@ -63,15 +65,9 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   const [error, setError] = useState("");
   const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState(null);
-
-  useEffect(() => {
-    if (taskResponse.status === "ready") {
-      setVideos((videos) => ({
-        data: [...videos.data, taskResponse.video_id],
-        isLoading: false,
-      }));
-    }
-  }, [taskResponse]);
+  const location = useLocation(); // Get the current location object
+  const navigate = useNavigate(); // Get the history object for navigation
+  const [isAllIndexed, setIsAllIndexed] = useState(false);
 
   useEffect(() => {
     fetchVideos();
@@ -88,53 +84,54 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   };
 
   /** Add "author" and "youtubeUrl" meta data to each video **/
-  async function updateMetadata() {
-    if (indexedVideos) {
-      for (const indexedVid of indexedVideos) {
-        const matchingVid = taskVideos?.find(
-          (taskVid) =>
-            taskVid.metadata.filename === indexedVid.metadata.filename
-        );
-        console.log("🚀 > indexedVideos.forEach > matchingVid=", matchingVid);
+async function updateMetadata() {
+  if (indexedVideos) {
+    const updatePromises = indexedVideos.map(async (indexedVid) => {
+      const matchingVid = taskVideos?.find(
+        (taskVid) =>
+          taskVid.metadata.filename === indexedVid.metadata.filename
+      );
 
-        if (matchingVid) {
-          const authorName = matchingVid.author.name;
-          console.log("🚀 > indexedVideos.forEach > AUTHOR NAME=", authorName);
-          const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-          console.log("🚀 > updateMetadata > YouTubeUrl=", youtubeUrl);
-          const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
+      if (matchingVid) {
+        const authorName = matchingVid.author.name;
+        const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
+        const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
+        const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
 
-          const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
+        const data = {
+          metadata: {
+            author: authorName,
+            youtubeUrl: youtubeUrl,
+          },
+        };
 
-          console.log("🚀 > updateMetadata > VIDEO_URL=", VIDEO_URL);
-          const data = {
-            metadata: {
-              author: authorName,
-              youtubeUrl: youtubeUrl,
-            },
-          };
+        const options = {
+          method: "PUT",
+          url: VIDEO_URL,
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": TWELVE_LABS_API_KEY,
+          },
+          data: data,
+        };
 
-          const options = {
-            method: "PUT",
-            url: VIDEO_URL,
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": TWELVE_LABS_API_KEY,
-            },
-            data: data,
-          };
-          console.log("🚀 > updateMetadata > options=", options);
-
-          try {
-            const response = await axios.request(options);
-            console.log("Response from API:", response.status);
-          } catch (error) {
-            console.error("Error updating metadata:", error);
-          }
+        try {
+          const response = await axios.request(options);
+          console.log("Response from API:", response.status);
+        } catch (error) {
+          console.error("Error updating metadata:", error);
         }
       }
-    }
+    });
+
+    // Wait for all metadata updates to complete
+    await Promise.all(updatePromises);
+
+    // Now that all updates are done, trigger the page reload
+    window.location.reload();
   }
+}
+
 
   /** Searches videos in an index with a given query*/
   async function searchVideo(indexId, query) {
@@ -297,7 +294,7 @@ function VideoIndex({ index, deleteIndex, index_id }) {
                     </span>
                     {[...uniqueAuthors].map((author) => (
                       <Badge
-                        key={author}
+                        key={author + "-" + index}
                         pill
                         bg="success"
                         style={{ fontSize: "1em", padding: "0.5em" }}
