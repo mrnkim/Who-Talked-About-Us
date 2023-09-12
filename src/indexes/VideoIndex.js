@@ -1,17 +1,16 @@
-import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Import the necessary dependencies for handling query parameters
 
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
-import UploadForm from "../videos/UploadForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Button, Container, Row, Col, Modal, Alert } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import axios from "axios";
 import Badge from "react-bootstrap/Badge";
 import Stack from "react-bootstrap/Stack";
+
+import CustomPagination from "./CustomPagination"; // Update the path to your Pagination component
 
 /** Show video list and videos, search form and search result list
  *
@@ -44,7 +43,7 @@ import Stack from "react-bootstrap/Stack";
 const SERVER_BASE_URL = new URL("http://localhost:4001");
 const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
 
-function VideoIndex({ index, deleteIndex, index_id }) {
+function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
@@ -66,6 +65,40 @@ function VideoIndex({ index, deleteIndex, index_id }) {
   const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState(null);
 
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+
+  /** State variables for default pagination */
+  const [currentPage, setCurrentPage] = useState(1);
+  const videosPerPage = 12;
+  const indexOfLastVideo = currentPage * videosPerPage;
+  const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
+  const currentVideos = videos.data?.slice(indexOfFirstVideo, indexOfLastVideo);
+  const totalPages = Math.ceil(videos.data?.length / videosPerPage);
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  // Function to show the delete confirmation message
+  const showDeleteConfirmationMessage = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  // Function to hide the delete confirmation message
+  const hideDeleteConfirmationMessage = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   useEffect(() => {
     fetchVideos();
     updateMetadata();
@@ -80,55 +113,63 @@ function VideoIndex({ index, deleteIndex, index_id }) {
     setVideos({ data: data.data, isLoading: false });
   };
 
-  /** Add "author" and "youtubeUrl" meta data to each video **/
-async function updateMetadata() {
-  if (indexedVideos) {
-    const updatePromises = indexedVideos.map(async (indexedVid) => {
-      const matchingVid = taskVideos?.find(
-        (taskVid) =>
-          taskVid.metadata.filename === indexedVid.metadata.filename
-      );
-
-      if (matchingVid) {
-        const authorName = matchingVid.author.name;
-        const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-        const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-        const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
-
-        const data = {
-          metadata: {
-            author: authorName,
-            youtubeUrl: youtubeUrl,
-          },
-        };
-
-        const options = {
-          method: "PUT",
-          url: VIDEO_URL,
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": TWELVE_LABS_API_KEY,
-          },
-          data: data,
-        };
-
-        try {
-          const response = await axios.request(options);
-          console.log("Response from API:", response.status);
-        } catch (error) {
-          console.error("Error updating metadata:", error);
-        }
-      }
-    });
-
-    // Wait for all metadata updates to complete
-    await Promise.all(updatePromises);
-
-    // Now that all updates are done, trigger the page reload
-    window.location.reload();
+  async function deleteIndex() {
+    await TwelveLabsApi.deleteIndex(index_id);
+    setIndexes((prevState) => ({
+      ...prevState,
+      data: prevState.data.filter((index) => index._id !== index_id),
+    }));
+    hideDeleteConfirmationMessage(); // Close the modal after deletion
   }
-}
 
+  /** Add "author" and "youtubeUrl" meta data to each video **/
+  async function updateMetadata() {
+    if (indexedVideos) {
+      const updatePromises = indexedVideos.map(async (indexedVid) => {
+        const matchingVid = taskVideos?.find(
+          (taskVid) =>
+            taskVid.metadata.filename === indexedVid.metadata.filename
+        );
+
+        if (matchingVid) {
+          const authorName = matchingVid.author.name;
+          const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
+          const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
+          const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
+
+          const data = {
+            metadata: {
+              author: authorName,
+              youtubeUrl: youtubeUrl,
+            },
+          };
+
+          const options = {
+            method: "PUT",
+            url: VIDEO_URL,
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": TWELVE_LABS_API_KEY,
+            },
+            data: data,
+          };
+
+          try {
+            const response = await axios.request(options);
+            console.log("Response from API:", response.status);
+          } catch (error) {
+            console.error("Error updating metadata:", error);
+          }
+        }
+      });
+
+      // Wait for all metadata updates to complete
+      await Promise.all(updatePromises);
+
+      // Now that all updates are done, trigger the page reload
+      window.location.reload();
+    }
+  }
 
   /** Searches videos in an index with a given query*/
   async function searchVideo(indexId, query) {
@@ -139,33 +180,6 @@ async function updateMetadata() {
       isLoading: false,
     });
     setSearchPerformed(true);
-  }
-
-  /** Uploads video and check status of the uploading task every 5 seconds */
-  async function uploadVideo(indexId, videoUrl) {
-    //download videos using ytdl
-
-    setUploading(true);
-    const newTask = await TwelveLabsApi.uploadVideo(indexId, videoUrl);
-
-    if (newTask) {
-      const intervalId = setInterval(async () => {
-        let response = await TwelveLabsApi.checkStatus(newTask._id);
-        setTaskResponse({
-          video_id: response.video_id,
-          status: response.status,
-        });
-        console.log("🚀 > intervalId > newVideoStatus=", response.status);
-
-        if (response.status === "ready") {
-          setUploading(false);
-          fetchVideos();
-          clearInterval(intervalId);
-        }
-      }, 5000);
-    } else {
-      setError("Failed to get new task for uploading a video");
-    }
   }
 
   /** Deletes a video from an index  */
@@ -186,44 +200,6 @@ async function updateMetadata() {
       console.error(err);
     }
   }
-  // async function setAuthorDataToFalse() {
-  //   const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-  //   let count = 0;
-
-  //   for (let video of videos.data) {
-  //     const VIDEO_URL = `https://api.twelvelabs.io/v1.1/indexes/${currIndex}/videos/${video._id}`;
-
-  //     const data = {
-  //       metadata: {
-  //         author: false,
-  //       },
-  //     };
-
-  //     const options = {
-  //       method: "PUT",
-  //       url: VIDEO_URL,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "x-api-key": TWELVE_LABS_API_KEY,
-  //       },
-  //       data: data,
-  //     };
-
-  //     try {
-  //       const response = await axios.request(options);
-  //       console.log("Response from API:", response.status);
-  //       console.log("metadata:", video.metadata);
-
-  //       count++;
-
-  //       if (count === 10) {
-  //         break;
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating metadata:", error);
-  //     }
-  //   }
-  // }
 
   /** Toggle whether to show or not show the components  */
   function handleClick() {
@@ -247,17 +223,78 @@ async function updateMetadata() {
           <Button
             variant="secondary"
             onClick={handleClick}
-            style={{ width: "100%" }}
+            style={{ width: "90%" }}
           >
-            {index.index_name}
-          </Button>
-        </Col>
-        <Col xs="auto">
-          <Button variant="danger" onClick={() => deleteIndex(currIndex)}>
-            <i className="bi bi-trash"></i>{" "}
+            <div
+              className="index-bar"
+              onMouseEnter={() => setShowDeleteButton(true)}
+              onMouseLeave={() => setShowDeleteButton(false)}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+                <span>{index.index_name}</span>
+                <span
+                  style={{ marginLeft: "5px", color: "rgb(222, 222, 215)" }}
+                >
+                  ({videos.data?.length} videos)
+                </span>
+              </div>
+              {showDeleteButton && (
+                <Button
+                  onClick={showDeleteConfirmationMessage}
+                  className="trash-button"
+                  style={{
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {showDeleteButton && <i className="bi bi-x-lg"></i>}
+                  </div>
+                </Button>
+              )}
+              {/* Delete Confirmation Message */}
+              {showDeleteConfirmation && (
+                <Modal
+                  show={showDeleteConfirmation}
+                  onHide={hideDeleteConfirmationMessage}
+                  backdrop="static"
+                  keyboard={false}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Are you sure you want to delete this index? This action
+                    cannot be undone.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={deleteIndex}>
+                      Delete
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={hideDeleteConfirmationMessage}
+                    >
+                      Cancel
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              )}
+            </div>
           </Button>
         </Col>
       </Row>
+
       {showComponents && videos.data.length === 0 && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
           <h1 className="display-6 m-5">Add New Videos</h1>
@@ -271,7 +308,7 @@ async function updateMetadata() {
           />
         </Container>
       )}
-      {showComponents && !searchPerformed && videos.data.length > 0 && (
+      {showComponents && !searchPerformed && currentVideos && (
         <div>
           <div>
             <Container className="m-5">
@@ -301,21 +338,6 @@ async function updateMetadata() {
                     ))}
                   </div>
                 </Container>
-                <Row className="m-3">
-                  {isUploading && (
-                    <p>It might take a couple of minutes to finish uploading</p>
-                  )}
-                  {error && (
-                    <Alert variant="danger" dismissible>
-                      {error}
-                    </Alert>
-                  )}
-                  {isUploading && taskResponse.status && (
-                    <div>
-                      <p>Status: {taskResponse.status}...</p>
-                    </div>
-                  )}
-                </Row>
               </Container>
             </div>
             <Container fluid className="mb-5">
@@ -323,10 +345,22 @@ async function updateMetadata() {
                 {videos.data && (
                   <VideoList
                     index_id={currIndex}
-                    videos={videos}
+                    videos={{
+                      data: currentVideos,
+                      isLoading: videos.isLoading,
+                    }}
                     deleteVideo={deleteVideo}
                   />
                 )}
+                <Container fluid className="my-5 d-flex justify-content-center">
+                  <CustomPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    nextPage={nextPage}
+                    prevPage={prevPage}
+                  />
+                </Container>
               </Row>
             </Container>
             <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>

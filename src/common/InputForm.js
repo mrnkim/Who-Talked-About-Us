@@ -3,7 +3,7 @@ import { Container, Form, Button } from "react-bootstrap";
 
 /** User input form
  *
- * { UploadForm, SearchForm } -> InputForm
+ * { SearchForm } -> InputForm
  *
  */
 

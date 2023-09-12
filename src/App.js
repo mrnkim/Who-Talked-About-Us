@@ -41,15 +41,15 @@ function App() {
   }
 
   /** Triggered in VideoIndex component; removes an index */
-  async function deleteIndex(indexId) {
-    if (window.confirm("Are you sure you want to delete this index?")) {
-      await TwelveLabsApi.deleteIndex(indexId);
-      setIndexes((prevState) => ({
-        ...prevState,
-        data: prevState.data.filter((index) => index._id !== indexId),
-      }));
-    }
-  }
+  // async function deleteIndex(indexId) {
+  //   if (window.confirm("Are you sure you want to delete this index?")) {
+  //     await TwelveLabsApi.deleteIndex(indexId);
+  //     setIndexes((prevState) => ({
+  //       ...prevState,
+  //       data: prevState.data.filter((index) => index._id !== indexId),
+  //     }));
+  //   }
+  // }
 
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
@@ -67,10 +67,11 @@ function App() {
           indexes.data.map((index) => (
             <div className="mb-3" key={index._id}>
               <VideoIndex
+                indexes={indexes}
+                setIndexes={setIndexes}
                 index={index}
                 index_id={index._id}
                 className="mb-3"
-                deleteIndex={deleteIndex}
               />
             </div>
           ))}
