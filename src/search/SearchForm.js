@@ -37,7 +37,7 @@ function SearchForm({ index, search }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={query}
-        type="Enter a search term"
+        type="What are you looking for? (e.g., applying MAC lipstick)"
         buttonText="Search"
       />
       {error && (

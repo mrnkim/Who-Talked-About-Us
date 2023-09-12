@@ -2,6 +2,8 @@ import React from "react";
 import { Col, Badge, Container } from "react-bootstrap";
 import Video from "./Video";
 import ReactPlayer from "react-player";
+import "./VideoList.css";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 
 /** Shows list of the video in an index
  *
@@ -25,11 +27,13 @@ function VideoList({ index_id, videos, deleteVideo }) {
         width="100%"
         height="100%"
       ></ReactPlayer>
-      <div>
-        <Badge bg="success" pill style={{ marginRight: "0.5rem" }}>
+      <div className="channelAndVideoName">
+        <Badge bg="primary" pill style={{ marginRight: "0.5rem" }}>
           {video.metadata.author}
         </Badge>
-        <span>{video.metadata.filename.replace(".mp4", "")}</span>
+        <span className="filename-text">
+          {video.metadata.filename.replace(".mp4", "")}
+        </span>
       </div>
     </Col>
   ));

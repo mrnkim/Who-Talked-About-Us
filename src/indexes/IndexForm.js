@@ -39,7 +39,11 @@ function IndexForm({ addIndex }) {
         handleChange={handleChange}
         input={indexName}
         type="Create an index and start indexing videos!"
-        buttonText={<i className="bi bi-folder-plus"></i>}
+        buttonText={
+          <>
+            <i className="bi bi-folder-plus"></i> Create
+          </>
+        }
       />
 
       {error && (

@@ -5,6 +5,7 @@ import sanitize from 'sanitize-filename'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
+import "./UploadYouTubeVideo.css"
 import Checkbox from '@mui/material/Checkbox'
 import ReactPlayer from 'react-player'
 
@@ -297,7 +298,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                             </Button>
                             <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
                             <i className="bi bi-arrow-counterclockwise"></i>
-                                  Reset
+                                  <span> Back</span>
                             </Button>
                         </Container>
                     </Container>
@@ -314,28 +315,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         controls =
             <>
                 <Container display='flex' justifycontent='center' alignitems='center'  direction='column'>
-                    {/* <Container display='flex' xs> */}
-                    <Container display="flex" justifycontent='center' alignitems='center' >
-                        <label htmlFor="jsonFileInput" style={{
-                                                            display: 'inline-block',
-                                                            padding: '10px 20px',
-                                                            background: '#fff', // White background
-                                                            color: '#6C757D', // Font color in secondary
-                                                            border: '1px solid #6C757D', // Secondary outline
-                                                            borderRadius: '4px', // Rounded corners
-                                                            cursor: 'pointer',
-                                                            marginRight: '10px', // Added margin-right property
-                                                            transition: 'color 0.3s', // Added transition for smooth color change
-                                                            }}
-                                                            onMouseOver={(event) => {
-                                                                event.target.style.color = 'black'; // Change color on hover
-                                                              }}
-                                                              onMouseOut={(event) => {
-                                                                event.target.style.color = '#6C757D'; // Reset color when not hovering
-                                                              }}
-                                                            >
-                                                              Select JSON File
-                                                            </label>
+                    <Container style={{marginBottom:"1rem"}}display="flex" justifycontent='center' alignitems='center' >
+                        <label htmlFor="jsonFileInput"   className="label-container">Select JSON File</label>
                         <input
                         id="jsonFileInput"
                         type='file'
@@ -344,28 +325,24 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         onChange={handleJSONSelect}
                         disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
                         />
-                    {/* </Container> */}
-
-                    {/* <Container display='flex' justifyContent='center' alignitems='center' className="mt-3 mb-2"> */}
                         <strong>Selected File: </strong>
-                    {/* </Container> */}
-
-                    {/* <Container display='flex' justifyContent='center' alignitems='center' className="mt-1 mb-2"> */}
                         { selectedJSON ? selectedJSON.name : 'None' }
-                    {/* </Container> */}
                     </Container>
-                    <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Channel ID' variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
+                    <Container display='flex' xs={3}>
+                        <TextField label={<span><i class="bi bi-youtube"></i> YouTube Channel ID</span>} variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
                     </Container>
 
-                    <Container sx={{mb: 3}} display='flex' xs={3}>
-                        <TextField label='Playlist ID' variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
+                    <Container display='flex' xs={3}>
+                        <TextField label={<span><i class="bi bi-youtube"></i> YouTube Playlist ID</span>}  variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
                     </Container>
 
 
                     <Container display='flex' className="mt-3">
-                        <Button disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
+                        <Button  style={{ marginRight: '0.5rem' }} disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
                             Submit
+                        </Button>
+                        <Button variant="secondary" disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ handleReset }>
+                            Cancel
                         </Button>
                     </Container>
 

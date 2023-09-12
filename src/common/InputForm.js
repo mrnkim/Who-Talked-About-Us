@@ -28,7 +28,7 @@ function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
         <Button
           style={{ marginLeft: "3px" }}
           className="rounded"
-          variant="secondary"
+          variant="primary"
           type="submit"
         >
           {buttonText}

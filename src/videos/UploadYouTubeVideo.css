@@ -1,0 +1,16 @@
+.label-container {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #fff;
+    color: #6C757D;
+    border: 1px solid #6C757D;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .label-container:hover {
+    color: #3B71CA;
+    border:2px solid #3B71CA;
+  }

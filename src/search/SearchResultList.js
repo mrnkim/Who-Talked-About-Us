@@ -51,28 +51,30 @@ function SearchResultList({ index_id, searchResults, videos }) {
             <div key={videoAuthor} className="m-3">
               <Badge
                 pill
-                bg="success"
+                bg="primary"
                 style={{
-                  fontSize: "1em",
+                  fontSize: "1.2rem",
                   padding: "0.5em",
                   width: "100%",
                   textAlign: "left",
                 }}
               >
                 {videoAuthor} ({totalSearchResults}{" "}
-                {totalSearchResults <= 1 ? "Mention" : "Mentions"})
+                {totalSearchResults <= 1 ? "Result" : "Results"})
               </Badge>
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
-                  <Container key={videoTitle} className="m-2">
+                  <Container
+                    key={videoTitle}
+                    className="videoResults mt-2 mb-2"
+                  >
                     <h5
                       style={{
                         fontWeight: "bold",
                         textAlign: "left",
-                        margin: "1em",
                       }}
                     >
-                      Video: {videoTitle} ({results.length})
+                      {videoTitle} ({results.length})
                     </h5>
                     <Row>
                       {results.map((data, index) => (
@@ -81,7 +83,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
                           md={6}
                           lg={4}
                           xl={3}
-                          className="m-1 mb-5"
+                          className="mb-3"
                           key={data.video_id + "-" + index}
                         >
                           <ReactPlayer
@@ -97,8 +99,8 @@ function SearchResultList({ index_id, searchResults, videos }) {
                             height="100%"
                             light={data.thumbnail_url}
                           />
-                          <div>
-                            Start: {data.start}, End: {data.end}, Confidence:{" "}
+                          <div style={{ fontSize: "0.9rem" }}>
+                            Start: {data.start}, End: {data.end},{" "}
                             <span
                               style={{
                                 color:
@@ -122,17 +124,17 @@ function SearchResultList({ index_id, searchResults, videos }) {
           );
         })}
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
-        <div>
-          <div style={{ fontSize: "1.5em" }}>
-            ❌ Channels with no search results
-          </div>
+        <div style={{ fontSize: "2rem", textAlign: "left", marginTop: "3rem" }}>
+          <span>
+            <i class="bi bi-emoji-frown"></i> No results from...
+          </span>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
             <Badge
               key={index}
               className="m-1"
               pill
-              bg="success"
-              style={{ fontSize: "1em", padding: "0.5em" }}
+              bg="danger"
+              style={{ fontSize: "1.2rem", padding: "0.5em" }}
             >
               {author}
             </Badge>

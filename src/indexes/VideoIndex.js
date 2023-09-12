@@ -73,6 +73,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const indexOfLastVideo = currentPage * videosPerPage;
   const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
   const currentVideos = videos.data?.slice(indexOfFirstVideo, indexOfLastVideo);
+  console.log("🚀 > VideoIndex > currentVideos=", currentVideos);
   const totalPages = Math.ceil(videos.data?.length / videosPerPage);
 
   const nextPage = () => {
@@ -292,9 +293,11 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
         </Col>
       </Row>
 
-      {showComponents && videos.data.length === 0 && (
+      {showComponents && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
-          <h1 className="display-6 m-5">Add New Videos</h1>
+          <h1 className="display-6 m-5">
+            <i class="bi bi-upload"></i> Add New Videos
+          </h1>
           <UploadYoutubeVideo
             indexedVideos={indexedVideos}
             setIndexedVideos={setIndexedVideos}
@@ -305,30 +308,41 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
           />
         </Container>
       )}
-      {showComponents && !searchPerformed && currentVideos && (
+
+      {showComponents && !searchPerformed && currentVideos.length > 0 && (
         <div>
-          <div>
-            <Container className="m-5">
-              <SearchForm index={currIndex} search={searchVideo} />
-            </Container>
-          </div>
+          <Container fluid style={{ marginTop: "3em", marginBottom: "3em" }}>
+            <h1 className="display-6">
+              <i class="bi bi-search"></i> Search Videos
+            </h1>
+            <SearchForm index={currIndex} search={searchVideo} />
+          </Container>
+
           <div>
             <div>
-              <Container className="m-5">
-                <Container fluid className="m-4 mt-5">
+              <Container className="mt-5 mb-5">
+                <Container fluid>
                   <div
-                    style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
+                    class="channels"
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      flexWrap: "wrap",
+                    }}
                   >
-                    <span style={{ fontSize: "1.5em" }}>
-                      {" "}
+                    <span
+                      style={{
+                        fontSize: "1.2em",
+                      }}
+                    >
                       All Channels in Index:{" "}
                     </span>
                     {[...uniqueAuthors].map((author) => (
                       <Badge
                         key={author + "-" + index}
                         pill
-                        bg="success"
-                        style={{ fontSize: "1em", padding: "0.5em" }}
+                        bg="primary"
+                        style={{ fontSize: "1em" }}
                       >
                         {author}
                       </Badge>
@@ -360,30 +374,16 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                 </Container>
               </Row>
             </Container>
-            <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
-              <h1 className="display-6 m-5">Add New Videos</h1>
-              <UploadYoutubeVideo
-                indexedVideos={indexedVideos}
-                setIndexedVideos={setIndexedVideos}
-                index={index}
-                index_id={index_id}
-                taskVideos={taskVideos}
-                setTaskVideos={setTaskVideos}
-              />
-            </Container>
           </div>
         </div>
       )}
       {searchPerformed && (
         <div>
           <h1 className="mt-5 display-6">
-            🔎 Search Results For "{searchQuery}"{" "}
+            <i class="bi bi-binoculars"></i> Search Results for "{searchQuery}"{" "}
           </h1>
           <SearchForm index={currIndex} search={searchVideo} />
-          <Button onClick={reset} className="m-5">
-            <i className="bi bi-arrow-counterclockwise"></i>
-            Back to All Videos
-          </Button>
+
           <Container fluid className="m-3">
             <Row>
               {!searchResults.isLoading && searchResults.data.length === 0 && (
@@ -398,6 +398,10 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
               )}
             </Row>
           </Container>
+          <Button onClick={reset} className="m-5" variant="secondary">
+            <i className="bi bi-arrow-counterclockwise"></i>
+            &nbsp;Back to All Videos
+          </Button>
         </div>
       )}
     </div>
