@@ -28,6 +28,7 @@ function IndexForm({ addIndex }) {
       setError("Please enter the name of an index");
     } else {
       addIndex(trimmedIndexName);
+      setIndexName("");
     }
   }
 
@@ -37,8 +38,8 @@ function IndexForm({ addIndex }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={indexName}
-        type="Enter an index name"
-        buttonText="Create Index"
+        type="Create an index and start indexing videos!"
+        buttonText={<i className="bi bi-folder-plus"></i>}
       />
 
       {error && (

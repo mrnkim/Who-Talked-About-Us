@@ -236,7 +236,8 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
               }}
             >
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                <span>{index.index_name}</span>
+                <i class="bi bi-folder"></i>
+                <span style={{ marginLeft: "10px" }}>{index.index_name}</span>
                 <span
                   style={{ marginLeft: "5px", color: "rgb(222, 222, 215)" }}
                 >
@@ -270,12 +271,8 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                   backdrop="static"
                   keyboard={false}
                 >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Confirm Deletion</Modal.Title>
-                  </Modal.Header>
                   <Modal.Body>
-                    Are you sure you want to delete this index? This action
-                    cannot be undone.
+                    Are you sure you want to delete this index?
                   </Modal.Body>
                   <Modal.Footer>
                     <Button variant="danger" onClick={deleteIndex}>
