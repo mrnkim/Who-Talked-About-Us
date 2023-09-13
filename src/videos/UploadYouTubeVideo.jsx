@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Card, Container } from "react-bootstrap";
+import { Button, Card, Container, Row } from "react-bootstrap";
 import TextField from '@mui/material/TextField'
 import sanitize from 'sanitize-filename'
 import Typography from '@mui/material/Typography'
@@ -24,7 +24,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
+    console.log("🚀 > UploadYoutubeVideo > youtubeChannelId=", youtubeChannelId)
     const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
+    console.log("🚀 > UploadYoutubeVideo > outubePlaylistId=", youtubePlaylistId)
     const [indexId, setIndexId] = useState(null)
     // const [indexName, setIndexName] = useState(null)
     const [searchQuery, setSearchQuery] = useState(null)
@@ -35,30 +37,37 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     }
 
     const handleReset = () => {
+        setPendingApiRequest(false)
         setIndexedVideos(null)
         setTaskVideos(null)
         setSelectedJSON(null)
         setYoutubeChannelId(null)
         setYoutubePlaylistId(null)
-        setPendingApiRequest(false)
         setSearchQuery(null)
         setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
+        setIndexId(null);
+        updateApiElement(null);
+
+
+
     }
 
     const updateApiElement = (text) => {
         if (text) {
             let apiRequestElement =
-                <Box>
-                    <LinearProgress/>
-                    <Typography variant="body2" color="text.secondary" display='flex' alignitems='center'>
-                        { text }
-                    </Typography>
-                </Box>
+            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+{waitingBar}            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
+              {text}
+            </Typography>
+          </Box>
+
+
                 setApiElement(apiRequestElement)
         } else {
             setApiElement(null)
         }
         setPendingApiRequest(previousPendingApiRequest => !previousPendingApiRequest)
+
     }
 
     const handleYoutubeUrlEntry = (event) => {
@@ -202,99 +211,53 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     let controls = <></>
     let videos = <></>
     let waitingBar =
-        <Box sx={{ width: '100%', py: '1vh' }}>
-            <LinearProgress/>
+    <Box sx={{ width: '100%', py: '0.2vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <LinearProgress sx={{ width: '30%' }}/>
         </Box>
 
-    // if (indexedVideos && !pendingApiRequest) {
-    //     videos = indexedVideos.map(video => {
-    //         let element =
-    //         <Container key={ video._id } xs={12} sm={6} md={4} lg={3}>
-    //         <Container>
-    //                     <Card>
-    //                             <ReactPlayer url={ video.hls.video_url } controls width='100%' height='100%'/>
 
-    //                     </Card>
-    //                 </Container>
-    //             </Container>
-    //         return element
-    //     })
+if (taskVideos) {
+    videos = taskVideos.map(video => {
+        let indexingStatusContainer = null;
 
-    //     console.log(searchOptions)
+        if (video.status) {
+            let indexingMessage = video.status === 'ready' ? <p> Done Indexing  </p> : <p>Waiting...</p>;
 
-    //     controls =
-    //         <>
-    //             <Container justifycontent='center' alignitems='center' direction='column' disableEqualOverflow>
-    //                 <Container direction='row' sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
-    //                     <Container>
-    //                         <TextField label='Search' variant='standard' fullWidth
-    //                             disabled={ pendingApiRequest ? true : false } onChange={ (event) => setSearchQuery(event.target.value) }/>
-    //                     </Container>
-
-    //                     <Container>
-    //                         <Button component='label' disabled={ (pendingApiRequest || !searchQuery || !searchOptions) ? true : false }>
-    //                             Submit Search
-    //                         </Button>
-    //                     </Container>
-
-    //                 </Container>
-
-    //                     { apiElement }
-
-
-    //                 <Container direction='row' spacing={ 2 } justifycontent='center' alignitems='center'  sx={{m: '8vh'}}>
-    //                     { videos }
-    //                 </Container>
-    //             </Container>
-    //         </>
-    // } else
-    if (taskVideos) {
-        let indexingStatus
-
-        videos = taskVideos.map(video => {
-            if (video.status) {
-                let indexingMessage = video.status === 'ready' ? <p> Done Indexing  </p> : <p>'Waiting...'</p>
-
-                indexingStatus =
-                    <>
-
-                        { video.status === 'ready' ? null : waitingBar }
-                        <div>
-                        <Container variant="body2" color="text.secondary" display='flex' alignItems='center'>
+            indexingStatusContainer =
+                <Container key={video.video_url || video.url} className="indexingStatusContainer">
+                    { video.status === 'ready' ? null : waitingBar }
+                    <div>
+                        <Container variant="body2" color="text.secondary" display='flex' alignItems='center' className="indexingStatus">
                             { video.process ? `Indexing... ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
                         </Container>
-                            </div>
+                    </div>
+                </Container>;
+        }
+        let element =
+        <Container key={video.video_url || video.url} className="taskVideo">
+            <Card  style={{ border: 'none', margin: "0.5rem"}}>
+                <a href={ video.video_url || video.url } target='_blank'>
+                    <Card.Img
+                        src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
+                        style={{ width: '100%', height: '100%' }}
+                    />
+                </a>
+            </Card>
+            <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+                { indexingStatusContainer || (pendingApiRequest ? "Downloading and Submitting for Indexing" : null) }
+            </Container>
+        </Container>;
 
-                    </>
-            }
-
-            let element =
-                <Container key={ video.videoId } xs={12} sm={6} md={4} lg={3}
-                >
-                    <Container>
-                        <Card  style={{ border: 'none', margin: "1em"}}>
-                            <a href={ video.video_url || video.url } target='_blank'>
-                                <Card.Img
-                                    src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
-                                    style={{ width: '60%', height: '60%' }}
-                                />
-                            </a>
-                        </Card>
-                    </Container>
-                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-                         { indexingStatus || (pendingApiRequest ? "Downloading and Submitting for Indexing" : null) }
-                    </Container>
-                </Container>
-            return element
-        })
+        return element;
+    });
 
         controls =
             <>
-                <Container justifycontent='center' alignitems='center' direction='column'  disableEqualOverflow>
+                <Container justifycontent='center' alignitems='center' direction='column'  disableequaloverflow>
                     <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
                             <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
-                                Add Videos
+                                Add {taskVideos.length} Videos
                             </Button>
                             <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
                             <i className="bi bi-arrow-counterclockwise"></i>
@@ -304,11 +267,19 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                     </Container>
 
                         { apiElement }
+                        <Container fluid>
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "8px", justifyContent: "center", alignItems: "center" }}>
+    {videos}
+  </div>
+</Container>
 
 
-                    <Container direction='row' spacing={ 2 } justifycontent='center' alignItems='center'  sx={{m: '8vh'}}>
-                        { videos }
-                    </Container>
+
+
+
+
+
+
                 </Container>
             </>
     } else {
@@ -329,11 +300,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         { selectedJSON ? selectedJSON.name : 'None' }
                     </Container>
                     <Container display='flex' xs={3}>
-                        <TextField label={<span><i class="bi bi-youtube"></i> YouTube Channel ID</span>} variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
+                        <TextField label={<span><i className="bi bi-youtube"></i> YouTube Channel ID</span>} variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
                     </Container>
 
                     <Container display='flex' xs={3}>
-                        <TextField label={<span><i class="bi bi-youtube"></i> YouTube Playlist ID</span>}  variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
+                        <TextField label={<span><i className="bi bi-youtube"></i> YouTube Playlist ID</span>}  variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
                     </Container>
 
 
@@ -341,7 +312,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
                         <Button  style={{ marginRight: '0.5rem' }} disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
                             Submit
                         </Button>
-                        <Button variant="secondary" disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ handleReset }>
+                        <Button variant="secondary" onClick={ handleReset }>
                             Cancel
                         </Button>
                     </Container>

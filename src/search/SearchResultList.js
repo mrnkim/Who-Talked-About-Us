@@ -126,7 +126,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
         <div style={{ fontSize: "2rem", textAlign: "left", marginTop: "3rem" }}>
           <span>
-            <i class="bi bi-emoji-frown"></i> No results from...
+            <i className="bi bi-emoji-frown"></i> No results from...
           </span>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
             <Badge

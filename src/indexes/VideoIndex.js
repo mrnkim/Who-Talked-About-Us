@@ -241,7 +241,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
               }}
             >
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                <i class="bi bi-folder"></i>
+                <i className="bi bi-folder"></i>
                 <span style={{ marginLeft: "10px" }}>{index.index_name}</span>
                 <span
                   style={{ marginLeft: "5px", color: "rgb(222, 222, 215)" }}
@@ -301,7 +301,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
       {showComponents && !searchPerformed && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
           <h1 className="display-6 m-5">
-            <i class="bi bi-upload"></i> Add New Videos
+            <i className="bi bi-upload"></i> Add New Videos
           </h1>
           <UploadYoutubeVideo
             indexedVideos={indexedVideos}
@@ -318,7 +318,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
         <div>
           <Container fluid style={{ marginTop: "3em", marginBottom: "3em" }}>
             <h1 className="display-6">
-              <i class="bi bi-search"></i> Search Videos
+              <i className="bi bi-search"></i> Search Videos
             </h1>
             <SearchForm index={currIndex} search={searchVideo} />
           </Container>
@@ -328,7 +328,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
               <Container className="mt-5 mb-5">
                 <Container fluid>
                   <div
-                    class="channels"
+                    className="channels"
                     style={{
                       display: "flex",
                       gap: "10px",
@@ -385,7 +385,8 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
       {searchPerformed && (
         <div>
           <h1 className="mt-5 display-6">
-            <i class="bi bi-binoculars"></i> Search Results for "{searchQuery}"{" "}
+            <i className="bi bi-binoculars"></i> Search Results for "
+            {searchQuery}"{" "}
           </h1>
           <SearchForm index={currIndex} search={searchVideo} />
 
