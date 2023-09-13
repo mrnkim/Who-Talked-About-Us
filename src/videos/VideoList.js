@@ -1,9 +1,7 @@
 import React from "react";
 import { Col, Badge, Container } from "react-bootstrap";
-import Video from "./Video";
 import ReactPlayer from "react-player";
 import "./VideoList.css";
-import { alignProperty } from "@mui/material/styles/cssUtils";
 
 /** Shows list of the video in an index
  *
@@ -11,7 +9,6 @@ import { alignProperty } from "@mui/material/styles/cssUtils";
  */
 
 function VideoList({ index_id, videos, deleteVideo }) {
-  console.log("🚀 > VideoList > videos=", videos);
   return videos.data.map((video, index) => (
     <Col
       sm={12}

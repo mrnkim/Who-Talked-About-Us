@@ -144,7 +144,6 @@ app.get("/json-video-info", async (request, response, next) => {
     let url = request.query.URL;
     const videoId = ytdl.getURLVideoID(url);
     const videoInfo = await ytdl.getBasicInfo(videoId);
-    console.log("🚀 > app.get > videoInfo=", videoInfo);
 
     response.json(videoInfo.videoDetails);
   } catch (error) {
@@ -198,11 +197,6 @@ app.post(
       let processedVideosCount = 0;
       const chunk_size = 5;
       let videoIndexingResponses = [];
-
-      // console.log("Creating Index...");
-      // const indexId = await createIndex(indexName);
-      // console.log(`Index Created With ID: ${indexId}`);
-
       console.log("Downloading Videos...");
 
       for (let i = 0; i < totalVideos; i += chunk_size) {

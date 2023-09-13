@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
@@ -8,7 +7,6 @@ import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import axios from "axios";
 import Badge from "react-bootstrap/Badge";
-import Stack from "react-bootstrap/Stack";
 import "./VideoIndex.css";
 
 import CustomPagination from "./CustomPagination"; // Update the path to your Pagination component
@@ -47,15 +45,12 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
 function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
-  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
-  console.log("🚀 > VideoIndex > videos=", videos);
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,
   });
-  console.log("🚀 > VideoIndex > searchResults=", searchResults);
   const [taskResponse, setTaskResponse] = useState({
     video_id: null,
     status: null,
@@ -75,7 +70,6 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const indexOfLastVideo = currentPage * videosPerPage;
   const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
   const currentVideos = videos.data?.slice(indexOfFirstVideo, indexOfLastVideo);
-  console.log("🚀 > VideoIndex > currentVideos=", currentVideos);
   const totalPages = Math.ceil(videos.data?.length / videosPerPage);
 
   const nextPage = () => {
@@ -187,10 +181,8 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
 
   /** Deletes a video from an index  */
   async function deleteVideo(indexId, videoId) {
-    console.log("🚀 > deleteVideo > indexId, videoId=", indexId, videoId);
     try {
       const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
-      console.log("🚀 > deleteVideo > response=", response);
       //TODO: add validation if response is success
       // const updatedVideos = videos.data.filter(
       //   (video) => video._id !== videoId
@@ -237,7 +229,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignitems: "center",
               }}
             >
               <div style={{ marginLeft: "auto", marginRight: "auto" }}>
@@ -262,7 +254,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      alignItems: "center",
+                      alignitems: "center",
                     }}
                   >
                     {showDeleteButton && <i className="bi bi-x-lg"></i>}
@@ -384,10 +376,13 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
       )}
       {searchPerformed && (
         <div>
-          <h1 className="mt-5 display-6">
-            <i className="bi bi-binoculars"></i> Search Results for "
-            {searchQuery}"{" "}
-          </h1>
+          {!searchResults.isLoading && searchResults.data.length > 0 && (
+            <h1 className="mt-5 display-6">
+              <i className="bi bi-binoculars"></i> Search Results for "
+              {searchQuery}"{" "}
+            </h1>
+          )}
+
           <SearchForm index={currIndex} search={searchVideo} />
 
           <Container fluid className="m-3">

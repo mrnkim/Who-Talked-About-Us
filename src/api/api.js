@@ -176,17 +176,11 @@ class TwelveLabsApi {
 
   /** Deletes a video */
   static async deleteVideo(indexId, videoId) {
-    console.log(
-      "🚀 > TwelveLabsApi > deleteVideo > indexId, videoId=",
-      indexId,
-      videoId
-    );
     const config = {
       method: "DELETE",
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: this.headers,
     };
-    console.log("🚀 > TwelveLabsApi > deleteVideo > config=", config);
     try {
       const response = await axios.request(config);
       return response.status;

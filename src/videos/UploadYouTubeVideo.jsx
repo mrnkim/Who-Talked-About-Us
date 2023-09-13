@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
 import "./UploadYouTubeVideo.css"
-import Checkbox from '@mui/material/Checkbox'
-import ReactPlayer from 'react-player'
+
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
@@ -20,15 +19,11 @@ const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
-    console.log("🚀 > UploadYoutubeVideo > pendingApiRequest,=", pendingApiRequest,)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
-    console.log("🚀 > UploadYoutubeVideo > youtubeChannelId=", youtubeChannelId)
     const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
-    console.log("🚀 > UploadYoutubeVideo > outubePlaylistId=", youtubePlaylistId)
     const [indexId, setIndexId] = useState(null)
-    // const [indexName, setIndexName] = useState(null)
     const [searchQuery, setSearchQuery] = useState(null)
     const [searchOptions, setSearchOptions] = useState(['visual', 'conversation', 'text-in-video', 'logo'])
 
@@ -54,6 +49,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
     const updateApiElement = (text) => {
         if (text) {
+            setPendingApiRequest(true);
+
             let apiRequestElement =
             <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
 {waitingBar}            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -64,9 +61,9 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
                 setApiElement(apiRequestElement)
         } else {
+            setPendingApiRequest(false);
             setApiElement(null)
         }
-        setPendingApiRequest(previousPendingApiRequest => !previousPendingApiRequest)
 
     }
 
@@ -124,7 +121,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         const queryUrl = PLAYLIST_VIDEO_INFO_URL
         queryUrl.searchParams.set('PLAYLIST_ID', youtubePlaylistId)
         const response = await fetch(queryUrl.href)
-        console.log("🚀 > getPlaylistVideoInfo > response=", response)
         return await response.json()
     }
 
@@ -136,7 +132,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     }
 
     const indexYouTubeVideos = async () => {
-        updateApiElement()
+        updateApiElement('Do not leave or refresh the page. Please wait until indexing is done for ALL videos.')
+
         const videoData = taskVideos.map(videoData => { return {url: videoData.video_url || videoData.url, title: videoData.title, authorName: videoData.author.name}})
         const requestData = {
             videoData: videoData,
@@ -153,9 +150,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         }
         const response = await fetch(DOWNLOAD_URL.toString(), data)
         const json = await response.json()
-        console.log("🚀 > indexYouTubeVideos > json=", json)
         const taskIds = json.taskIds
-        console.log("🚀 > indexYouTubeVideos > taskIds=", taskIds)
         setIndexId(json.indexId)
         await monitorTaskIds(taskIds)
     }
@@ -197,17 +192,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         }
     }
 
-    const handleSearchOptions = async (option) => {
-        let tempSearchOptions = searchOptions
-        if (searchOptions.includes(option)) {
-            tempSearchOptions.splice(searchOptions.indexOf(option), 1)
-        } else {
-            tempSearchOptions.push(option)
-        }
-        console.log(tempSearchOptions)
-        setSearchOptions(tempSearchOptions)
-    }
-
     let controls = <></>
     let videos = <></>
     let waitingBar =
@@ -217,7 +201,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
 
 if (taskVideos) {
-    videos = taskVideos.map(video => {
+    videos = taskVideos.map((video, index) => { // Added "index" parameter for unique keys
         let indexingStatusContainer = null;
 
         if (video.status) {
@@ -233,27 +217,30 @@ if (taskVideos) {
                     </div>
                 </Container>;
         }
+
         let element =
-        <Container key={video.video_url || video.url} className="taskVideo">
-            <Card  style={{ border: 'none', margin: "0.5rem"}}>
-                <a href={ video.video_url || video.url } target='_blank'>
-                    <Card.Img
-                        src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
-                        style={{ width: '100%', height: '100%' }}
-                    />
-                </a>
-            </Card>
-            <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-                { indexingStatusContainer || (pendingApiRequest ? "Downloading and Submitting for Indexing" : null) }
-            </Container>
-        </Container>;
+            <Container key={video.video_url || video.url} className="taskVideo">
+                <Container >
+                    <Card  style={{ border: 'none', margin: "0.5rem"}}>
+                        <a href={ video.video_url || video.url } target='_blank'>
+                            <Card.Img
+                                src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                        </a>
+                    </Card>
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+                        { indexingStatusContainer || (pendingApiRequest ? "Downloading & Submitting..." : null) }
+                    </Container>
+                </Container>
+            </Container>;
 
         return element;
     });
-
         controls =
             <>
                 <Container justifycontent='center' alignitems='center' direction='column'  disableequaloverflow>
+
                     <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
                             <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
@@ -272,14 +259,6 @@ if (taskVideos) {
     {videos}
   </div>
 </Container>
-
-
-
-
-
-
-
-
                 </Container>
             </>
     } else {
@@ -309,7 +288,7 @@ if (taskVideos) {
 
 
                     <Container display='flex' className="mt-3">
-                        <Button  style={{ marginRight: '0.5rem' }} disabled={ (!selectedJSON && !youtubeChannelId && !youtubePlaylistId && !indexId) || (pendingApiRequest) ? true : false} onClick={ getInfo }>
+                        <Button  style={{ marginRight: '0.5rem' }} onClick={ getInfo }>
                             Submit
                         </Button>
                         <Button variant="secondary" onClick={ handleReset }>

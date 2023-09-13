@@ -1,13 +1,34 @@
 import React from "react";
 import { Col, Row, Badge, Container } from "react-bootstrap";
-import Video from "../videos/Video";
-import VideoSegmentPlayer from "../videos/VideoSegmentPlayer";
 import ReactPlayer from "react-player";
+import { useState, useRef } from "react";
 
 function SearchResultList({ index_id, searchResults, videos }) {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const playerRef = useRef(null);
+
+  const handleProgress = (progress, videoId) => {
+    // Find the result with the matching video_id
+    const result = searchResults.data.find((data) => data.video_id === videoId);
+
+    // Check if the video has reached the 'end' time
+    if (result && playerRef.current && progress.playedSeconds >= result.end) {
+      // Seek the video back to the 'start' time
+      playerRef.current.seekTo(result.start);
+    }
+  };
+
+  // Function to convert seconds to "mm:ss" format
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
   // Organize search results by author and video_id
   const organizedResults = {};
-  console.log("🚀 > SearchResultList > organizedResults=", organizedResults);
   searchResults.data.forEach((result) => {
     const videoId = result.video_id;
     const video = videos.data.find((vid) => vid._id === videoId);
@@ -36,7 +57,6 @@ function SearchResultList({ index_id, searchResults, videos }) {
       noResultAuthors.push(authorName);
     }
   }
-  console.log("🚀 > SearchResultList > noResultAuthors=", noResultAuthors);
 
   return (
     <div>
@@ -83,7 +103,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
                           md={6}
                           lg={4}
                           xl={3}
-                          className="mb-3"
+                          className="mb-4"
                           key={data.video_id + "-" + index}
                         >
                           <ReactPlayer
@@ -98,9 +118,22 @@ function SearchResultList({ index_id, searchResults, videos }) {
                             width="100%"
                             height="100%"
                             light={data.thumbnail_url}
+                            loop
+                            config={{
+                              youtube: {
+                                playerVars: {
+                                  start: data.start, // Set the start time for looping
+                                },
+                              },
+                            }}
+                            onProgress={(progress) =>
+                              handleProgress(progress, data.video_id)
+                            }
                           />
+
                           <div style={{ fontSize: "0.9rem" }}>
-                            Start: {data.start}, End: {data.end},{" "}
+                            Start: {formatTime(data.start)}, End:{" "}
+                            {formatTime(data.end)},{" "}
                             <span
                               style={{
                                 color:
