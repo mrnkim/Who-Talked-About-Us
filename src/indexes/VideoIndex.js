@@ -9,6 +9,7 @@ import VideoList from "../videos/VideoList";
 import axios from "axios";
 import Badge from "react-bootstrap/Badge";
 import Stack from "react-bootstrap/Stack";
+import "./VideoIndex.css";
 
 import CustomPagination from "./CustomPagination"; // Update the path to your Pagination component
 
@@ -66,6 +67,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const [searchQuery, setSearchQuery] = useState(null);
 
   const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
 
   /** State variables for default pagination */
   const [currentPage, setCurrentPage] = useState(1);
@@ -204,6 +206,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
 
   /** Toggle whether to show or not show the components  */
   function handleClick() {
+    setIsSelected(!isSelected);
     setShowComponents(!showComponents);
   }
 
@@ -222,9 +225,10 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
       <Row className="align-items-center">
         <Col>
           <Button
-            variant="secondary"
+            variant="outline-secondary"
             onClick={handleClick}
             style={{ width: "90%" }}
+            className={isSelected ? "selected-index" : ""}
           >
             <div
               className="index-bar"
@@ -251,6 +255,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                   className="trash-button"
                   style={{
                     backgroundColor: "transparent",
+                    border: "none",
                   }}
                 >
                   <div
@@ -293,7 +298,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
         </Col>
       </Row>
 
-      {showComponents && (
+      {showComponents && !searchPerformed && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
           <h1 className="display-6 m-5">
             <i class="bi bi-upload"></i> Add New Videos

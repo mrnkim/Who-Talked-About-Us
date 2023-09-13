@@ -1,25 +1,18 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import InputForm from "../common/InputForm";
-import { Alert } from "react-bootstrap";
-
-/** Form to create a new video index
- *
- * - indexName: a name of a new index that updates based on the user input
- *
- * IndexForm -> InputForm
- */
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 function IndexForm({ addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 
-  /** Updates form input */
   function handleChange(evt) {
     const input = evt.target;
     setIndexName(input.value);
   }
 
-  /** Calls parent function to create/add a new index */
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
@@ -32,13 +25,17 @@ function IndexForm({ addIndex }) {
     }
   }
 
+  const closeErrorAlert = () => {
+    setError("");
+  };
+
   return (
     <div>
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={indexName}
-        type="Create an index and start indexing videos!"
+        type="Create an index and start analyzing videos!"
         buttonText={
           <>
             <i className="bi bi-folder-plus"></i> Create
@@ -47,7 +44,20 @@ function IndexForm({ addIndex }) {
       />
 
       {error && (
-        <Alert variant="danger" dismissible>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={closeErrorAlert}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          style={{ width: "65%", margin: "auto", marginTop: "1rem" }}
+        >
           {error}
         </Alert>
       )}

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import InputForm from "../common/InputForm";
-import { Alert } from "react-bootstrap";
-
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 /** Form to search videos
  *
  * - query: search term that updates based on the user input
@@ -31,17 +32,38 @@ function SearchForm({ index, search }) {
     }
   }
 
+  const closeErrorAlert = () => {
+    setError("");
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center">
+    <div>
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={query}
-        type="What are you looking for? (e.g., applying MAC lipstick)"
-        buttonText="Search"
+        type="What are you looking for? (e.g., applying MAC pink lipstick)"
+        buttonText={
+          <>
+            <i className="bi bi-search"></i> Search
+          </>
+        }
       />
       {error && (
-        <Alert variant="danger" dismissible>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={closeErrorAlert}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          style={{ width: "65%", margin: "auto", marginTop: "1rem" }}
+        >
           {error}
         </Alert>
       )}

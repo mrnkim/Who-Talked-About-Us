@@ -1,0 +1,5 @@
+.selected-index {
+    background-color:RGB(108, 117, 125);
+    transform: scale(1.05);
+    color: white
+  }

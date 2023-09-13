@@ -21,7 +21,6 @@ function App() {
     data: null,
     isLoading: true,
   });
-  console.log("🚀 > App > indexes=", indexes);
 
   useEffect(function fetchIndexesOnMount() {
     async function fetchIndexes() {
@@ -40,26 +39,16 @@ function App() {
     }));
   }
 
-  /** Triggered in VideoIndex component; removes an index */
-  // async function deleteIndex(indexId) {
-  //   if (window.confirm("Are you sure you want to delete this index?")) {
-  //     await TwelveLabsApi.deleteIndex(indexId);
-  //     setIndexes((prevState) => ({
-  //       ...prevState,
-  //       data: prevState.data.filter((index) => index._id !== indexId),
-  //     }));
-  //   }
-  // }
-
   if (indexes.isLoading) return <i>Loading...</i>;
   return (
-    <div className="App" style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="App">
       <Container className="m-auto p-3">
-        <h1 className="m-3 display-5">
-          UGC Analyzer - Who Mentioned Our Brand?
+        <h1 className="m-3 display-5" style={{ fontWeight: "700" }}>
+          <i class="bi bi-chat-square-dots"></i> Who Talked About Us?
         </h1>
+        <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
-      <Container className="m-auto p-3">
+      <Container>
         <IndexForm indexes={indexes.data} addIndex={addIndex} />
       </Container>
       <Container className="m-auto p-3">
