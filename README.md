@@ -13,8 +13,9 @@ Who Talked About Us?
 
 This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for the rich, contextual video search. Twelve Labs is an AI-powered video understanding platform that extracts various types of information from videos, such as movement and actions, objects and people, sound, text on screen, and speech.
 
-<img src="public/app.png" alt="app screenshot" style="border: 1px solid black;" />
-
+<div style="border: 1px solid black;">
+  <img src="public/app.png" alt="app screenshot" />
+</div>
 ### Built With
 
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -36,7 +37,9 @@ Discovering the right YouTube or TikTok influencer for your brand is crucial. Th
 
 This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a simple keyword (e.g., _your brand name_) or specific descriptions (e.g., "applying _your product name_"), you can identify videos that discuss or feature your brand or products, pinpointing the exact moments these references occur.
 
+<div style="border: 1px solid black;">
 <img src="public/searchResult.png" alt="search result screenshot" style="border: 1px solid black;" />
+</div>
 
 Follow this simple guide on how to use the UGC Analyzer:
 
@@ -45,12 +48,12 @@ Follow this simple guide on how to use the UGC Analyzer:
    - A YouTube playlist and channel should be public
    - JSON file format should be
 
-     ```json
+     ```javascript
      [
       { "url": "(video url)" },
-      { "url": "(video url)" },
+      { "url": "(video url)" }
       ...
-      ]
+     ]
      ```
 
 2. Once the videos are uploaded, you can conduct a search using any keyword. Here are some suggestions:
