@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Badge, Container } from "react-bootstrap";
+import { Col, Badge } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import "./VideoList.css";
 
@@ -7,7 +7,6 @@ import "./VideoList.css";
  *
  *  VideoIndex -> VideoList -> Video
  */
-
 function VideoList({ index_id, videos, deleteVideo }) {
   return videos.data.map((video, index) => (
     <Col
@@ -15,7 +14,7 @@ function VideoList({ index_id, videos, deleteVideo }) {
       md={6}
       lg={4}
       xl={3}
-      className="mb-5"
+      className="mb-5 mt-3"
       key={video._id + "-" + index}
     >
       <ReactPlayer
@@ -25,7 +24,7 @@ function VideoList({ index_id, videos, deleteVideo }) {
         height="100%"
       ></ReactPlayer>
       <div className="channelAndVideoName">
-        <Badge bg="primary" pill style={{ marginRight: "0.5rem" }}>
+        <Badge bg="primary" pill style={{ marginRight: "0.2rem" }}>
           {video.metadata.author}
         </Badge>
         <span className="filename-text">

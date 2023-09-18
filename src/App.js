@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-// const { getIndexes } = require('./api/server');
 
 /** UGC Analyzer application
  *

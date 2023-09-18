@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Button, Card, Container, Row } from "react-bootstrap";
+import { useState} from 'react'
+import { Button, Card, Container} from "react-bootstrap";
 import TextField from '@mui/material/TextField'
 import sanitize from 'sanitize-filename'
 import Typography from '@mui/material/Typography'
@@ -42,9 +42,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
         setIndexId(null);
         updateApiElement(null);
-
-
-
     }
 
     const updateApiElement = (text) => {
@@ -52,19 +49,16 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             setPendingApiRequest(true);
 
             let apiRequestElement =
-            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-{waitingBar}            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
+            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>{waitingBar}
+            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
               {text}
             </Typography>
           </Box>
-
-
-                setApiElement(apiRequestElement)
+            setApiElement(apiRequestElement)
         } else {
             setPendingApiRequest(false);
             setApiElement(null)
         }
-
     }
 
     const handleYoutubeUrlEntry = (event) => {
@@ -73,10 +67,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
     const handlePlaylistUrlEntry = (event) => {
         setYoutubePlaylistId(event.target.value)
-    }
-
-    const handleIndexIdEntry = (event) => {
-        setIndexId(event.target.value)
     }
 
     const getInfo = async () => {
@@ -195,7 +185,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     let controls = <></>
     let videos = <></>
     let waitingBar =
-    <Box sx={{ width: '100%', py: '0.2vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Box sx={{ width: '100%', py: '0.2vh', display: 'flex', justifyContent: 'center', alignitems: 'center' }}>
             <LinearProgress sx={{ width: '30%' }}/>
         </Box>
 
@@ -211,7 +201,7 @@ if (taskVideos) {
                 <Container key={video.video_url || video.url} className="indexingStatusContainer">
                     { video.status === 'ready' ? null : waitingBar }
                     <div>
-                        <Container variant="body2" color="text.secondary" display='flex' alignItems='center' className="indexingStatus">
+                        <Container variant="body2" color="text.secondary" display='flex' alignitems='center' className="indexingStatus">
                             { video.process ? `Indexing... ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
                         </Container>
                     </div>
@@ -229,7 +219,7 @@ if (taskVideos) {
                             />
                         </a>
                     </Card>
-                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignitems: 'center', marginTop: '10px' }}>
                         { indexingStatusContainer || (pendingApiRequest ? "Downloading & Submitting..." : null) }
                     </Container>
                 </Container>
@@ -239,7 +229,7 @@ if (taskVideos) {
     });
         controls =
             <>
-                <Container justifycontent='center' alignitems='center' direction='column'  disableequaloverflow>
+                <Container justifycontent='center' alignitems='center' direction='column'  disableequaloverflow="true">
 
                     <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
@@ -255,9 +245,16 @@ if (taskVideos) {
 
                         { apiElement }
                         <Container fluid>
-  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "8px", justifyContent: "center", alignItems: "center" }}>
-    {videos}
-  </div>
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", justifyContent: "center", alignitems: "center" }}>
+  {videos.length === 1 ? (
+    <div className="single-video">
+      {videos}
+    </div>
+  ) : (
+    videos
+  )}
+</div>
+
 </Container>
                 </Container>
             </>

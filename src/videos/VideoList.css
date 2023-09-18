@@ -7,6 +7,10 @@
 .channelAndVideoName {
     display: flex;
     justify-content: flex-start;
-    margin-top: 0.5rem;
-    align-items: center; /* You can adjust this for vertical alignment */
+    margin-top: 0.3rem;
+    align-items: baseline; /* You can adjust this for vertical alignment */
+  }
+
+  .channelAndVideoName .filename-text {
+    margin-left: 0.2rem; /* Add some spacing between badge and title */
   }

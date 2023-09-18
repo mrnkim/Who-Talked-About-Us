@@ -14,3 +14,7 @@
     color: #3B71CA;
     border:2px solid #3B71CA;
   }
+
+  .single-video {
+    max-width: 500px; /* Adjust the max-width as needed */
+  }

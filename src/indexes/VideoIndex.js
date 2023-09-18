@@ -317,7 +317,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
 
           <div>
             <div>
-              <Container className="mt-5 mb-5">
+              <Container className="mt-5 mb-2">
                 <Container fluid>
                   <div
                     className="channels"
@@ -339,7 +339,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                         key={author + "-" + index}
                         pill
                         bg="primary"
-                        style={{ fontSize: "1em" }}
+                        style={{ fontSize: "1rem" }}
                       >
                         {author}
                       </Badge>

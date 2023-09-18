@@ -75,8 +75,11 @@ describe("TwelveLabsApi", () => {
       headers: {
         "x-api-key": process.env.REACT_APP_API_KEY,
       },
+      params: {
+        page_limit: "50",
+      },
     });
-  });
+});
 
   test("should get video", async () => {
     const indexId = "index1";
