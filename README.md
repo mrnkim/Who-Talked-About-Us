@@ -217,7 +217,7 @@ app.post(
 
 ### 2. Updating the metadata of a video
 
-Once all videos are indexed, `updateMetadata` runs to customize each video's metadata by adding `"author"` and `youtubeUrl` to the default metatdata. This way, the author (channel) names are properly shown in frontend and each React Player component renders videos by YouTube (or video) urls.
+Once all videos are indexed, `updateMetadata` runs to customize each video's metadata by adding `"author"` and `"youtubeUrl"` to the default metatdata. This way, the author (channel) names are properly shown in frontend and each React Player component renders videos by YouTube (or video) urls.
 
 > 💡 Check out details at [Provide custom metadata](https://docs.twelvelabs.io/docs/provide-custom-metadata) in Twelve Labs API Reference
 
