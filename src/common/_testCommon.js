@@ -22,6 +22,8 @@ const SEARCH_RESULT = {
       score: 83.82,
       start: 20,
       video_id: "VIDEO1",
+      author: "AUTHOR",
+      filename: "VIDEO1",
     },
   ],
   isLoading: false,

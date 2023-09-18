@@ -30,11 +30,13 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 ## ✨ What is it for?
 
-> Social media & influencer marketing for a brand
+> 💡 Social media & influencer marketing for a brand
 
 Discovering the right YouTube or TikTok influencer for your brand is crucial. The most effective influencer partnerships typically evolve organically, with influencers who already use or discuss your products or brand. However, pinpointing these influencers can be challenging, especially as YouTube and TikTok searches often miss content where your brand name isn't explicitly mentioned in video titles or descriptions.
 
 This is where the User-Generated Content (UGC) Analyzer can provide immense value. Unlike standard YouTube or TikTok searches, this app enables in-depth, contextual video searching. By inputting a simple keyword (e.g., _your brand name_) or specific descriptions (e.g., "applying _your product name_"), you can identify videos that discuss or feature your brand or products, pinpointing the exact moments these references occur.
+
+![Search Result Screen Shot][search-screenshot]
 
 Follow this simple guide on how to use the UGC Analyzer:
 
@@ -46,7 +48,7 @@ Follow this simple guide on how to use the UGC Analyzer:
      ```json
      [
       { "url": "(video url)" },
-      { url: "(video url)" },
+      { "url": "(video url)" },
       ...
       ]
      ```
@@ -77,18 +79,19 @@ Remember, success in influencer marketing is all about forming authentic partner
    ```
 
    .env
+
    REACT_APP_API_URL=https://api.twelvelabs.io/p/v1.1
    REACT_APP_API_KEY=YOUR_API_KEY
 
    ```
 
-4. Create a folder named "videos" in the root directory. All the videos will be downloaded and saved to this folder.
+4. Create a folder named `videos` in the root directory. All the videos will be downloaded and saved to this folder.
 
 ### Step 2. Start the App
 
 1. Clone the current repo
    ```sh
-      git clone git@github.com:mrnkim/vid-analyzer-react.git
+   git clone git@github.com:mrnkim/vid-analyzer-react.git
    ```
 2. Start the server
 
@@ -276,5 +279,5 @@ Below is the to-do list for the current version of the app. Feel free to make su
 - Combine `api.js` and `server.js` to reduce redundancy
 
   [app-screenshot]: public/app.png
-  [app-screenshot]: public/app.png
+  [search-screenshot]: public/searchResult.png
   [component-design]: public/component%20Design_UGC.png

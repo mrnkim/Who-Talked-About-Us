@@ -15,7 +15,7 @@ it("has the correct element and text", function () {
   const { container } = render(<SearchForm />);
 
   const button = container.querySelector("Button");
-  expect(button.textContent).toBe("Search");
+  expect(button.textContent).toBe(" Search");
 });
 
 it("updates the form input on change", function () {

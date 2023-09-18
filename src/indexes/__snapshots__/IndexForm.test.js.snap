@@ -4,39 +4,33 @@ exports[`matches snapshot 1`] = `
 <div>
   <div>
     <div
-      class="mt-5"
+      class="mt-5 container"
     >
-      <div
-        class="row"
-        style="display: flex; justify-content: center;"
+      <form
+        class="d-flex justify-content-center align-items-center"
       >
-        <div
-          class="col-lg-8 col-md-8 col-sm-12"
+        <input
+          aria-label="Create an index and start analyzing videos!"
+          class="form-control"
+          data-testid="search-input"
+          id="Create an index and start analyzing videos!"
+          name="Create an index and start analyzing videos!"
+          placeholder="Create an index and start analyzing videos!"
+          style="width: 60%; font-size: 1em;"
+          type="Create an index and start analyzing videos!"
+          value=""
+        />
+        <button
+          class="rounded btn btn-primary"
+          style="margin-left: 3px;"
+          type="submit"
         >
-          <form
-            class="d-flex"
-          >
-            <input
-              aria-label="Enter an index name"
-              class="form-control"
-              data-testid="search-input"
-              id="Enter an index name"
-              name="Enter an index name"
-              placeholder="Enter an index name"
-              style="width: 60%; font-size: 1em;"
-              type="Enter an index name"
-              value=""
-            />
-            <button
-              class="rounded btn btn-primary"
-              style="margin-left: 3px;"
-              type="submit"
-            >
-              Create Index
-            </button>
-          </form>
-        </div>
-      </div>
+          <i
+            class="bi bi-folder-plus"
+          />
+           Create
+        </button>
+      </form>
     </div>
   </div>
 </div>

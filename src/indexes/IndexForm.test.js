@@ -15,5 +15,5 @@ it("has the correct element and text", function () {
   const { container } = render(<IndexForm />);
 
   const button = container.querySelector("Button");
-  expect(button.textContent).toBe("Create Index");
+  expect(button.textContent).toBe(" Create");
 });

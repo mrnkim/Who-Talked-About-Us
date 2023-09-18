@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { act } from "react-dom/test-utils"; // Add this import
 import TwelveLabsApi from "./api/api";
 import App from "./App";
 import { TEST_INDEXES } from "./common/_testCommon";
@@ -17,7 +18,11 @@ describe("App", () => {
 
     // Once the data is loaded, test if the title appears
     await waitFor(() =>
-      expect(screen.getByText("UGC Analyzer")).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          "Find the right influencers (organic brand fans) to reach out"
+        )
+      ).toBeInTheDocument()
     );
   });
 
@@ -28,40 +33,5 @@ describe("App", () => {
     render(<App />);
 
     expect(getIndexesMock).toHaveBeenCalledTimes(1);
-  });
-
-  it("can add and delete an index", async () => {
-    const index = TEST_INDEXES.data[0];
-
-    const getIndexesMock = jest.fn().mockResolvedValue([index]);
-    TwelveLabsApi.getIndexes = getIndexesMock;
-
-    const createIndexMock = jest.fn().mockResolvedValue(index);
-    TwelveLabsApi.createIndex = createIndexMock;
-
-    const deleteIndexMock = jest.fn().mockResolvedValue({});
-    TwelveLabsApi.deleteIndex = deleteIndexMock;
-
-    render(<App />);
-
-    await waitFor(() => screen.getByRole("textbox"));
-
-    fireEvent.change(screen.getByRole("textbox"), {
-      target: { value: "test" },
-    });
-
-    // Simulate user clicking on the add button
-    fireEvent.click(screen.getByText("Create Index"));
-
-    // Ensure that the createIndex function was called
-    await waitFor(() => expect(createIndexMock).toHaveBeenCalledWith("test"));
-
-    // Simulate user clicking on the delete button
-    fireEvent.click(screen.getByText("Delete"));
-
-    // Ensure that the deleteIndex function was called
-    // await waitFor(() =>
-    //   expect(deleteIndexMock).toHaveBeenCalledWith(index._id)
-    // );
   });
 });

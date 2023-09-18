@@ -4,39 +4,33 @@ exports[`matches snapshot 1`] = `
 <div>
   <div>
     <div
-      class="mt-5"
+      class="mt-5 container"
     >
-      <div
-        class="row"
-        style="display: flex; justify-content: center;"
+      <form
+        class="d-flex justify-content-center align-items-center"
       >
-        <div
-          class="col-lg-8 col-md-8 col-sm-12"
+        <input
+          aria-label="What are you looking for? (e.g., applying MAC gold highlighter)"
+          class="form-control"
+          data-testid="search-input"
+          id="What are you looking for? (e.g., applying MAC gold highlighter)"
+          name="What are you looking for? (e.g., applying MAC gold highlighter)"
+          placeholder="What are you looking for? (e.g., applying MAC gold highlighter)"
+          style="width: 60%; font-size: 1em;"
+          type="What are you looking for? (e.g., applying MAC gold highlighter)"
+          value=""
+        />
+        <button
+          class="rounded btn btn-primary"
+          style="margin-left: 3px;"
+          type="submit"
         >
-          <form
-            class="d-flex"
-          >
-            <input
-              aria-label="Enter a search term"
-              class="form-control"
-              data-testid="search-input"
-              id="Enter a search term"
-              name="Enter a search term"
-              placeholder="Enter a search term"
-              style="width: 60%; font-size: 1em;"
-              type="Enter a search term"
-              value=""
-            />
-            <button
-              class="rounded btn btn-primary"
-              style="margin-left: 3px;"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-      </div>
+          <i
+            class="bi bi-search"
+          />
+           Search
+        </button>
+      </form>
     </div>
   </div>
 </div>

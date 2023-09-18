@@ -8,7 +8,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
   const playerRef = useRef(null);
 
   const handleProgress = (progress, videoId) => {
-    // Find the result with the matching video_id
+  // Find the result with the matching video_id
     const result = searchResults.data.find((data) => data.video_id === videoId);
 
     // Check if the video has reached the 'end' time
@@ -31,7 +31,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
   const organizedResults = {};
   searchResults.data.forEach((result) => {
     const videoId = result.video_id;
-    const video = videos.data.find((vid) => vid._id === videoId);
+    const video = videos?.data.find((vid) => vid._id === videoId);
     if (video) {
       const videoAuthor = video.metadata.author;
       const videoTitle = video.metadata.filename.replace(".mp4", "");
