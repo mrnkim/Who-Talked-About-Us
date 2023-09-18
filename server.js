@@ -1,3 +1,5 @@
+/** Import required libraries and modules */
+
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -12,6 +14,7 @@ const sanitize = require("sanitize-filename");
 const util = require("util");
 const streamPipeline = util.promisify(require("stream").pipeline);
 
+/** Define constants and configure API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const API_BASE_URL = "https://api.twelvelabs.io/p/v1.1";
 
@@ -19,6 +22,7 @@ const TWELVE_LABS_API = axios.create({
   baseURL: API_BASE_URL,
 });
 
+/** Set up middleware for Express */
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -27,6 +31,7 @@ app.use(
   })
 );
 
+/** Define error handling middleware */
 const errorLogger = (error, request, response, next) => {
   console.error(error.stack);
   next(error);
@@ -40,26 +45,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorLogger, errorHandler);
 
-const createIndex = async (indexName) => {
-  const headers = {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "application/json",
-      "x-api-key": TWELVE_LABS_API_KEY,
-    },
-  };
-
-  const params = JSON.stringify({
-    engine_id: "marengo2.5",
-    index_options: ["visual", "conversation", "text_in_video", "logo"],
-    addons: ["thumbnail"],
-    index_name: indexName,
-  });
-
-  const response = await TWELVE_LABS_API.post("/indexes", params, headers);
-  return await response.data._id;
-};
-
+/** Takes a downloaded video and initiates the indexing process */
 const indexVideo = async (videoPath, indexId) => {
   const headers = {
     headers: {
@@ -83,10 +69,12 @@ process.on("uncaughtException", function (exception) {
   console.log(exception);
 });
 
+/** Set up Express server to listen on port 4001 */
 app.listen(4001, () => {
   console.log("Server Running. Listening on port 4001");
 });
 
+/** Get video information and merge additional data from a specified index */
 app.get("/get-index-info", async (request, response, next) => {
   try {
     const indexId = request.query.INDEX_ID;
@@ -118,6 +106,7 @@ app.get("/get-index-info", async (request, response, next) => {
   }
 });
 
+/** Fetch videos from a specified index */
 app.get("/fetch-videos", async (request, response, next) => {
   try {
     const indexId = request.query.INDEX_ID;
@@ -139,6 +128,7 @@ app.get("/fetch-videos", async (request, response, next) => {
   }
 });
 
+/** Get JSON-formatted video information from a YouTube URL using ytdl */
 app.get("/json-video-info", async (request, response, next) => {
   try {
     let url = request.query.URL;
@@ -151,6 +141,7 @@ app.get("/json-video-info", async (request, response, next) => {
   }
 });
 
+/** Get JSON-formatted video information from a YouTube channel using ytch & ytdl */
 app.get("/channel-video-info", async (request, response, next) => {
   try {
     const channelVideos = await ytch.getChannelVideos({
@@ -170,6 +161,7 @@ app.get("/channel-video-info", async (request, response, next) => {
   }
 });
 
+/** Get JSON-formatted video information from a YouTube playlist using ytch & ytdl */
 app.get("/playlist-video-info", async (request, response, next) => {
   try {
     const playlistVideos = await ytpl(request.query.PLAYLIST_ID);
@@ -182,6 +174,7 @@ app.get("/playlist-video-info", async (request, response, next) => {
   }
 });
 
+/** Download and index videos for analysis, returning task IDs and index ID */
 app.post(
   "/download",
   bodyParser.urlencoded(),
@@ -189,25 +182,29 @@ app.post(
     console.log("🚀 > request=", request);
 
     try {
+      // Step 1: Extract video data and index information from the request
       const jsonVideos = request.body.videoData;
-      console.log("🚀 > jsonVideos=", jsonVideos);
       const indexName = request.body.indexName;
       const totalVideos = jsonVideos.length;
-      console.log("🚀 > totalVideos=", totalVideos);
       let processedVideosCount = 0;
       const chunk_size = 5;
       let videoIndexingResponses = [];
       console.log("Downloading Videos...");
 
+      // Step 2: Download videos in chunks
       for (let i = 0; i < totalVideos; i += chunk_size) {
         const videoChunk = jsonVideos.slice(i, i + chunk_size);
         const chunkDownloadedVideos = [];
 
+        // Download each video in the current chunk.
         await Promise.all(
           videoChunk.map(async (videoData) => {
             try {
+              // Generate a safe file name for the downloaded video
               const safeName = sanitize(videoData.title);
               const videoPath = `videos/${safeName}.mp4`;
+
+              // Download the video from the provided URL
               const stream = ytdl(videoData.url, {
                 filter: "videoandaudio",
                 format: ".mp4",
@@ -223,6 +220,7 @@ app.post(
           })
         );
 
+        // Step 3: Submit downloaded videos for indexing
         console.log(
           `Submitting Videos For Indexing | Chunk ${
             Math.floor(i / chunk_size) + 1
@@ -236,15 +234,13 @@ app.post(
           })
         ).catch(next);
 
+        // Log indexing completion and update progress
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
-        console.log("🚀 > chunkVideoIndexingResponses=", chunkVideoIndexingResponses)
-
+        
         processedVideosCount += videoChunk.length;
-
         console.log(
           `Processed ${processedVideosCount} out of ${totalVideos} videos`
         );
-
         videoIndexingResponses = videoIndexingResponses.concat(
           chunkVideoIndexingResponses
         );
@@ -252,6 +248,7 @@ app.post(
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
 
+      // Step 4: Respond with task IDs for the indexing tasks and the index ID
       console.log(
         "Indexing Submission For All Videos Completed With Task IDs:"
       );
@@ -267,6 +264,7 @@ app.post(
   }
 );
 
+/** Check the status of a specific indexing task */
 app.get("/check-tasks", async (request, response, next) => {
   try {
     const taskId = request.query.TASK_ID;
@@ -282,14 +280,6 @@ app.get("/check-tasks", async (request, response, next) => {
     response.json(taskStatus.data);
   } catch (error) {
     response.json(error);
-    return next(error);
-  }
-});
-
-app.put("/update-video", async (request, response, next) => {
-  try {
-    const videoId = request.query.VIDEO_ID;
-  } catch (error) {
     return next(error);
   }
 });

@@ -7,7 +7,7 @@ import "./VideoList.css";
  *
  *  VideoIndex -> VideoList -> Video
  */
-function VideoList({ index_id, videos, deleteVideo }) {
+function VideoList({ videos }) {
   return videos.data.map((video, index) => (
     <Col
       sm={12}

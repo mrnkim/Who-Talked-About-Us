@@ -15,7 +15,6 @@ const CHANNEL_VIDEO_INFO_URL = new URL('/channel-video-info', SERVER_BASE_URL)
 const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
-const UPDATE_VIDEO_URL = new URL('/update-video', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
@@ -191,7 +190,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
 
 if (taskVideos) {
-    videos = taskVideos.map((video, index) => { // Added "index" parameter for unique keys
+    videos = taskVideos.map((video, index) => { 
         let indexingStatusContainer = null;
 
         if (video.status) {

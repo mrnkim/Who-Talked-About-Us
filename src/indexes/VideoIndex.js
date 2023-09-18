@@ -8,40 +8,16 @@ import VideoList from "../videos/VideoList";
 import axios from "axios";
 import Badge from "react-bootstrap/Badge";
 import "./VideoIndex.css";
-
-import CustomPagination from "./CustomPagination"; // Update the path to your Pagination component
-
-/** Show video list and videos, search form and search result list
- *
- * - showComponents: state whether to show the components or not
- *                   true or false
- *
- *
- * - videos: list of videos and loading state
- *
- *   { data: [{_id: '1', created_at: '2023-07-30T21:24:25Z', updated_at: {…}', ...},
- *            {_id: '2', created_at: '2023-07-31T21:24:25Z', updated_at: {…}', ...}]
- *            , isLoading: false }
- *
- *
- * - searchResults: list of videos and loading state
- *
- *   { data: [{score: 92.28, start: 260, end: 263, video_id: '1', confidence: 'high', ...},
- *            {score: 92.28, start: 316, end: 322, video_id: '3', confidence: 'medium', ...} ]
- *            , isLoading: false }
- *
- *
- * - taskResponse: status of a video uploading task
- *
- *   {video_id: '1', status: 'pending'}
- *
- *
- * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
- */
+import CustomPagination from "./CustomPagination";
 
 const SERVER_BASE_URL = new URL("http://localhost:4001");
 const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
 
+/**
+ * Show video list and videos, search form and search result list
+ *
+ * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
+ */
 function VideoIndex({ index, index_id, indexes, setIndexes }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
@@ -51,16 +27,9 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
     data: [],
     isLoading: true,
   });
-  const [taskResponse, setTaskResponse] = useState({
-    video_id: null,
-    status: null,
-  });
-  const [isUploading, setUploading] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
-  const [error, setError] = useState("");
   const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState(null);
-
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -84,14 +53,13 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
     }
   };
 
+  /** State variables for delete confirmation modal */
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-  // Function to show the delete confirmation message
   const showDeleteConfirmationMessage = () => {
     setShowDeleteConfirmation(true);
   };
 
-  // Function to hide the delete confirmation message
   const hideDeleteConfirmationMessage = () => {
     setShowDeleteConfirmation(false);
   };
@@ -110,13 +78,14 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
     setVideos({ data: data.data, isLoading: false });
   };
 
+  /** Deletes an index */
   async function deleteIndex() {
     await TwelveLabsApi.deleteIndex(index_id);
     setIndexes((prevState) => ({
       ...prevState,
       data: prevState.data.filter((index) => index._id !== index_id),
     }));
-    hideDeleteConfirmationMessage(); // Close the modal after deletion
+    hideDeleteConfirmationMessage();
   }
 
   /** Add "author" and "youtubeUrl" meta data to each video **/
@@ -134,6 +103,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
           const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
           const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
 
+          //include custom data to add to the existing metadata
           const data = {
             metadata: {
               author: authorName,
@@ -177,23 +147,6 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
       isLoading: false,
     });
     setSearchPerformed(true);
-  }
-
-  /** Deletes a video from an index  */
-  async function deleteVideo(indexId, videoId) {
-    try {
-      const response = await TwelveLabsApi.deleteVideo(indexId, videoId);
-      //TODO: add validation if response is success
-      // const updatedVideos = videos.data.filter(
-      //   (video) => video._id !== videoId
-      // );
-      // setVideos((videos) => ({
-      //   data: updatedVideos,
-      //   isLoading: false,
-      // }));
-    } catch (err) {
-      console.error(err);
-    }
   }
 
   /** Toggle whether to show or not show the components  */
@@ -261,6 +214,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                   </div>
                 </Button>
               )}
+
               {/* Delete Confirmation Message */}
               {showDeleteConfirmation && (
                 <Modal
@@ -357,7 +311,6 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
                       data: currentVideos,
                       isLoading: videos.isLoading,
                     }}
-                    deleteVideo={deleteVideo}
                   />
                 )}
                 <Container fluid className="my-5 d-flex justify-content-center">

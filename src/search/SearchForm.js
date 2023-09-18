@@ -42,7 +42,7 @@ function SearchForm({ index, search }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={query}
-        type="What are you looking for? (e.g., applying MAC highlighter)"
+        type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText={
           <>
             <i className="bi bi-search"></i> Search

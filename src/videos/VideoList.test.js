@@ -19,10 +19,3 @@ it("shows loading", function () {
     expect(element).toBeInTheDocument();
   });
 });
-
-//FIXME: fix test 
-// it("shows delete button", async function () {
-//   const deleteVideo = jest.fn(); // mock function
-//   render(<VideoList videos={TEST_VIDEOS} deleteVideo={deleteVideo} />);
-//   await waitFor(() => screen.getByText("Delete")); // wait for the 'Delete' button to appear
-// });
