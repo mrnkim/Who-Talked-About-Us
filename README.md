@@ -16,6 +16,7 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 <div style="border: 1px solid black;">
   <img src="public/app.png" alt="app screenshot" />
 </div>
+
 ### Built With
 
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
