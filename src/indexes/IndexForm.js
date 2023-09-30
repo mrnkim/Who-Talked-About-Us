@@ -4,6 +4,7 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import icon from "./Plus.svg";
+import "./IndexForm.css";
 
 function IndexForm({ addIndex }) {
   const [indexName, setIndexName] = useState("");
@@ -12,6 +13,9 @@ function IndexForm({ addIndex }) {
   function handleChange(evt) {
     const input = evt.target;
     setIndexName(input.value);
+    if (error && input.value.trim() !== "") {
+      setError("");
+    }
   }
 
   async function handleSubmit(evt) {
@@ -31,7 +35,7 @@ function IndexForm({ addIndex }) {
   };
 
   return (
-    <div>
+    <div className="inputAndError">
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
@@ -40,25 +44,7 @@ function IndexForm({ addIndex }) {
         buttonText="Create"
         icon={icon}
       />
-
-      {error && (
-        <Alert
-          severity="error"
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={closeErrorAlert}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          style={{ width: "65%", margin: "auto", marginTop: "1rem" }}
-        >
-          {error}
-        </Alert>
-      )}
+      {error && <p className="errorMessage">{error}</p>}
     </div>
   );
 }

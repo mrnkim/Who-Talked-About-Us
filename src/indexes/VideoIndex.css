@@ -1,5 +1,47 @@
 .selected-index {
-    background-color:RGB(108, 117, 125);
-    transform: scale(1.05);
-    color: white
+  cursor: pointer;
+
+  display: flex;
+  height: 3rem;
+  padding: 0.25rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  background: var(--TL-Green-500, #9AED59)
+
   }
+
+.default-index {
+  cursor: pointer;
+display: flex;
+height: 3rem;
+padding: 0.25rem 0.75rem;
+justify-content: center;
+align-items: center;
+gap: 0.25rem;
+flex-shrink: 0;
+border: 1px solid var(--TL-Grey-300, #D4D5D2);
+background: #FFF;
+}
+
+.default-index:hover {
+display: flex;
+height: 3rem;
+padding: 0.25rem 0.75rem;
+justify-content: center;
+align-items: center;
+gap: 0.25rem;
+flex-shrink: 0;
+border: 1px solid var(--TL-Grey-300, #D4D5D2);
+background: var(--TL-Grey--100, #F4F4F3);
+}
+
+.deleteButton {
+  display: flex;
+  padding: 10px 12px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+}

@@ -18,7 +18,7 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
  */
-function VideoIndex({ index, index_id, indexes, setIndexes }) {
+function VideoIndex({ index, index_id, indexes, setIndexes, icon }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
@@ -166,83 +166,52 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
   });
 
   return (
-    <div>
-      <Row className="align-items-center">
-        <Col>
-          <Button
-            variant="outline-secondary"
-            onClick={handleClick}
-            style={{ width: "90%" }}
-            className={isSelected ? "selected-index" : ""}
+    <Container>
+      <div
+        onClick={handleClick}
+        onMouseEnter={() => setShowDeleteButton(true)}
+        onMouseLeave={() => setShowDeleteButton(false)}
+        className={isSelected ? "selected-index" : "default-index"}
+      >
+        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+          <i className="bi bi-folder"></i>
+          <span style={{ marginLeft: "10px" }}>{index.index_name}</span>
+          <span style={{ marginLeft: "5px" }}>
+            ({videos.data?.length} videos)
+          </span>
+        </div>
+        {showDeleteButton && (
+          <button
+            className="deleteButton"
+            onClick={showDeleteConfirmationMessage}
           >
-            <div
-              className="index-bar"
-              onMouseEnter={() => setShowDeleteButton(true)}
-              onMouseLeave={() => setShowDeleteButton(false)}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignitems: "center",
-              }}
-            >
-              <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                <i className="bi bi-folder"></i>
-                <span style={{ marginLeft: "10px" }}>{index.index_name}</span>
-                <span
-                  style={{ marginLeft: "5px", color: "rgb(222, 222, 215)" }}
-                >
-                  ({videos.data?.length} videos)
-                </span>
-              </div>
-              {showDeleteButton && (
-                <Button
-                  onClick={showDeleteConfirmationMessage}
-                  className="trash-button"
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignitems: "center",
-                    }}
-                  >
-                    {showDeleteButton && <i className="bi bi-x-lg"></i>}
-                  </div>
-                </Button>
-              )}
+            {icon && <img src={icon} alt="Icon" className="icon" />}
+          </button>
+        )}
 
-              {/* Delete Confirmation Message */}
-              {showDeleteConfirmation && (
-                <Modal
-                  show={showDeleteConfirmation}
-                  onHide={hideDeleteConfirmationMessage}
-                  backdrop="static"
-                  keyboard={false}
-                >
-                  <Modal.Body>
-                    Are you sure you want to delete this index?
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="danger" onClick={deleteIndex}>
-                      Delete
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={hideDeleteConfirmationMessage}
-                    >
-                      Cancel
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-              )}
-            </div>
-          </Button>
-        </Col>
-      </Row>
+        {/* Delete Confirmation Message */}
+        {showDeleteConfirmation && (
+          <Modal
+            show={showDeleteConfirmation}
+            onHide={hideDeleteConfirmationMessage}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Modal.Body>Are you sure you want to delete this index?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="danger" onClick={deleteIndex}>
+                Delete
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={hideDeleteConfirmationMessage}
+              >
+                Cancel
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+      </div>
 
       {showComponents && !searchPerformed && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
@@ -358,7 +327,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes }) {
           </Button>
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 
