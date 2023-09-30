@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-import icon from "./Close.svg";
+import closeIcon from "./Close.svg";
 
 /** UGC Analyzer application
  *
@@ -61,7 +61,7 @@ function App() {
                 index={index}
                 index_id={index._id}
                 key={index._id}
-                icon={icon}
+                closeIcon={closeIcon}
               />
             </div>
           ))}

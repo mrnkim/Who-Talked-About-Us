@@ -18,7 +18,7 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
  */
-function VideoIndex({ index, index_id, indexes, setIndexes, icon }) {
+function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
@@ -185,7 +185,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes, icon }) {
             className="deleteButton"
             onClick={showDeleteConfirmationMessage}
           >
-            {icon && <img src={icon} alt="Icon" className="icon" />}
+            {closeIcon && <img src={closeIcon} alt="Icon" className="icon" />}
           </button>
         )}
 
@@ -215,9 +215,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes, icon }) {
 
       {showComponents && !searchPerformed && (
         <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
-          <h1 className="display-6 m-5">
-            <i className="bi bi-upload"></i> Add New Videos
-          </h1>
+          <div className="display-6 m-4">Upload New Videos</div>
           <UploadYoutubeVideo
             indexedVideos={indexedVideos}
             setIndexedVideos={setIndexedVideos}
@@ -232,9 +230,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes, icon }) {
       {showComponents && !searchPerformed && currentVideos.length > 0 && (
         <div>
           <Container fluid style={{ marginTop: "3em", marginBottom: "3em" }}>
-            <h1 className="display-6">
-              <i className="bi bi-search"></i> Search Videos
-            </h1>
+            <div className="display-6">Search Videos</div>
             <SearchForm index={currIndex} search={searchVideo} />
           </Container>
 

@@ -22,27 +22,12 @@ margin-right: 0.5rem;
 }
 
 .textField:hover {
-min-width: 30rem;
-height: 3rem;
-padding: 0.25rem 0.75rem;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 0.25rem;
 flex-shrink: 0;
 border: 1px solid var(--TL-Grey-300, #D4D5D2);
 background: var(--TL-Grey--100, #F4F4F3);
 }
 
 .textField:focus {
-min-width: 30rem;
-height: 3rem;
-padding: 0.25rem 0.75rem;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 0.25rem;
-flex-shrink: 0;
 outline: 1px solid var(--TL-Green-500, #9AED59);
 background: #FFF;
 }
@@ -50,4 +35,5 @@ background: #FFF;
 .icon {
     margin-right: 2px;
 }
+
 

@@ -20,6 +20,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
+    console.log("🚀 > UploadYoutubeVideo > selectedJSON=", selectedJSON)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
     const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
     const [indexId, setIndexId] = useState(null)
@@ -35,8 +36,8 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         setIndexedVideos(null)
         setTaskVideos(null)
         setSelectedJSON(null)
-        setYoutubeChannelId(null)
-        setYoutubePlaylistId(null)
+        setYoutubeChannelId("")
+        setYoutubePlaylistId("")
         setSearchQuery(null)
         setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
         setIndexId(null);
@@ -60,11 +61,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
         }
     }
 
-    const handleYoutubeUrlEntry = (event) => {
+    const handleYoutubeChannelIdEntry = (event) => {
         setYoutubeChannelId(event.target.value)
     }
 
-    const handlePlaylistUrlEntry = (event) => {
+    const handleYoutubePlaylistIdEntry = (event) => {
         setYoutubePlaylistId(event.target.value)
     }
 
@@ -190,7 +191,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
 
 if (taskVideos) {
-    videos = taskVideos.map((video, index) => { 
+    videos = taskVideos.map((video, index) => {
         let indexingStatusContainer = null;
 
         if (video.status) {
@@ -262,7 +263,8 @@ if (taskVideos) {
             <>
                 <Container display='flex' justifycontent='center' alignitems='center'  direction='column'>
                     <Container style={{marginBottom:"1rem"}}display="flex" justifycontent='center' alignitems='center' >
-                        <label htmlFor="jsonFileInput"   className="label-container">Select JSON File</label>
+                        <label htmlFor="jsonFileInput"                           className={!!selectedJSON || !!youtubeChannelId|| !!youtubePlaylistId ? "jsonDisabled" : "selectJsonButton"}
+>Select JSON File</label>
                         <input
                         id="jsonFileInput"
                         type='file'
@@ -271,25 +273,44 @@ if (taskVideos) {
                         onChange={handleJSONSelect}
                         disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
                         />
-                        <strong>Selected File: </strong>
-                        { selectedJSON ? selectedJSON.name : 'None' }
-                    </Container>
-                    <Container display='flex' xs={3}>
-                        <TextField label={<span><i className="bi bi-youtube"></i> YouTube Channel ID</span>} variant='standard' sx={{ width: '50%' }} onChange={ handleYoutubeUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubePlaylistId}/>
+                        <span className="selectedFile" >Selected File:
+                        { selectedJSON ? selectedJSON.name : 'none' } </span>
                     </Container>
 
-                    <Container display='flex' xs={3}>
-                        <TextField label={<span><i className="bi bi-youtube"></i> YouTube Playlist ID</span>}  variant='standard' sx={{ width: '50%' }}onChange={ handlePlaylistUrlEntry } disabled={ !!selectedJSON || !!indexId || !!youtubeChannelId }/>
+                    <Container display='flex' xs={3}  style={{marginBottom:"1rem"}}>
+                        <input
+                        className={!!selectedJSON || !!indexId || !!youtubePlaylistId ? "customDisabled" : "youTubeId"}
+                        placeholder="YouTube Channel ID" onChange={ handleYoutubeChannelIdEntry } disabled={ !!selectedJSON || !!youtubePlaylistId}
+                        value={youtubeChannelId}/>
                     </Container>
 
+                    <Container display='flex' xs={3}  style={{marginBottom:"1rem"}}>
+                        <input
+                        className={!!selectedJSON || !!indexId || !!youtubeChannelId ? "customDisabled" : "youTubeId"}
+                        placeholder="YouTube Playlist ID" onChange={ handleYoutubePlaylistIdEntry } disabled={ !!selectedJSON || !!youtubeChannelId}
+                        value={youtubePlaylistId}/>
+                    </Container>
 
-                    <Container display='flex' className="mt-3">
-                        <Button  style={{ marginRight: '0.5rem' }} onClick={ getInfo }>
-                            Submit
-                        </Button>
-                        <Button variant="secondary" onClick={ handleReset }>
+                    <Container display='flex' className="buttons">
+                        <button className="button" onClick={ getInfo }>
+                        <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                d="M7.99996 8.33333V7.83333H7.49996H5.37373L9.99996 3.20711L14.6262 7.83333H12.5H12V8.33333V12.8333H7.99996V8.33333ZM15.3333 15.5V16.1667H4.66663V15.5H15.3333Z"
+                fill="black"
+                stroke="black"
+              />
+            </svg>
+                            Upload
+                        </button>
+                        <button className="button cancel" onClick={ handleReset }>
                             Cancel
-                        </Button>
+                        </button>
                     </Container>
 
                     { apiElement }

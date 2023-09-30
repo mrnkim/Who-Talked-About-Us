@@ -1,20 +1,128 @@
-.label-container {
+.selectJsonButton {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 0.625rem 0.75rem;
     background: #fff;
-    color: #6C757D;
+    color: #B7B9B4;
     border: 1px solid #6C757D;
-    border-radius: 4px;
     cursor: pointer;
     margin-right: 10px;
-    transition: color 0.3s, border-color 0.3s;
+    border: 1px solid var(--TL-Grey-500, #B7B9B4);
+    color: var(--TL-Grey-700, #6F706D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem; /* 125% */
   }
 
-  .label-container:hover {
-    color: #3B71CA;
-    border:2px solid #3B71CA;
-  }
+.jsonDisabled {
+  display: inline-block;
+  padding: 0.625rem 0.75rem;
+  background: #fff;
+  color: #B7B9B4;
+  border: 1px solid #6C757D;
+  cursor: pointer;
+  margin-right: 10px;
+  border: 1px solid var(--TL-Grey-500, #B7B9B4);
+  color: var(--TL-Grey-700, #6F706D);
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem; /* 125% */
+  background: var(--TL-Grey-200, #E5E6E4);
+  color: var(--TL-Grey-500, #B7B9B4);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+  .selectJsonButton:hover {
+    display: inline-block;
+    padding: 0.625rem 0.75rem;
+    background: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid var(--TL-Grey-500, #B7B9B4);
+    color: var(--TL-Grey-700, #6F706D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem; /* 125% */
+    color: #222222;
+    border: 1px solid var(--TL-Green-500, #9AED59);  }
 
   .single-video {
     max-width: 500px; /* Adjust the max-width as needed */
+  }
+
+  .selectedFile {
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .youTubeId {
+    min-width: 30rem;
+    height: 3rem;
+    padding: 0.25rem 0.75rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: #FFF;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+font-style: normal;
+font-weight: 400;
+line-height: 1.5rem; /* 150% */
+  }
+
+  .youTubeId:hover {
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: var(--TL-Grey--100, #F4F4F3);
+  }
+
+  .youTubeId:focus {
+    outline: 1px solid var(--TL-Green-500, #9AED59);
+    background: #FFF;
+  }
+
+  .button {
+    padding: 0.625rem 0.75rem;
+    background: var(--TL-Green-500, #9AED59);
+    border: none;
+  }
+
+  .buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cancel {
+    background: #D4D5D2;
+  }
+
+  .customDisabled {
+    min-width: 30rem;
+    height: 3rem;
+    padding: 0.25rem 0.75rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: var(--TL-Grey-200, #E5E6E4);
+    color: var(--TL-Grey-500, #B7B9B4);
+
+        margin-right: 0.5rem;
+    font-size: 1rem;
+font-style: normal;
+font-weight: 400;
+line-height: 1.5rem; /* 150% */
+cursor: not-allowed;
+
   }
