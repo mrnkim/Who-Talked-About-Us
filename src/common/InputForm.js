@@ -1,20 +1,27 @@
 import React from "react";
 import { Container, Form, Button } from "react-bootstrap";
-
+import "./InputForm.css";
 /** User input form
  *
- * { SearchForm } -> InputForm
+ * { IndexForm, SearchForm } -> InputForm
  *
  */
 
-function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
+function InputForm({
+  handleSubmit,
+  handleChange,
+  input,
+  type,
+  buttonText,
+  icon,
+}) {
   return (
     <Container className="mt-5">
       <Form
         className="d-flex justify-content-center align-items-center"
         onSubmit={handleSubmit}
       >
-        <Form.Control
+        <input
           type={type}
           id={type}
           name={type}
@@ -23,16 +30,11 @@ function InputForm({ handleSubmit, handleChange, input, type, buttonText }) {
           value={input}
           aria-label={type}
           data-testid="search-input"
-          style={{ width: "60%", fontSize: "1em" }}
+          className="textField"
         />
-        <Button
-          style={{ marginLeft: "3px" }}
-          className="rounded"
-          variant="primary"
-          type="submit"
-        >
-          {buttonText}
-        </Button>
+        <button className="primaryButton" type="submit">
+          {icon && <img src={icon} alt="Icon" className="icon" />} {buttonText}
+        </button>
       </Form>
     </Container>
   );

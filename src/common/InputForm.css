@@ -1,0 +1,55 @@
+.primaryButton {
+    display: flex;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    background: var(--TL-Green-500, #9AED59);
+    border: none;
+}
+
+.textField {
+display: flex;
+width: 800px;
+height: 44px;
+padding: 4px 12px;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 4px;
+flex-shrink: 0;
+border: 1px solid var(--TL-Grey-300, #D4D5D2);
+background: #FFF;
+margin-right: 5px;
+}
+
+.textField:hover {
+display: flex;
+width: 800px;
+height: 44px;
+padding: 4px 12px;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 4px;
+flex-shrink: 0;
+border: 1px solid var(--TL-Grey-300, #D4D5D2);
+background: var(--TL-Grey--100, #F4F4F3);
+}
+
+.textField:focus {
+display: flex;
+width: 800px;
+height: 44px;
+padding: 4px 12px;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 4px;
+flex-shrink: 0;
+outline: 1px solid var(--TL-Green-500, #9AED59);
+background: #FFF;
+}
+
+.icon {
+    margin-right: 2px;
+}

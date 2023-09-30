@@ -3,6 +3,7 @@ import InputForm from "../common/InputForm";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import icon from "./Plus.svg";
 
 function IndexForm({ addIndex }) {
   const [indexName, setIndexName] = useState("");
@@ -36,11 +37,8 @@ function IndexForm({ addIndex }) {
         handleChange={handleChange}
         input={indexName}
         type="Create an index and start analyzing videos!"
-        buttonText={
-          <>
-            <i className="bi bi-folder-plus"></i> Create
-          </>
-        }
+        buttonText="Create"
+        icon={icon}
       />
 
       {error && (
