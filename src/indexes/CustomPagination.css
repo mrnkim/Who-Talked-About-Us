@@ -1,0 +1,23 @@
+/* CustomPagination.css */
+.custom-pagination {
+    color: #9AED59; /* Desired color for pagination controls */
+  }
+
+  .custom-pagination .page-link {
+    color: black; /* Desired color for page numbers */
+    border: none;
+  }
+
+  .custom-pagination .page-link:hover {
+    background-color: #9AED59; /* Desired background color on hover */
+    color: color; /* Desired text color on hover */
+    border: none;
+
+  }
+
+  /* Change the background color of the selected page */
+  .custom-pagination .page-item.active .page-link {
+    background-color: #C3F49C; /* Desired background color for the selected page */
+    font-weight: 700;
+    border: none;
+  }

@@ -24,12 +24,10 @@ function VideoList({ videos }) {
         height="100%"
       ></ReactPlayer>
       <div className="channelAndVideoName">
-        <Badge bg="primary" pill style={{ marginRight: "0.2rem" }}>
-          {video.metadata.author}
-        </Badge>
-        <span className="filename-text">
+        <div className="channelPillSmall">{video.metadata.author}</div>
+        <div className="filename-text">
           {video.metadata.filename.replace(".mp4", "")}
-        </span>
+        </div>
       </div>
     </Col>
   ));

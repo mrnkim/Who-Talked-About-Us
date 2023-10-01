@@ -3,6 +3,8 @@ import InputForm from "../common/InputForm";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import union from "./Union.svg";
+
 /** Form to search videos
  *
  * - query: search term that updates based on the user input
@@ -45,7 +47,8 @@ function SearchForm({ index, search }) {
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText={
           <>
-            <i className="bi bi-search"></i> Search
+            {union && <img src={union} alt="unionIcon" className="icon" />}
+            Search
           </>
         }
       />

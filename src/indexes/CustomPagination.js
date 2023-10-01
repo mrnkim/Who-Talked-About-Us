@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "react-bootstrap/Pagination";
+import "./CustomPagination.css"; // Import the CSS file
 
 function CustomPagination({
   currentPage,
@@ -15,7 +16,7 @@ function CustomPagination({
   }
 
   return (
-    <Pagination>
+    <Pagination className="custom-pagination">
       <Pagination.Prev onClick={prevPage} disabled={currentPage === 1} />
       {pageNumbers.map((number) => (
         <Pagination.Item

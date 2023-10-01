@@ -214,7 +214,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
       </div>
 
       {showComponents && !searchPerformed && (
-        <Container fluid style={{ marginTop: "5em", marginBottom: "5em" }}>
+        <div className="videoUploadForm">
           <div className="display-6 m-4">Upload New Videos</div>
           <UploadYoutubeVideo
             indexedVideos={indexedVideos}
@@ -224,72 +224,59 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
           />
-        </Container>
+        </div>
       )}
 
       {showComponents && !searchPerformed && currentVideos.length > 0 && (
         <div>
-          <Container fluid style={{ marginTop: "3em", marginBottom: "3em" }}>
-            <div className="display-6">Search Videos</div>
+          <div className="videoSearchForm">
+            <div className="display-6 m-4">Search Videos</div>
             <SearchForm index={currIndex} search={searchVideo} />
-          </Container>
-
-          <div>
-            <div>
-              <Container className="mt-5 mb-2">
-                <Container fluid>
-                  <div
-                    className="channels"
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "1.2em",
-                      }}
-                    >
-                      All Channels in Index:{" "}
-                    </span>
-                    {[...uniqueAuthors].map((author) => (
-                      <Badge
-                        key={author + "-" + index}
-                        pill
-                        bg="primary"
-                        style={{ fontSize: "1rem" }}
-                      >
-                        {author}
-                      </Badge>
-                    ))}
-                  </div>
-                </Container>
-              </Container>
-            </div>
-            <Container fluid className="mb-5">
-              <Row>
-                {videos.data && (
-                  <VideoList
-                    index_id={currIndex}
-                    videos={{
-                      data: currentVideos,
-                      isLoading: videos.isLoading,
-                    }}
-                  />
-                )}
-                <Container fluid className="my-5 d-flex justify-content-center">
-                  <CustomPagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                  />
-                </Container>
-              </Row>
-            </Container>
           </div>
+
+          <div className="channelPills">
+            <div className="label">
+              <div
+                style={{
+                  fontSize: "1.8rem",
+                }}
+              >
+                All Channels in Index{" "}
+              </div>
+              {[...uniqueAuthors].map((author) => (
+                <div
+                  key={author + "-" + index}
+                  className="channelPill"
+                  bg="primary"
+                >
+                  {author}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Container fluid className="mb-5">
+            <Row>
+              {videos.data && (
+                <VideoList
+                  index_id={currIndex}
+                  videos={{
+                    data: currentVideos,
+                    isLoading: videos.isLoading,
+                  }}
+                />
+              )}
+              <Container fluid className="my-5 d-flex justify-content-center">
+                <CustomPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  nextPage={nextPage}
+                  prevPage={prevPage}
+                />
+              </Container>
+            </Row>
+          </Container>
         </div>
       )}
       {searchPerformed && (

@@ -20,7 +20,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
-    console.log("🚀 > UploadYoutubeVideo > selectedJSON=", selectedJSON)
     const [youtubeChannelId, setYoutubeChannelId] = useState(null)
     const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
     const [indexId, setIndexId] = useState(null)
