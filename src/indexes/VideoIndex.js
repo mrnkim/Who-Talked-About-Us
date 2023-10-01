@@ -230,29 +230,23 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
       {showComponents && !searchPerformed && currentVideos.length > 0 && (
         <div>
           <div className="videoSearchForm">
-            <div className="display-6 m-4">Search Videos</div>
+            <div className="title">Search Videos</div>
             <SearchForm index={currIndex} search={searchVideo} />
           </div>
 
           <div className="channelPills">
-            <div className="label">
-              <div
-                style={{
-                  fontSize: "1.8rem",
-                }}
-              >
-                All Channels in Index{" "}
-              </div>
-              {[...uniqueAuthors].map((author) => (
-                <div
-                  key={author + "-" + index}
-                  className="channelPill"
-                  bg="primary"
-                >
-                  {author}
-                </div>
-              ))}
+            <div
+              style={{
+                fontSize: "1.8rem",
+              }}
+            >
+              All Channels in Index{" "}
             </div>
+            {[...uniqueAuthors].map((author) => (
+              <div key={author + "-" + index} className="channelPill">
+                {author}
+              </div>
+            ))}
           </div>
 
           <Container fluid className="mb-5">
@@ -282,18 +276,20 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
       {searchPerformed && (
         <div>
           {!searchResults.isLoading && searchResults.data.length > 0 && (
-            <h1 className="mt-5 display-6">
-              <i className="bi bi-binoculars"></i> Search Results for "
-              {searchQuery}"{" "}
-            </h1>
+            <div className="title searchResultTitle">
+              Search Results for "{searchQuery}"{" "}
+            </div>
           )}
-
-          <SearchForm index={currIndex} search={searchVideo} />
+          <div className="videoSearchForm">
+            <SearchForm index={currIndex} search={searchVideo} />
+          </div>
 
           <Container fluid className="m-3">
             <Row>
               {!searchResults.isLoading && searchResults.data.length === 0 && (
-                <p>No results found</p>
+                <div className="title">
+                  No results. Let's try with other queries!
+                </div>
               )}
               {!searchResults.isLoading && searchResults.data.length > 0 && (
                 <SearchResultList
@@ -304,10 +300,12 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
               )}
             </Row>
           </Container>
-          <Button onClick={reset} className="m-5" variant="secondary">
-            <i className="bi bi-arrow-counterclockwise"></i>
-            &nbsp;Back to All Videos
-          </Button>
+          <div className="resetButtonWrapper">
+            <button className="resetButton" onClick={reset}>
+              <i className="bi bi-arrow-counterclockwise"></i>
+              &nbsp;Back to All Videos
+            </button>
+          </div>
         </div>
       )}
     </Container>

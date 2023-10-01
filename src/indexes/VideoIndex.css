@@ -1,6 +1,5 @@
 .selected-index {
   cursor: pointer;
-
   display: flex;
   height: 3rem;
   padding: 0.25rem 0.75rem;
@@ -9,7 +8,6 @@
   gap: 0.25rem;
   flex-shrink: 0;
   background: var(--TL-Green-500, #9AED59)
-
   }
 
 .default-index {
@@ -50,10 +48,6 @@ background: #FFF;
 }
 
 .channelPills {
-  margin-top: 3rem;
-}
-
-.label {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -61,13 +55,42 @@ background: #FFF;
 
 .channelPill {
   display: flex;
-padding: 0.5rem 0.75rem;
-align-items: flex-start;
-border-radius: 2.5rem;
-background: var(--TL-Green-500, #9AED59);
+  padding: 0.5rem 0.75rem;
+  align-items: flex-start;
+  border-radius: 2.5rem;
+  background: var(--TL-Green-500, #9AED59);
 }
 
-.videoUploadForm, .videoSearchForm {
-  margin-top: 4rem;
-  margin-bottom: 4rem
+.videoUploadForm, .videoSearchForm{
+  margin-top: 3rem;
+  margin-bottom: 3rem
+}
+
+.title {
+font-size: 2.5rem;
+font-weight: 100;
+margin-bottom: 1rem
+}
+
+
+.searchResultTitle {
+  margin-top: 3rem;
+
+}
+
+.resetButton {
+  padding: 10px 12px;
+  align-items: center;
+  background: var(--TL-Green-500, #9AED59);
+  border: none;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.resetButtonWrapper {
+  display: flex;
+  justify-content: center;
+
+
+
 }

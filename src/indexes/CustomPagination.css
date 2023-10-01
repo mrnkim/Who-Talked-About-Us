@@ -17,7 +17,7 @@
 
   /* Change the background color of the selected page */
   .custom-pagination .page-item.active .page-link {
-    background-color: #C3F49C; /* Desired background color for the selected page */
+    background-color: #DBFEBE; /* Desired background color for the selected page */
     font-weight: 700;
     border: none;
   }

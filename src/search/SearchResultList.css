@@ -1,0 +1,37 @@
+.channelResultPill {
+    display: flex;
+    padding: 0.5rem 0.75rem;
+    border-radius: 2.5rem;
+    background: var(--TL-Green-500, #C3F49C);
+    font-size: 1.25rem;
+    max-width: 90%;
+  }
+
+  .confidence {
+    padding: 0.2em;
+    border-radius: 0.25em;
+    text-transform: capitalize;
+}
+
+  .resultDescription {
+    font-size: 0.875rem;
+    font-family: 'Figtree', sans-serif;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.channelPills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .channelNoResultPill {
+    display: flex;
+    padding: 0.5rem 0.75rem;
+    align-items: flex-start;
+    border-radius: 2.5rem;
+    background: #D4D5D2
+  }

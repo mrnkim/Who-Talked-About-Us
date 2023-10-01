@@ -2,13 +2,14 @@ import React from "react";
 import { Col, Row, Badge, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { useState, useRef } from "react";
+import "./SearchResultList.css";
 
 function SearchResultList({ index_id, searchResults, videos }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const playerRef = useRef(null);
 
   const handleProgress = (progress, videoId) => {
-  // Find the result with the matching video_id
+    // Find the result with the matching video_id
     const result = searchResults.data.find((data) => data.video_id === videoId);
 
     // Check if the video has reached the 'end' time
@@ -69,33 +70,23 @@ function SearchResultList({ index_id, searchResults, videos }) {
 
           return (
             <div key={videoAuthor} className="m-3">
-              <Badge
-                pill
-                bg="primary"
-                style={{
-                  fontSize: "1.2rem",
-                  padding: "0.5em",
-                  width: "100%",
-                  textAlign: "left",
-                }}
-              >
+              <div className="channelResultPill">
                 {videoAuthor} ({totalSearchResults}{" "}
                 {totalSearchResults <= 1 ? "Result" : "Results"})
-              </Badge>
+              </div>
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
                   <Container
                     key={videoTitle}
                     className="videoResults mt-2 mb-2"
                   >
-                    <h5
+                    <h6
                       style={{
-                        fontWeight: "bold",
                         textAlign: "left",
                       }}
                     >
                       {videoTitle} ({results.length})
-                    </h5>
+                    </h6>
                     <Row>
                       {results.map((data, index) => (
                         <Col
@@ -122,7 +113,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
                             config={{
                               youtube: {
                                 playerVars: {
-                                  start: data.start, // Set the start time for looping
+                                  start: data.start,
                                 },
                               },
                             }}
@@ -131,17 +122,18 @@ function SearchResultList({ index_id, searchResults, videos }) {
                             }
                           />
 
-                          <div style={{ fontSize: "0.9rem" }}>
-                            Start: {formatTime(data.start)}, End:{" "}
-                            {formatTime(data.end)},{" "}
+                          <div className="resultDescription">
+                            Start {formatTime(data.start)} | End{" "}
+                            {formatTime(data.end)} |{" "}
                             <span
+                              className="confidence"
                               style={{
-                                color:
+                                backgroundColor:
                                   data.confidence === "high"
-                                    ? "green"
+                                    ? "#2EC29F"
                                     : data.confidence === "medium"
-                                    ? "orange"
-                                    : "red",
+                                    ? "#FDC14E"
+                                    : "#B7B9B4",
                               }}
                             >
                               {data.confidence}
@@ -156,24 +148,24 @@ function SearchResultList({ index_id, searchResults, videos }) {
             </div>
           );
         })}
+
       {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
-        <div style={{ fontSize: "2rem", textAlign: "left", marginTop: "3rem" }}>
-          <span>
-            <i className="bi bi-emoji-frown"></i> No results from...
-          </span>
+        <div className="channelPills">
+          <div
+            style={{
+              fontSize: "1.8rem",
+            }}
+          >
+            No results from
+          </div>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
-            <Badge
-              key={index}
-              className="m-1"
-              pill
-              bg="danger"
-              style={{ fontSize: "1.2rem", padding: "0.5em" }}
-            >
+            <div key={index} className="channelNoResultPill">
               {author}
-            </Badge>
+            </div>
           ))}
         </div>
       )}
+      
     </div>
   );
 }
