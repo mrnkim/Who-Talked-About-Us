@@ -3,7 +3,8 @@ import InputForm from "../common/InputForm";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import union from "./Union.svg";
+import icon from "./Union.svg";
+import "./SearchForm.css";
 
 /** Form to search videos
  *
@@ -20,6 +21,9 @@ function SearchForm({ index, search }) {
   function handleChange(evt) {
     const input = evt.target;
     setQuery(input.value);
+    if (error && input.value.trim() !== "") {
+      setError("");
+    }
   }
 
   /** Calls parent function to search videos based on a query */
@@ -31,45 +35,21 @@ function SearchForm({ index, search }) {
       setError("Please enter the search term");
     } else {
       search(index, trimmedQuery);
+      setQuery("");
     }
   }
 
-  const closeErrorAlert = () => {
-    setError("");
-  };
-
   return (
-    <div>
+    <div className="inputAndErrorSearch">
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={query}
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
-        buttonText={
-          <>
-            {union && <img src={union} alt="unionIcon" className="icon" />}
-            Search
-          </>
-        }
+        buttonText="Search"
+        icon={icon}
       />
-      {error && (
-        <Alert
-          severity="error"
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={closeErrorAlert}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          style={{ width: "65%", margin: "auto", marginTop: "1rem" }}
-        >
-          {error}
-        </Alert>
-      )}
+      {error && <div className="errorMessageSearch">{error}</div>}
     </div>
   );
 }

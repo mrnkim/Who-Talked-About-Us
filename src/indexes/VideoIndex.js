@@ -18,7 +18,14 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
  */
-function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
+function VideoIndex({
+  index,
+  index_id,
+  indexes,
+  setIndexes,
+  closeIcon,
+  backIcon,
+}) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
@@ -175,7 +182,9 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
       >
         <div style={{ marginLeft: "auto", marginRight: "auto" }}>
           <i className="bi bi-folder"></i>
-          <span style={{ marginLeft: "10px" }}>{index.index_name}</span>
+          <span style={{ marginLeft: "10px", fontSize: "1.1rem" }}>
+            {index.index_name}
+          </span>
           <span style={{ marginLeft: "5px" }}>
             ({videos.data?.length} videos)
           </span>
@@ -231,7 +240,9 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
         <div>
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
-            <SearchForm index={currIndex} search={searchVideo} />
+            <div className="m-auto p-3 searchFormContainer">
+              <SearchForm index={currIndex} search={searchVideo} />
+            </div>
           </div>
 
           <div className="channelPills">
@@ -276,12 +287,14 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
       {searchPerformed && (
         <div>
           {!searchResults.isLoading && searchResults.data.length > 0 && (
-            <div className="title searchResultTitle">
+            <div className="searchResultTitle">
               Search Results for "{searchQuery}"{" "}
             </div>
           )}
           <div className="videoSearchForm">
-            <SearchForm index={currIndex} search={searchVideo} />
+            <div className="m-auto p-3 searchFormContainer">
+              <SearchForm index={currIndex} search={searchVideo} />
+            </div>
           </div>
 
           <Container fluid className="m-3">
@@ -302,7 +315,7 @@ function VideoIndex({ index, index_id, indexes, setIndexes, closeIcon }) {
           </Container>
           <div className="resetButtonWrapper">
             <button className="resetButton" onClick={reset}>
-              <i className="bi bi-arrow-counterclockwise"></i>
+              {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
               &nbsp;Back to All Videos
             </button>
           </div>

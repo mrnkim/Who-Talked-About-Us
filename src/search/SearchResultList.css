@@ -8,8 +8,10 @@
   }
 
   .confidence {
-    padding: 0.2em;
-    border-radius: 0.25em;
+    display: inline-flex;
+    padding: 0.125rem 0.25rem;
+    align-items: center;
+    gap: 0.25rem;
     text-transform: capitalize;
 }
 

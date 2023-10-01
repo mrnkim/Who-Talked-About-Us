@@ -5,6 +5,7 @@ import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 import closeIcon from "./Close.svg";
+import backIcon from "./Back.svg";
 
 /** UGC Analyzer application
  *
@@ -48,7 +49,7 @@ function App() {
         </h1>
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
-      <Container className="m-auto p-3">
+      <Container className="m-auto p-3 indexFormContainer">
         <IndexForm indexes={indexes.data} addIndex={addIndex} />
       </Container>
       <Container className="m-auto p-3">
@@ -62,6 +63,7 @@ function App() {
                 index_id={index._id}
                 key={index._id}
                 closeIcon={closeIcon}
+                backIcon={backIcon}
               />
             </div>
           ))}

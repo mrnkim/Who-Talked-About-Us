@@ -3,7 +3,7 @@ import InputForm from "../common/InputForm";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import icon from "./Plus.svg";
+import icon from "./Create.svg";
 import "./IndexForm.css";
 
 function IndexForm({ addIndex }) {
@@ -30,10 +30,6 @@ function IndexForm({ addIndex }) {
     }
   }
 
-  const closeErrorAlert = () => {
-    setError("");
-  };
-
   return (
     <div className="inputAndError">
       <InputForm
@@ -44,7 +40,7 @@ function IndexForm({ addIndex }) {
         buttonText="Create"
         icon={icon}
       />
-      {error && <p className="errorMessage">{error}</p>}
+      {error && <div className="errorMessage">{error}</div>}
     </div>
   );
 }

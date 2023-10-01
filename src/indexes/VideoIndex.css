@@ -58,24 +58,24 @@ background: #FFF;
   padding: 0.5rem 0.75rem;
   align-items: flex-start;
   border-radius: 2.5rem;
-  background: var(--TL-Green-500, #9AED59);
+  background: var(--TL-Green-500, #C3F49C);
 }
 
 .videoUploadForm, .videoSearchForm{
   margin-top: 3rem;
-  margin-bottom: 3rem
+  margin-bottom: rem
 }
 
 .title {
 font-size: 2.5rem;
 font-weight: 100;
-margin-bottom: 1rem
 }
 
 
 .searchResultTitle {
+  font-size: 2.5rem;
+  font-weight: 100;
   margin-top: 3rem;
-
 }
 
 .resetButton {
@@ -90,7 +90,12 @@ margin-bottom: 1rem
 .resetButtonWrapper {
   display: flex;
   justify-content: center;
+}
 
-
-
+.searchFormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0
 }

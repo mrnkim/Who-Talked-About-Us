@@ -1,39 +1,57 @@
-.primaryButton {
+.inputContainer {
     display: flex;
-    padding: 10px 12px;
+    align-items: center;
+  }
+
+  .primaryButton {
+    display: flex;
+    padding-top: 12px;
+    background: #FFF;
+    border: none;
+    border-bottom: 2px solid #D4D5D2;
     justify-content: center;
     align-items: center;
-    background: var(--TL-Green-500, #9AED59);
+    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    margin-top: 0.75rem;
+    margin-bottom: 0.625rem;
+    height: 3.5rem;
+  }
+
+  .textField {
+    display: flex;
+    width: 64.5625rem;
+    padding-top: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.625rem;
+    background: #FFF;
     border: none;
-}
+    border-bottom: 2px solid #D4D5D2;
+    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    margin-top: 0.75rem;
+    margin-bottom: 0.625rem;
+    font-size: 1.2rem;
+    height: 3.5rem;
+  }
 
-.textField {
-min-width: 30rem;
-height: 3rem;
-padding: 0.25rem 0.75rem;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 0.25rem;
-flex-shrink: 0;
-border: 1px solid var(--TL-Grey-300, #D4D5D2);
-background: #FFF;
-margin-right: 0.5rem;
-}
+  .inputForm:hover {
+    flex-shrink: 0;
+    background: var(--TL-Grey--100, #F4F4F3);
+  }
 
-.textField:hover {
-flex-shrink: 0;
-border: 1px solid var(--TL-Grey-300, #D4D5D2);
-background: var(--TL-Grey--100, #F4F4F3);
-}
+  /* Add a class to change the border color of both button and input when typing */
+  .inputFocused .primaryButton,
+  .inputFocused .textField {
+    border-bottom: 2px solid #9AED59; /* Change to your desired color */
+  }
 
+  /* Remove the blue outline for focused input elements */
 .textField:focus {
-outline: 1px solid var(--TL-Green-500, #9AED59);
-background: #FFF;
-}
+    outline: none;
+  }
 
-.icon {
+
+  .icon {
     margin-right: 2px;
-}
-
-
+    color: #D4D5D2;
+  }
