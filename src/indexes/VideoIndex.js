@@ -25,6 +25,7 @@ function VideoIndex({
   setIndexes,
   closeIcon,
   backIcon,
+  loadingSpinner,
 }) {
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
@@ -232,6 +233,7 @@ function VideoIndex({
             index_id={index_id}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
+            loadingSpinner={loadingSpinner}
           />
         </div>
       )}

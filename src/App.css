@@ -53,3 +53,19 @@ h1 {
   align-items: center;
   justify-content: center;
 }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.loading-spinner {
+  margin: auto;
+  padding: 1rem;
+  animation: rotate 2s linear infinite; /* Adjust the duration as needed */
+}

@@ -6,6 +6,7 @@ import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 import closeIcon from "./Close.svg";
 import backIcon from "./Back.svg";
+import loadingSpinner from "./LoadingSpinner.svg";
 
 /** UGC Analyzer application
  *
@@ -40,7 +41,17 @@ function App() {
     }));
   }
 
-  if (indexes.isLoading) return <i>Loading...</i>;
+  // if (indexes.isLoading) return <i>Loading...</i>;
+
+  if (indexes.isLoading)
+    return (
+      <div className="text-center">
+        <div className=" loading-spinner">
+          <img src={loadingSpinner} alt="Loading Spinner" />
+        </div>
+        Loading
+      </div>
+    );
   return (
     <div className="App">
       <Container className="m-auto p-3">
@@ -64,6 +75,7 @@ function App() {
                 key={index._id}
                 closeIcon={closeIcon}
                 backIcon={backIcon}
+                loadingSpinner={loadingSpinner}
               />
             </div>
           ))}

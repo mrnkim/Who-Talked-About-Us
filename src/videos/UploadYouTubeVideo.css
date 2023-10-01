@@ -126,3 +126,22 @@ line-height: 1.5rem; /* 150% */
 cursor: not-allowed;
 
   }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+
+  .loading-spinner {
+    animation: rotate 2s linear infinite; /* Adjust the duration as needed */
+  }
+
+  .doNotLeaveMessage {
+    color: black;
+    margin-bottom: 1rem;
+  }

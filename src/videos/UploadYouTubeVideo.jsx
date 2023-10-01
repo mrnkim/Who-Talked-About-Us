@@ -16,7 +16,7 @@ const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 
-function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos}) {
+function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos, loadingSpinner}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
@@ -48,10 +48,12 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             setPendingApiRequest(true);
 
             let apiRequestElement =
-            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>{waitingBar}
-            <Typography variant="body2" color="text.secondary" sx={{ display: 'inline-block', verticalAlign: 'middle' }}>
-              {text}
-            </Typography>
+            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <div className="loading-spinner">
+  <img src={loadingSpinner} alt="Loading Spinner" />
+</div>
+            <div className="doNotLeaveMessage">   {text}
+            </div>
           </Box>
             setApiElement(apiRequestElement)
         } else {
@@ -183,10 +185,6 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
 
     let controls = <></>
     let videos = <></>
-    let waitingBar =
-    <Box sx={{ width: '100%', py: '0.2vh', display: 'flex', justifyContent: 'center', alignitems: 'center' }}>
-            <LinearProgress sx={{ width: '30%' }}/>
-        </Box>
 
 
 if (taskVideos) {
@@ -198,7 +196,9 @@ if (taskVideos) {
 
             indexingStatusContainer =
                 <Container key={video.video_url || video.url} className="indexingStatusContainer">
-                    { video.status === 'ready' ? null : waitingBar }
+                    { video.status === 'ready' ? null :  <div className="loading-spinner">
+                    <img src={loadingSpinner} alt="Loading Spinner" />
+                    </div> }
                     <div>
                         <Container variant="body2" color="text.secondary" display='flex' alignitems='center' className="indexingStatus">
                             { video.process ? `Indexing... ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
@@ -232,13 +232,12 @@ if (taskVideos) {
 
                     <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
-                            <Button component='label' onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
+                            <button className="button" onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
                                 Add {taskVideos.length} Videos
-                            </Button>
-                            <Button component='label' onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
-                            <i className="bi bi-arrow-counterclockwise"></i>
-                                  <span> Back</span>
-                            </Button>
+                            </button>
+                            <button className="button" onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
+                                   Back
+                            </button>
                         </Container>
                     </Container>
 
