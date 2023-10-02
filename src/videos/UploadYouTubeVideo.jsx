@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
 import "./UploadYouTubeVideo.css"
-import warningIcon from "../svg/Warning.svg"
+import infoIcon from "../svg/Info.svg"
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
@@ -50,7 +50,7 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             let apiRequestElement =
 
             <div className="doNotLeaveMessageWrapper">
-                <img src={warningIcon} alt="warningIcon" className="icon"></img>
+                <img src={infoIcon} alt="infoIcon" className="icon"></img>
                 <div className="doNotLeaveMessage">{text}</div>
             </div>
             setApiElement(apiRequestElement)
@@ -191,7 +191,7 @@ if (taskVideos) {
 
         if (video.status) {
             let indexingMessage = video.status === 'ready' ? <div className="statusMessage doneMessage"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 1.66666C5.40001 1.66666 1.66667 5.39999 1.66667 9.99999C1.66667 14.6 5.40001 18.3333 10 18.3333C14.6 18.3333 18.3333 14.6 18.3333 9.99999C18.3333 5.39999 14.6 1.66666 10 1.66666ZM10.8333 14.1667H9.16667V9.16666H10.8333V14.1667ZM10.8333 7.49999H9.16667V5.83332H10.8333V7.49999Z" fill="#006F33"/>
+            <path d="M10 1.66667C5.40001 1.66667 1.66667 5.40001 1.66667 10C1.66667 14.6 5.40001 18.3333 10 18.3333C14.6 18.3333 18.3333 14.6 18.3333 10C18.3333 5.40001 14.6 1.66667 10 1.66667ZM10.8333 14.1667H9.16667V9.16667H10.8333V14.1667ZM10.8333 7.50001H9.16667V5.83334H10.8333V7.50001Z" fill="#5AC903"/>
           </svg> Complete  </div> : <div className="statusMessage">Waiting...</div>;
             indexingStatusContainer =
                 <Container key={video.video_url || video.url} className="indexingStatusContainer">

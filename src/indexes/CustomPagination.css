@@ -30,3 +30,7 @@
 }
 
 
+.custom-pagination button.disabled-button {
+  /* Remove the border for disabled buttons */
+  border: none;
+}
