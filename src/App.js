@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-import closeIcon from "./Close.svg";
-import backIcon from "./Back.svg";
-import loadingSpinner from "./LoadingSpinner.svg";
+import closeIcon from "./svg/Close.svg";
+import backIcon from "./svg/Back.svg";
+import loadingSpinner from "./svg/LoadingSpinner.svg";
 
 /** UGC Analyzer application
  *

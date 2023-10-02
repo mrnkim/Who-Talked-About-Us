@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
 import "./UploadYouTubeVideo.css"
-import warningIcon from "./Warning.svg"
+import warningIcon from "../svg/Warning.svg"
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)

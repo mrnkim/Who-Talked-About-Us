@@ -1,6 +1,7 @@
 import React from "react";
-import Pagination from "react-bootstrap/Pagination";
 import "./CustomPagination.css"; // Import the CSS file
+import nextIcon from "../svg/ChevronRight.svg";
+import prevIcon from "../svg/ChevronLeft.svg";
 
 function CustomPagination({
   currentPage,
@@ -16,22 +17,27 @@ function CustomPagination({
   }
 
   return (
-    <Pagination className="custom-pagination">
-      <Pagination.Prev onClick={prevPage} disabled={currentPage === 1} />
+    <div className="custom-pagination">
+      <button onClick={prevPage} disabled={currentPage === 1}>
+        <img src={prevIcon} alt="next Icon" />
+      </button>
       {pageNumbers.map((number) => (
-        <Pagination.Item
+        <button
           key={number}
-          active={currentPage === number}
+          className={currentPage === number ? "active" : ""}
           onClick={() => onPageChange(number)}
         >
           {number}
-        </Pagination.Item>
+        </button>
       ))}
-      <Pagination.Next
+      <button
         onClick={nextPage}
         disabled={currentPage === totalPages}
-      />
-    </Pagination>
+        className={currentPage === totalPages ? "disabled" : ""}
+      >
+        <img src={nextIcon} alt="next Icon" />
+      </button>
+    </div>
   );
 }
 

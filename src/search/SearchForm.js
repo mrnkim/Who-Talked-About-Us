@@ -3,7 +3,7 @@ import InputForm from "../common/InputForm";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import icon from "./Union.svg";
+import searchIcon from "../svg/Union.svg";
 import "./SearchForm.css";
 
 /** Form to search videos
@@ -47,7 +47,7 @@ function SearchForm({ index, search }) {
         input={query}
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText="Search"
-        icon={icon}
+        icon={searchIcon}
       />
       {error && <div className="errorMessageSearch">{error}</div>}
     </div>
