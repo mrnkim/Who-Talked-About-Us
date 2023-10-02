@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
-import { Button, Container, Row, Col, Modal, Alert } from "react-bootstrap";
+import { Button, Container, Row, Modal } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import axios from "axios";
-import Badge from "react-bootstrap/Badge";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
 

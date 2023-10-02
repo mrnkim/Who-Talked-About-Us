@@ -1,10 +1,6 @@
 import { useState} from 'react'
-import { Button, Card, Container} from "react-bootstrap";
-import TextField from '@mui/material/TextField'
+import {  Card, Container} from "react-bootstrap";
 import sanitize from 'sanitize-filename'
-import Typography from '@mui/material/Typography'
-import LinearProgress from '@mui/material/LinearProgress'
-import { Box } from '@mui/material'
 import "./UploadYouTubeVideo.css"
 import infoIcon from "../svg/Info.svg"
 

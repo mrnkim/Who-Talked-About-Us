@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Badge } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import "./VideoList.css";
 

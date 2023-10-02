@@ -1,5 +1,5 @@
 import React from "react";
-import "./CustomPagination.css"; // Import the CSS file
+import "./CustomPagination.css"; 
 import nextIcon from "../svg/ChevronRight.svg";
 import nextIconDisabled from "../svg/ChevronRightDisabled.svg";
 import prevIcon from "../svg/ChevronLeft.svg";

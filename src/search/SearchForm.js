@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import InputForm from "../common/InputForm";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import searchIcon from "../svg/Union.svg";
 import "./SearchForm.css";
 

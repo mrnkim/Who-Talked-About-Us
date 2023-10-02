@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Badge, Container } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { useState, useRef } from "react";
 import "./SearchResultList.css";
@@ -165,7 +165,7 @@ function SearchResultList({ index_id, searchResults, videos }) {
           ))}
         </div>
       )}
-      
+
     </div>
   );
 }

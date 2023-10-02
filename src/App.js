@@ -55,7 +55,7 @@ function App() {
   return (
     <div className="App">
       <Container className="m-auto p-3">
-        <h1 className="m-3 display-5" style={{ fontWeight: "700" }}>
+        <h1 className="m-3 display-5" >
          Who Talked About Us?
         </h1>
         <h4>Find the right influencers (organic brand fans) to reach out </h4>

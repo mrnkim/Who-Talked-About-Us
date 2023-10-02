@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import VideoIndex from "./VideoIndex";
 import TwelveLabsApi from "../api/api";
 
