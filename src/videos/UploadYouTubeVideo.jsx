@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Box } from '@mui/material'
 import "./UploadYouTubeVideo.css"
-
+import warningIcon from "./Warning.svg"
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
@@ -48,13 +48,11 @@ function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, 
             setPendingApiRequest(true);
 
             let apiRequestElement =
-            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-          <div className="loading-spinner">
-  <img src={loadingSpinner} alt="Loading Spinner" />
-</div>
-            <div className="doNotLeaveMessage">   {text}
+
+            <div className="doNotLeaveMessageWrapper">
+                <img src={warningIcon} alt="warningIcon" className="icon"></img>
+                <div className="doNotLeaveMessage">{text}</div>
             </div>
-          </Box>
             setApiElement(apiRequestElement)
         } else {
             setPendingApiRequest(false);
@@ -192,16 +190,19 @@ if (taskVideos) {
         let indexingStatusContainer = null;
 
         if (video.status) {
-            let indexingMessage = video.status === 'ready' ? <p> Done Indexing  </p> : <p>Waiting...</p>;
-
+            let indexingMessage = video.status === 'ready' ? <div className="statusMessage doneMessage"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1.66666C5.40001 1.66666 1.66667 5.39999 1.66667 9.99999C1.66667 14.6 5.40001 18.3333 10 18.3333C14.6 18.3333 18.3333 14.6 18.3333 9.99999C18.3333 5.39999 14.6 1.66666 10 1.66666ZM10.8333 14.1667H9.16667V9.16666H10.8333V14.1667ZM10.8333 7.49999H9.16667V5.83332H10.8333V7.49999Z" fill="#006F33"/>
+          </svg> Complete  </div> : <div className="statusMessage">Waiting...</div>;
             indexingStatusContainer =
                 <Container key={video.video_url || video.url} className="indexingStatusContainer">
-                    { video.status === 'ready' ? null :  <div className="loading-spinner">
-                    <img src={loadingSpinner} alt="Loading Spinner" />
+                    { video.status === 'ready' ? null :
+                    <div className="loading-spinner-wrapper">
+                    <img src={loadingSpinner} alt="Loading Spinner" className="loading-spinner" />
                     </div> }
+
                     <div>
                         <Container variant="body2" color="text.secondary" display='flex' alignitems='center' className="indexingStatus">
-                            { video.process ? `Indexing... ${Math.round(video.process.upload_percentage)}% complete` : indexingMessage }
+                            { video.process ? <div className="statusMessage">Indexing... {Math.round(video.process.upload_percentage)}%</div> : indexingMessage }
                         </Container>
                     </div>
                 </Container>;
@@ -212,14 +213,14 @@ if (taskVideos) {
                 <Container >
                     <Card  style={{ border: 'none', margin: "0.5rem"}}>
                         <a href={ video.video_url || video.url } target='_blank'>
-                            <Card.Img
-                                src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
-                                style={{ width: '100%', height: '100%' }}
+                         <Card.Img
+                            src={ video.thumbnails[video.thumbnails.length-1].url || video.bestThumbnail.url}
+                            style={{ width: '100%', height: '100%' }}
                             />
                         </a>
                     </Card>
                     <Container style={{ display: 'flex', justifyContent: 'center', alignitems: 'center', marginTop: '10px' }}>
-                        { indexingStatusContainer || (pendingApiRequest ? "Downloading & Submitting..." : null) }
+                        { indexingStatusContainer || (pendingApiRequest ? <div className="downloadSubmit">Downloading & Submitting...</div> : null) }
                     </Container>
                 </Container>
             </Container>;
@@ -229,81 +230,79 @@ if (taskVideos) {
         controls =
             <>
                 <Container justifycontent='center' alignitems='center' direction='column'  disableequaloverflow="true">
-
                     <Container direction='row'  sx={{pb: '2vh', width: '100%', bgcolor: '#121212', 'z-index': 5}} position='fixed' top='0' justifycontent='center' alignitems='end'>
                         <Container className="m-3">
                             <button className="button" onClick={ indexYouTubeVideos } disabled={ pendingApiRequest ? true : false } style={{marginRight: "5px"}}>
-                                Add {taskVideos.length} Videos
+                                Continue
                             </button>
                             <button className="button" onClick={ handleReset } disabled={ pendingApiRequest ? true : false }>
-                                   Back
+                                Back
                             </button>
                         </Container>
                     </Container>
 
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom:'2rem', marginTop:'2rem' }}>
                         { apiElement }
-                        <Container fluid>
-  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", justifyContent: "center", alignitems: "center" }}>
-  {videos.length === 1 ? (
-    <div className="single-video">
-      {videos}
-    </div>
-  ) : (
-    videos
-  )}
-</div>
+                    </Container>
 
-</Container>
+                        <Container fluid>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", justifyContent: "center", alignitems: "center" }}>
+                         {videos.length === 1 ? (<div className="single-video">{videos}</div>) : (videos)}</div>
+                        </Container>
                 </Container>
             </>
-    } else {
+        } else {
         controls =
             <>
                 <Container display='flex' justifycontent='center' alignitems='center'  direction='column'>
                     <Container style={{marginBottom:"1rem"}}display="flex" justifycontent='center' alignitems='center' >
-                        <label htmlFor="jsonFileInput"                           className={!!selectedJSON || !!youtubeChannelId|| !!youtubePlaylistId ? "jsonDisabled" : "selectJsonButton"}
->Select JSON File</label>
+                        <label htmlFor="jsonFileInput" className={!!selectedJSON || !!youtubeChannelId|| !!youtubePlaylistId ? "jsonDisabled" : "selectJsonButton"}
+                            >Select JSON File</label>
                         <input
-                        id="jsonFileInput"
-                        type='file'
-                        accept='.json'
-                        hidden
-                        onChange={handleJSONSelect}
-                        disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
-                        />
+                            id="jsonFileInput"
+                            type='file'
+                            accept='.json'
+                            hidden
+                            onChange={handleJSONSelect}
+                            disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
+                            />
                         <span className="selectedFile" >Selected File:
                         { selectedJSON ? selectedJSON.name : 'none' } </span>
                     </Container>
 
                     <Container display='flex' xs={3}  style={{marginBottom:"1rem"}}>
                         <input
-                        className={!!selectedJSON || !!indexId || !!youtubePlaylistId ? "customDisabled" : "youTubeId"}
-                        placeholder="YouTube Channel ID" onChange={ handleYoutubeChannelIdEntry } disabled={ !!selectedJSON || !!youtubePlaylistId}
-                        value={youtubeChannelId}/>
+                            className={!!selectedJSON || !!indexId || !!youtubePlaylistId ? "customDisabled" : "youTubeId"}
+                            placeholder="YouTube Channel ID"
+                            onChange={ handleYoutubeChannelIdEntry }
+                            disabled={ !!selectedJSON || !!youtubePlaylistId}
+                            value={youtubeChannelId}/>
                     </Container>
 
                     <Container display='flex' xs={3}  style={{marginBottom:"1rem"}}>
                         <input
                         className={!!selectedJSON || !!indexId || !!youtubeChannelId ? "customDisabled" : "youTubeId"}
-                        placeholder="YouTube Playlist ID" onChange={ handleYoutubePlaylistIdEntry } disabled={ !!selectedJSON || !!youtubeChannelId}
+                        placeholder="YouTube Playlist ID"
+                        onChange={ handleYoutubePlaylistIdEntry }
+                        disabled={ !!selectedJSON || !!youtubeChannelId}
                         value={youtubePlaylistId}/>
                     </Container>
 
                     <Container display='flex' className="buttons">
                         <button className="button" onClick={ getInfo }>
                         <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-            >
-              <path
-                d="M7.99996 8.33333V7.83333H7.49996H5.37373L9.99996 3.20711L14.6262 7.83333H12.5H12V8.33333V12.8333H7.99996V8.33333ZM15.3333 15.5V16.1667H4.66663V15.5H15.3333Z"
-                fill="black"
-                stroke="black"
-              />
-            </svg>
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        >
+                        <path
+                            d="M7.99996 8.33333V7.83333H7.49996H5.37373L9.99996 3.20711L14.6262 7.83333H12.5H12V8.33333V12.8333H7.99996V8.33333ZM15.3333 15.5V16.1667H4.66663V15.5H15.3333Z"
+                            fill="black"
+                            stroke="black"
+                        />
+                        </svg>
                             Upload
                         </button>
                         <button className="button cancel" onClick={ handleReset }>
@@ -311,11 +310,13 @@ if (taskVideos) {
                         </button>
                     </Container>
 
-                    { apiElement }
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        { apiElement }
+                    </Container>
+
                 </Container>
             </>
     }
-
     return (
         controls
     )
