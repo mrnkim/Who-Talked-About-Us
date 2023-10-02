@@ -14,7 +14,7 @@ describe("App", () => {
     render(<App />);
 
     // Test if the Loading text appears initially
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Loading")).toBeInTheDocument();
 
     // Once the data is loaded, test if the title appears
     await waitFor(() =>

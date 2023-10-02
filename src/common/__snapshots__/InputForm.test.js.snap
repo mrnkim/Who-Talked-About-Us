@@ -2,24 +2,22 @@
 
 exports[`matches snapshot 1`] = `
 <div>
-  <div
-    class="mt-5 container"
+  <form
+    class="d-flex justify-content-center align-items-center inputForm"
   >
-    <form
-      class="d-flex justify-content-center align-items-center"
+    <div
+      class="inputContainer "
     >
-      <input
-        class="form-control"
-        data-testid="search-input"
-        style="width: 60%; font-size: 1em;"
-        value=""
-      />
       <button
-        class="rounded btn btn-primary"
-        style="margin-left: 3px;"
+        class="primaryButton"
         type="submit"
       />
-    </form>
-  </div>
+      <input
+        class="textField"
+        data-testid="search-input"
+        value=""
+      />
+    </div>
+  </form>
 </div>
 `;

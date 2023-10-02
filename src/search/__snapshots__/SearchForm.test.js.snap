@@ -2,36 +2,37 @@
 
 exports[`matches snapshot 1`] = `
 <div>
-  <div>
-    <div
-      class="mt-5 container"
+  <div
+    class="inputAndErrorSearch"
+  >
+    <form
+      class="d-flex justify-content-center align-items-center inputForm"
     >
-      <form
-        class="d-flex justify-content-center align-items-center"
+      <div
+        class="inputContainer "
       >
+        <button
+          class="primaryButton"
+          type="submit"
+        >
+          <img
+            alt="Icon"
+            class="icon"
+            src="Union.svg"
+          />
+        </button>
         <input
           aria-label="What are you looking for? (e.g., applying MAC gold highlighter)"
-          class="form-control"
+          class="textField"
           data-testid="search-input"
           id="What are you looking for? (e.g., applying MAC gold highlighter)"
           name="What are you looking for? (e.g., applying MAC gold highlighter)"
           placeholder="What are you looking for? (e.g., applying MAC gold highlighter)"
-          style="width: 60%; font-size: 1em;"
           type="What are you looking for? (e.g., applying MAC gold highlighter)"
           value=""
         />
-        <button
-          class="rounded btn btn-primary"
-          style="margin-left: 3px;"
-          type="submit"
-        >
-          <i
-            class="bi bi-search"
-          />
-           Search
-        </button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
 `;

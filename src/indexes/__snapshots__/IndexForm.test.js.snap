@@ -2,36 +2,37 @@
 
 exports[`matches snapshot 1`] = `
 <div>
-  <div>
-    <div
-      class="mt-5 container"
+  <div
+    class="inputAndError"
+  >
+    <form
+      class="d-flex justify-content-center align-items-center inputForm"
     >
-      <form
-        class="d-flex justify-content-center align-items-center"
+      <div
+        class="inputContainer "
       >
+        <button
+          class="primaryButton"
+          type="submit"
+        >
+          <img
+            alt="Icon"
+            class="icon"
+            src="Create.svg"
+          />
+        </button>
         <input
           aria-label="Create an index and start analyzing videos!"
-          class="form-control"
+          class="textField"
           data-testid="search-input"
           id="Create an index and start analyzing videos!"
           name="Create an index and start analyzing videos!"
           placeholder="Create an index and start analyzing videos!"
-          style="width: 60%; font-size: 1em;"
           type="Create an index and start analyzing videos!"
           value=""
         />
-        <button
-          class="rounded btn btn-primary"
-          style="margin-left: 3px;"
-          type="submit"
-        >
-          <i
-            class="bi bi-folder-plus"
-          />
-           Create
-        </button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
 `;
