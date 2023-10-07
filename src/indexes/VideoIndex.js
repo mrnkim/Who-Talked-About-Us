@@ -20,7 +20,6 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
 function VideoIndex({
   index,
   index_id,
-  indexes,
   setIndexes,
   closeIcon,
   backIcon,

@@ -12,7 +12,7 @@ const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 
-function UploadYoutubeVideo ({indexedVideos, setIndexedVideos, index, index_id, taskVideos, setTaskVideos, loadingSpinner}) {
+function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, setTaskVideos, loadingSpinner}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
