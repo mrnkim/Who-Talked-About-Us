@@ -165,8 +165,6 @@ app.get("/channel-video-info", async (request, response, next) => {
 app.get("/playlist-video-info", async (request, response, next) => {
   try {
     const playlistVideos = await ytpl(request.query.PLAYLIST_ID);
-    console.log("🚀 > app.get > playlistVideos=", playlistVideos);
-
     const playlistVideosDetail = playlistVideos.items;
     response.json(playlistVideosDetail);
   } catch (error) {
@@ -236,7 +234,7 @@ app.post(
 
         // Log indexing completion and update progress
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
-        
+
         processedVideosCount += videoChunk.length;
         console.log(
           `Processed ${processedVideosCount} out of ${totalVideos} videos`

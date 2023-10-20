@@ -17,7 +17,7 @@ function VideoList({ videos }) {
       className="mb-5 mt-3"
       key={video._id + "-" + index}
     >
-      <ReactPlayer
+      <ReactPlayer 
         url={video.metadata.youtubeUrl}
         controls
         width="100%"

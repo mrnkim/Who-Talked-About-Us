@@ -12,7 +12,7 @@ const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
 const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 
-function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, setTaskVideos, loadingSpinner}) {
+function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos, loadingSpinner}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
@@ -20,7 +20,6 @@ function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, set
     const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
     const [indexId, setIndexId] = useState(null)
     const [searchQuery, setSearchQuery] = useState(null)
-    const [searchOptions, setSearchOptions] = useState(['visual', 'conversation', 'text-in-video', 'logo'])
 
     const handleJSONSelect = (event) => {
         setSelectedJSON(event.target.files[0])
@@ -34,7 +33,6 @@ function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, set
         setYoutubeChannelId("")
         setYoutubePlaylistId("")
         setSearchQuery(null)
-        setSearchOptions(['visual', 'conversation', 'text-in-video', 'logo'])
         setIndexId(null);
         updateApiElement(null);
     }
@@ -111,7 +109,7 @@ function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, set
 
     const getIndexInfo = async () => {
         const queryUrl = INDEX_ID_INFO_URL
-        queryUrl.searchParams.set('INDEX_ID', index_id)
+        queryUrl.searchParams.set('INDEX_ID', index._id)
         const response = await fetch(queryUrl.href)
         return await response.json()
     }
@@ -123,7 +121,7 @@ function UploadYoutubeVideo ({setIndexedVideos, index, index_id, taskVideos, set
         const requestData = {
             videoData: videoData,
             indexName: index,
-            index_id: index_id
+            index_id: index._id
         }
         const data = {
             method: 'POST',

@@ -19,7 +19,6 @@ const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
  */
 function VideoIndex({
   index,
-  index_id,
   setIndexes,
   closeIcon,
   backIcon,
@@ -86,10 +85,10 @@ function VideoIndex({
 
   /** Deletes an index */
   async function deleteIndex() {
-    await TwelveLabsApi.deleteIndex(index_id);
+    await TwelveLabsApi.deleteIndex(currIndex);
     setIndexes((prevState) => ({
       ...prevState,
-      data: prevState.data.filter((index) => index._id !== index_id),
+      data: prevState.data.filter((index) => index._id !== currIndex),
     }));
     hideDeleteConfirmationMessage();
   }
@@ -228,7 +227,6 @@ function VideoIndex({
             indexedVideos={indexedVideos}
             setIndexedVideos={setIndexedVideos}
             index={index}
-            index_id={index_id}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
             loadingSpinner={loadingSpinner}
@@ -307,7 +305,6 @@ function VideoIndex({
               {!searchResults.isLoading && searchResults.data.length > 0 && (
                 <SearchResultList
                   searchResults={searchResults}
-                  index_id={currIndex}
                   videos={videos}
                 />
               )}

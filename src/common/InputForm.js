@@ -1,5 +1,5 @@
 import React from "react";
-import {useState} from "react";
+import { useState } from "react";
 import "./InputForm.css";
 
 /** User input form
@@ -8,14 +8,7 @@ import "./InputForm.css";
  *
  */
 
-function InputForm({
-  handleSubmit,
-  handleChange,
-  input,
-  type,
-  buttonText,
-  icon,
-}) {
+function InputForm({ handleSubmit, handleChange, input, type, icon }) {
   const [isInputFocused, setInputFocused] = useState(false);
 
   const handleInputFocus = () => {

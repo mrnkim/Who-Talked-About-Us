@@ -34,7 +34,6 @@ function IndexForm({ addIndex }) {
         handleChange={handleChange}
         input={indexName}
         type="Create an index and start analyzing videos!"
-        buttonText="Create"
         icon={icon}
       />
       {error && <div className="errorMessage">{error}</div>}

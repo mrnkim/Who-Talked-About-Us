@@ -41,8 +41,6 @@ function App() {
     }));
   }
 
-  // if (indexes.isLoading) return <i>Loading...</i>;
-
   if (indexes.isLoading)
     return (
       <div className="text-center">
@@ -71,7 +69,6 @@ function App() {
                 indexes={indexes}
                 setIndexes={setIndexes}
                 index={index}
-                index_id={index._id}
                 key={index._id}
                 closeIcon={closeIcon}
                 backIcon={backIcon}

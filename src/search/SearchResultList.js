@@ -1,11 +1,10 @@
 import React from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import "./SearchResultList.css";
 
-function SearchResultList({ index_id, searchResults, videos }) {
-  const [isPlaying, setIsPlaying] = useState(true);
+function SearchResultList({ searchResults, videos }) {
   const playerRef = useRef(null);
 
   const handleProgress = (progress, videoId) => {
@@ -165,7 +164,6 @@ function SearchResultList({ index_id, searchResults, videos }) {
           ))}
         </div>
       )}
-
     </div>
   );
 }
