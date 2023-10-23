@@ -9,9 +9,6 @@ import axios from "axios";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
 
-const SERVER_BASE_URL = new URL("http://localhost:4001");
-const FETCH_VIDEOS_URL = new URL("fetch-videos", SERVER_BASE_URL);
-
 /**
  * Show video list and videos, search form and search result list
  *
@@ -75,13 +72,10 @@ function VideoIndex({
   }, [indexedVideos]);
 
   /** Fetches videos and update videos state */
-  const fetchVideos = async () => {
-    const queryUrl = FETCH_VIDEOS_URL;
-    queryUrl.searchParams.set("INDEX_ID", currIndex);
-    const response = await fetch(queryUrl.href);
-    const data = await response.json();
-    setVideos({ data: data.data, isLoading: false });
-  };
+  async function fetchVideos() {
+    const fetchedVideos = await TwelveLabsApi.getVideos(currIndex);
+    setVideos({ data: fetchedVideos.data, isLoading: false });
+  }
 
   /** Deletes an index */
   async function deleteIndex() {

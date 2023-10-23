@@ -11,7 +11,6 @@ const JSON_VIDEO_INFO_URL = new URL('/json-video-info', SERVER_BASE_URL)
 const CHANNEL_VIDEO_INFO_URL = new URL('/channel-video-info', SERVER_BASE_URL)
 const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
 const DOWNLOAD_URL = new URL('/download', SERVER_BASE_URL)
-const CHECK_TASKS_URL = new URL('/check-tasks', SERVER_BASE_URL)
 
 function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos, loadingSpinner}) {
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
