@@ -3,6 +3,7 @@ import {  Card, Container} from "react-bootstrap";
 import sanitize from 'sanitize-filename'
 import "./UploadYouTubeVideo.css"
 import infoIcon from "../svg/Info.svg"
+import TwelveLabsApi from '../api/api';
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
 const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
@@ -146,10 +147,8 @@ function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos
 
         while (poll) {
             const taskStatuses = taskIds.map( async taskId => {
-                const queryUrl = CHECK_TASKS_URL
-                queryUrl.searchParams.set('TASK_ID', taskId._id)
-                const response = await fetch(queryUrl.href)
-                return await response.json()
+                const response = TwelveLabsApi.checkStatus(taskId._id)
+                return response;
             })
             const statuses = await Promise.all(taskStatuses)
             const videoTasksStatuses = statuses.map( status => {

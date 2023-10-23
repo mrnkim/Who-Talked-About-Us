@@ -262,22 +262,3 @@ app.post(
   }
 );
 
-/** Check the status of a specific indexing task */
-app.get("/check-tasks", async (request, response, next) => {
-  try {
-    const taskId = request.query.TASK_ID;
-    const headers = {
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "x-api-key": TWELVE_LABS_API_KEY,
-      },
-    };
-
-    const taskStatus = await TWELVE_LABS_API.get(`/tasks/${taskId}`, headers);
-    response.json(taskStatus.data);
-  } catch (error) {
-    response.json(error);
-    return next(error);
-  }
-});

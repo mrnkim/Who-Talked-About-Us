@@ -125,6 +125,22 @@ class TwelveLabsApi {
       console.error(error);
     }
   }
+
+  /** Check the status of a specific indexing task */
+  static async checkStatus(taskId) {
+    const config = {
+      method: "GET",
+      url: `${API_URL}/tasks/${taskId}`,
+      headers: this.headers,
+    };
+
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default TwelveLabsApi;
