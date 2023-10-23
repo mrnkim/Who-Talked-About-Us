@@ -16,8 +16,8 @@ function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos
     const [pendingApiRequest, setPendingApiRequest] = useState(false)
     const [apiElement, setApiElement] = useState(null)
     const [selectedJSON, setSelectedJSON] = useState(null)
-    const [youtubeChannelId, setYoutubeChannelId] = useState(null)
-    const [youtubePlaylistId, setYoutubePlaylistId] = useState(null)
+    const [youtubeChannelId, setYoutubeChannelId] = useState("")
+    const [youtubePlaylistId, setYoutubePlaylistId] = useState("")
     const [indexId, setIndexId] = useState(null)
     const [searchQuery, setSearchQuery] = useState(null)
 
@@ -259,6 +259,7 @@ if (taskVideos) {
                             hidden
                             onChange={handleJSONSelect}
                             disabled={!!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest}
+                            value={undefined}
                             />
                         <span className="selectedFile" >Selected File:
                         { selectedJSON ? selectedJSON.name : 'none' } </span>
