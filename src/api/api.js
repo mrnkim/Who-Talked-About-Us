@@ -11,6 +11,7 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 class TwelveLabsApi {
   /** Declare the `headers` object containing your API key */
   static headers = {
+    "Content-Type": "application/json",
     "x-api-key": API_KEY,
   };
 
@@ -84,26 +85,6 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get details on a video */
-  static async getVideo(index_id, video_id) {
-    const config = {
-      method: "GET",
-      url: `${API_URL}/indexes/${index_id}/videos/${video_id}`,
-      headers: {
-        ...this.headers,
-        "Content-Type":
-          "multipart/form-data; boundary=---011000010111000001101001",
-      },
-    };
-
-    try {
-      const response = await axios.request(config);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   /** Search videos with a given query */
   static async searchVideo(indexId, query) {
     const config = {
@@ -129,57 +110,13 @@ class TwelveLabsApi {
     }
   }
 
-  /** Checks status of a task (e.g., video upload task) */
-  static async checkStatus(taskId) {
+  /** Updates a video */
+  static async updateVideo(indexId, videoId, data) {
     const config = {
-      method: "GET",
-      url: `${API_URL}/tasks/${taskId}`,
-      headers: {
-        ...this.headers,
-      },
-    };
-
-    try {
-      const response = await axios.request(config);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /** Uploads a video with a given url */
-  static async uploadVideo(indexId, videoUrl) {
-    try {
-      let formData = new FormData();
-      formData.append("index_id", indexId);
-      formData.append("language", "en");
-      formData.append("video_url", videoUrl);
-
-      let config = {
-        method: "post",
-        url: `${API_URL}/tasks`,
-        headers: {
-          ...this.headers,
-          "Content-Type": "multipart/form-data",
-        },
-        data: formData,
-      };
-
-      let resp = await axios(config);
-      let response = await resp.data;
-      return response;
-    } catch (error) {
-      console.error(`Error: ${error}`);
-      console.error(`Error response: ${error.response.data}`);
-    }
-  }
-
-  /** Deletes a video */
-  static async deleteVideo(indexId, videoId) {
-    const config = {
-      method: "DELETE",
+      method: "PUT",
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: this.headers,
+      data: data,
     };
     try {
       const response = await axios.request(config);

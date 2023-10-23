@@ -105,8 +105,6 @@ function VideoIndex({
         if (matchingVid) {
           const authorName = matchingVid.author.name;
           const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-          const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-          const VIDEO_URL = `${process.env.REACT_APP_API_URL}/indexes/${currIndex}/videos/${indexedVid._id}`;
 
           //include custom data to add to the existing metadata
           const data = {
@@ -116,22 +114,7 @@ function VideoIndex({
             },
           };
 
-          const options = {
-            method: "PUT",
-            url: VIDEO_URL,
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": TWELVE_LABS_API_KEY,
-            },
-            data: data,
-          };
-
-          try {
-            const response = await axios.request(options);
-            console.log("Response from API:", response.status);
-          } catch (error) {
-            console.error("Error updating metadata:", error);
-          }
+          TwelveLabsApi.updateVideo(currIndex, indexedVid._id, data);
         }
       });
 

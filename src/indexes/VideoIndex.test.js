@@ -8,8 +8,6 @@ describe("VideoIndex", () => {
   beforeEach(() => {
     TwelveLabsApi.getVideos.mockClear();
     TwelveLabsApi.searchVideo.mockClear();
-    TwelveLabsApi.uploadVideo.mockClear();
-    TwelveLabsApi.deleteVideo.mockClear();
   });
 
   const index = {

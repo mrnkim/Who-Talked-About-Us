@@ -23,7 +23,6 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 - [Node](https://nodejs.org/en)
 - [React](https://react.dev/)
 - [React Bootstrap](https://react-bootstrap.netlify.app/)
-- [Material UI](https://mui.com/material-ui/getting-started/)
 - [ytdl-core](https://www.npmjs.com/package/ytdl-core)
 - [ytpl](https://www.npmjs.com/package/ytpl)
 - [React Player](https://www.npmjs.com/package/react-player)

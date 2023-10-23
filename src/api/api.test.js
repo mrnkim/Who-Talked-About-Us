@@ -79,26 +79,6 @@ describe("TwelveLabsApi", () => {
         page_limit: "50",
       },
     });
-});
-
-  test("should get video", async () => {
-    const indexId = "index1";
-    const videoId = "video1";
-
-    axios.request.mockResolvedValueOnce({ data: mockVideo });
-
-    const video = await TwelveLabsApi.getVideo(indexId, videoId);
-
-    expect(video).toEqual(mockVideo);
-    expect(axios.request).toHaveBeenCalledWith({
-      method: "GET",
-      url: `${process.env.REACT_APP_API_URL}/indexes/${indexId}/videos/${videoId}`,
-      headers: {
-        ...TwelveLabsApi.headers,
-        "Content-Type":
-          "multipart/form-data; boundary=---011000010111000001101001",
-      },
-    });
   });
 
   //FIXME: fix test
