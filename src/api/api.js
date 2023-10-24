@@ -68,12 +68,32 @@ class TwelveLabsApi {
     }
   }
 
+  /** Get details on a video */
+  static async getVideo(indexId, videoId) {
+    const config = {
+      method: "GET",
+      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
+      headers: {
+        ...this.headers,
+        "Content-Type":
+          "multipart/form-data; boundary=---011000010111000001101001",
+      },
+    };
+
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   /** Get all videos of an index */
-  static async getVideos(index_id) {
+  static async getVideos(indexId) {
     const config = {
       method: "GET",
       params: { page_limit: "50" },
-      url: `${API_URL}/indexes/${index_id}/videos`,
+      url: `${API_URL}/indexes/${indexId}/videos`,
       headers: this.headers,
     };
 
@@ -116,6 +136,22 @@ class TwelveLabsApi {
       method: "PUT",
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: this.headers,
+      data: data,
+    };
+    try {
+      const response = await axios.request(config);
+      return response.status;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /** Creates a video upload task */
+  static async createTask(data) {
+    const config = {
+      method: "POST",
+      url: `${API_URL}/tasks`,
+      headers: { ...this.headers, "Content-Type": "multipart/form-data" },
       data: data,
     };
     try {

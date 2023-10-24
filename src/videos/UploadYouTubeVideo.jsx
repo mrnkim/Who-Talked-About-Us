@@ -6,7 +6,6 @@ import infoIcon from "../svg/Info.svg"
 import TwelveLabsApi from '../api/api';
 
 const SERVER_BASE_URL = new URL('http://localhost:4001')
-const INDEX_ID_INFO_URL = new URL('/get-index-info', SERVER_BASE_URL)
 const JSON_VIDEO_INFO_URL = new URL('/json-video-info', SERVER_BASE_URL)
 const CHANNEL_VIDEO_INFO_URL = new URL('/channel-video-info', SERVER_BASE_URL)
 const PLAYLIST_VIDEO_INFO_URL = new URL('/playlist-video-info', SERVER_BASE_URL)
@@ -69,8 +68,7 @@ function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos
             fileReader.readAsText(selectedJSON)
             fileReader.onloadend = async () => {
                 const jsonVideos = JSON.parse(fileReader.result)
-
-                const response = await Promise.all(jsonVideos.map(getJsonVideoInfo))
+                 const response = await Promise.all(jsonVideos.map(getJsonVideoInfo))
                 setTaskVideos(response)
             }
         } else if (youtubeChannelId) {
@@ -107,11 +105,19 @@ function UploadYoutubeVideo ({setIndexedVideos, index, taskVideos, setTaskVideos
         return await response.json()
     }
 
+ /** Get video information and merge additional data from a specified index */
     const getIndexInfo = async () => {
-        const queryUrl = INDEX_ID_INFO_URL
-        queryUrl.searchParams.set('INDEX_ID', index._id)
-        const response = await fetch(queryUrl.href)
-        return await response.json()
+        const videos = await TwelveLabsApi.getVideos(index._id);
+        console.log("🚀 > getIndexInfo > videos=", videos)
+        const mergedVideos = await Promise.all(
+            videos.data?.map(async (video) => {
+              const videoInfo = await TwelveLabsApi.getVideo(index._id, video._id);
+              const videoData = await videoInfo.data;
+              return { ...video, ...videoData };
+            })
+          );
+        console.log("🚀 > getIndexInfo > mergedVideos =", mergedVideos )
+        return mergedVideos;
     }
 
     const indexYouTubeVideos = async () => {
