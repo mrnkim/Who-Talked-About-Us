@@ -126,7 +126,6 @@ app.post(
     try {
       // Step 1: Extract video data and index information from the request
       const jsonVideos = request.body.videoData;
-      const indexName = request.body.indexName;
       const totalVideos = jsonVideos.length;
       let processedVideosCount = 0;
       const chunk_size = 5;

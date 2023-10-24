@@ -5,7 +5,6 @@ import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import { Button, Container, Row, Modal } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
-import axios from "axios";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
 
