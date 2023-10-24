@@ -12,10 +12,9 @@ const sanitize = require("sanitize-filename");
 const util = require("util");
 const streamPipeline = util.promisify(require("stream").pipeline);
 
-/** Define constants and configure API endpoints */
+/** Define constants and configure TWL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const API_BASE_URL = "https://api.twelvelabs.io/p/v1.1";
-
 const TWELVE_LABS_API = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -121,7 +120,6 @@ app.post(
   "/download",
   bodyParser.urlencoded(),
   async (request, response, next) => {
-    console.log("🚀 > request=", request);
 
     try {
       // Step 1: Extract video data and index information from the request

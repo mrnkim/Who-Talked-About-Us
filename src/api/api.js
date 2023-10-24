@@ -33,23 +33,22 @@ class TwelveLabsApi {
 
   /** Creates an index */
   static async createIndex(indexName) {
-    const INDEXES_URL = `${API_URL}/indexes`;
-    const INDEX_NAME = indexName;
+    const config = {
+      method: "POST",
+      url: `${API_URL}/indexes`,
+      headers: this.headers,
+      data: {
+        engine_id: "marengo2.5",
+        index_options: ["visual", "conversation", "text_in_video", "logo"],
+        index_name: indexName,
+      },
+    };
 
     try {
-      const resp = await axios.post(
-        INDEXES_URL,
-        {
-          engine_id: "marengo2.5",
-          index_options: ["visual", "conversation", "text_in_video", "logo"],
-          index_name: INDEX_NAME,
-        },
-        { headers: this.headers }
-      );
-      const { data: response } = resp;
-      return resp.data;
+      const response = await axios.request(config);
+      return response.data;
     } catch (error) {
-      console.error(`Error: ${error}`);
+      console.error(error);
     }
   }
 

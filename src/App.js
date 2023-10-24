@@ -36,7 +36,7 @@ function App() {
   async function addIndex(indexName) {
     const newIndex = await TwelveLabsApi.createIndex(indexName);
     setIndexes((indexes) => ({
-      data: [...indexes.data, { ...newIndex, index_name: indexName }],
+      data: [{ ...newIndex, index_name: indexName }, ...indexes.data],
       isLoading: false,
     }));
   }
