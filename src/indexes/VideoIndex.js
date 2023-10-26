@@ -11,7 +11,7 @@ import CustomPagination from "./CustomPagination";
 /**
  * Show video list and videos, search form and search result list
  *
- * App -> VideoIndex -> { SearchForm, SearchResultList, UploadForm, VideoList}
+ * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
 function VideoIndex({
   index,

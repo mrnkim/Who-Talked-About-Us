@@ -3,6 +3,11 @@ import InputForm from "../common/InputForm";
 import icon from "../svg/Create.svg";
 import "./IndexForm.css";
 
+/** Renders the input form for an index 
+ *
+ * App -> IndexForm -> InputForm
+ */
+
 function IndexForm({ addIndex }) {
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");

@@ -14,6 +14,11 @@ const PLAYLIST_VIDEO_INFO_URL = new URL(
 );
 const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
 
+/** Implements video download, submission, and indexing
+ *
+ * App -> VideoIndex -> UploadYoutubeVideo
+ */
+
 function UploadYoutubeVideo({
   setIndexedVideos,
   index,

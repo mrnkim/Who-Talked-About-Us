@@ -4,6 +4,10 @@ import ReactPlayer from "react-player";
 import { useRef } from "react";
 import "./SearchResultList.css";
 
+/** Shows the search result
+ *
+ *  VideoIndex -> SearchResultList
+ */
 function SearchResultList({ searchResults, videos }) {
   const playerRef = useRef(null);
 
