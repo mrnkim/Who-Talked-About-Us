@@ -86,8 +86,9 @@ function VideoIndex({
     hideDeleteConfirmationMessage();
   }
 
-  /** Add "author" and "youtubeUrl" meta data to each video **/
+  /** Add "author" and "youtubeUrl" metadata to each video **/
   async function updateMetadata() {
+    //find the matching task video
     if (indexedVideos) {
       const updatePromises = indexedVideos.map(async (indexedVid) => {
         const matchingVid = taskVideos?.find(

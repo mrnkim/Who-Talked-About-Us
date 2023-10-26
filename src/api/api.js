@@ -5,7 +5,7 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 /** API Class
  *
- * Static class tying together methods used to get/send to to the API.
+ * Static class tying together methods used to get/send to the API.
  *
  */
 class TwelveLabsApi {
@@ -112,7 +112,6 @@ class TwelveLabsApi {
       headers: {
         ...this.headers,
         " accept": "application/json",
-        "Content-Type": "application/json",
       },
       data: {
         index_id: `${indexId}`,

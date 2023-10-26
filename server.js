@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const ytdl = require("ytdl-core");
@@ -12,7 +13,7 @@ const sanitize = require("sanitize-filename");
 const util = require("util");
 const streamPipeline = util.promisify(require("stream").pipeline);
 
-/** Define constants and configure TWL API endpoints */
+/** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const API_BASE_URL = "https://api.twelvelabs.io/p/v1.1";
 const TWELVE_LABS_API = axios.create({
@@ -42,6 +43,15 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorLogger, errorHandler);
 
+process.on("uncaughtException", function (exception) {
+  console.log(exception);
+});
+
+/** Set up Express server to listen on port 4001 */
+app.listen(4001, () => {
+  console.log("Server Running. Listening on port 4001");
+});
+
 /** Takes a downloaded video and initiates the indexing process */
 const indexVideo = async (videoPath, indexId) => {
   const headers = {
@@ -61,15 +71,6 @@ const indexVideo = async (videoPath, indexId) => {
   const response = await TWELVE_LABS_API.post("/tasks", params, headers);
   return await response.data;
 };
-
-process.on("uncaughtException", function (exception) {
-  console.log(exception);
-});
-
-/** Set up Express server to listen on port 4001 */
-app.listen(4001, () => {
-  console.log("Server Running. Listening on port 4001");
-});
 
 /** Get JSON-formatted video information from a YouTube URL using ytdl */
 app.get("/json-video-info", async (request, response, next) => {
@@ -120,7 +121,6 @@ app.post(
   "/download",
   bodyParser.urlencoded(),
   async (request, response, next) => {
-
     try {
       // Step 1: Extract video data and index information from the request
       const jsonVideos = request.body.videoData;
@@ -169,7 +169,7 @@ app.post(
         const chunkVideoIndexingResponses = await Promise.all(
           chunkDownloadedVideos.map(async (video) => {
             console.log(`Submitting ${video} For Indexing...`);
-            return await indexVideo(video, request.body.indexName._id);
+            return await indexVideo(video, request.body.index._id);
           })
         ).catch(next);
 
@@ -195,7 +195,7 @@ app.post(
 
       response.json({
         taskIds: videoIndexingResponses,
-        indexId: request.body.indexName._id,
+        indexId: request.body.index._id,
       });
     } catch (error) {
       next(error);
