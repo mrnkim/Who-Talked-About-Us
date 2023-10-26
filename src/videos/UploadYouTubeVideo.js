@@ -117,7 +117,6 @@ function UploadYoutubeVideo({
   /** Get video information and merge additional data from a specified index */
   const getIndexInfo = async () => {
     const videos = await TwelveLabsApi.getVideos(index._id);
-    console.log("🚀 > getIndexInfo > videos=", videos);
     const mergedVideos = await Promise.all(
       videos.data?.map(async (video) => {
         const videoInfo = await TwelveLabsApi.getVideo(index._id, video._id);
@@ -125,7 +124,6 @@ function UploadYoutubeVideo({
         return { ...video, ...videoData };
       })
     );
-    console.log("🚀 > getIndexInfo > mergedVideos =", mergedVideos);
     return mergedVideos;
   };
 
