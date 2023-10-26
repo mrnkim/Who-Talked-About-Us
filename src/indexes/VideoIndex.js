@@ -147,6 +147,17 @@ function VideoIndex({
     uniqueAuthors.add(vid.metadata.author);
   });
 
+  function searchResultsContent() {
+    if (!searchResults.isLoading && searchResults.data.length === 0) {
+      return (
+        <div className="title">No results. Let's try with other queries!</div>
+      );
+    } else if (!searchResults.isLoading && searchResults.data.length > 0) {
+      return <SearchResultList searchResults={searchResults} videos={videos} />;
+    }
+    return null;
+  }
+
   return (
     <Container>
       <div
@@ -219,7 +230,6 @@ function VideoIndex({
               <SearchForm index={currIndex} search={searchVideo} />
             </div>
           </div>
-
           <div className="channelPills">
             <div
               style={{
@@ -234,7 +244,6 @@ function VideoIndex({
               </div>
             ))}
           </div>
-
           <Container fluid className="mb-5">
             <Row>
               {videos.data && (
@@ -259,11 +268,12 @@ function VideoIndex({
           </Container>
         </div>
       )}
+
       {searchPerformed && (
         <div>
           {!searchResults.isLoading && searchResults.data.length > 0 && (
             <div className="searchResultTitle">
-              Search Results for "{searchQuery}"{" "}
+              Search Results for "{searchQuery}"
             </div>
           )}
           <div className="videoSearchForm">
@@ -271,21 +281,8 @@ function VideoIndex({
               <SearchForm index={currIndex} search={searchVideo} />
             </div>
           </div>
-
           <Container fluid className="m-3">
-            <Row>
-              {!searchResults.isLoading && searchResults.data.length === 0 && (
-                <div className="title">
-                  No results. Let's try with other queries!
-                </div>
-              )}
-              {!searchResults.isLoading && searchResults.data.length > 0 && (
-                <SearchResultList
-                  searchResults={searchResults}
-                  videos={videos}
-                />
-              )}
-            </Row>
+            <Row>{searchResultsContent()}</Row>
           </Container>
           <div className="resetButtonWrapper">
             <button className="resetButton" onClick={reset}>
