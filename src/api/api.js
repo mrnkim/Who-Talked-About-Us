@@ -20,12 +20,15 @@ class TwelveLabsApi {
     const config = {
       method: "GET",
       url: `${API_URL}/indexes`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
 
     try {
       const response = await axios.request(config);
-      return response.data.data;
+      return response;
     } catch (error) {
       console.error(error);
     }
@@ -36,7 +39,10 @@ class TwelveLabsApi {
     const config = {
       method: "POST",
       url: `${API_URL}/indexes`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
       data: {
         engine_id: "marengo2.5",
         index_options: ["visual", "conversation", "text_in_video", "logo"],
@@ -46,7 +52,7 @@ class TwelveLabsApi {
 
     try {
       const response = await axios.request(config);
-      return response.data;
+      return response;
     } catch (error) {
       console.error(error);
     }
