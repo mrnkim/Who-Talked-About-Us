@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import closeIcon from "./svg/Close.svg";
 import backIcon from "./svg/Back.svg";
 import loadingSpinner from "./svg/LoadingSpinner.svg";
-import { useGetIndexes } from "./api/apiQueries";
+import { useGetIndexes } from "./api/apiHooks";
 
 /** UGC Analyzer application
  *
@@ -18,12 +18,8 @@ import { useGetIndexes } from "./api/apiQueries";
  */
 
 function App() {
-  const { isLoading, data, refetch } = useGetIndexes();
+  const { isLoading, data } = useGetIndexes();
   const indexes = data?.data.data;
-
-  const handleRefetch = () => {
-    refetch();
-  };
 
   if (isLoading)
     return (
@@ -42,7 +38,7 @@ function App() {
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
       <Container className="m-auto p-3 indexFormContainer">
-        <IndexForm handleRefetch={handleRefetch} />
+        <IndexForm />
       </Container>
       <Container className="m-auto p-3">
         {indexes &&

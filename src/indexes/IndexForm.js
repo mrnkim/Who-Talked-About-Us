@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import InputForm from "../common/InputForm";
 import icon from "../svg/Create.svg";
 import "./IndexForm.css";
-import { useCreateIndex } from "../api/apiQueries";
+import { useCreateIndex } from "../api/apiHooks";
 
 /** Renders the input form for an index
  *
  * App -> IndexForm -> InputForm
  */
 
-function IndexForm({ handleRefetch }) {
+function IndexForm() {
   const createIndexMutation = useCreateIndex();
-  
+
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 
@@ -33,7 +33,6 @@ function IndexForm({ handleRefetch }) {
       try {
         await createIndexMutation.mutateAsync(trimmedIndexName);
         setIndexName("");
-        handleRefetch();
       } catch (error) {
         console.error(error);
       }
