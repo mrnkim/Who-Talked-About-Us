@@ -2,8 +2,8 @@ import "./App.css";
 import IndexForm from "./indexes/IndexForm";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-import closeIcon from "./svg/Close.svg";
-import backIcon from "./svg/Back.svg";
+// import closeIcon from "./svg/Close.svg";
+// import backIcon from "./svg/Back.svg";
 import loadingSpinner from "./svg/LoadingSpinner.svg";
 import { useGetIndexes } from "./api/apiHooks";
 
@@ -44,14 +44,7 @@ function App() {
         {indexes &&
           indexes.map((index) => (
             <div className="mb-3" key={index._id}>
-              <VideoIndex
-                indexes={indexes}
-                index={index}
-                key={index._id}
-                closeIcon={closeIcon}
-                backIcon={backIcon}
-                loadingSpinner={loadingSpinner}
-              />
+              <VideoIndex index={index} key={index._id} />
             </div>
           ))}
       </Container>

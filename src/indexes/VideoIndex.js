@@ -2,28 +2,29 @@ import { useState, useEffect } from "react";
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
+import closeIcon from "../svg/Close.svg";
+import backIcon from "../svg/Back.svg";
+import loadingSpinner from "../svg/LoadingSpinner.svg";
 import { Button, Container, Row, Modal } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
+import { useDeleteIndex } from "../api/apiHooks";
 
 /**
  * Show video list and videos, search form and search result list
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
-function VideoIndex({
-  index,
-  setIndexes,
-  closeIcon,
-  backIcon,
-  loadingSpinner,
-}) {
+function VideoIndex({ index }) {
+  const deleteIndexMutation = useDeleteIndex();
+
   const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
   const [videos, setVideos] = useState({ data: null, isLoading: true });
+  console.log("🚀 > VideoIndex > videos=", videos)
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,
@@ -78,11 +79,7 @@ function VideoIndex({
 
   /** Deletes an index */
   async function deleteIndex() {
-    await TwelveLabsApi.deleteIndex(currIndex);
-    setIndexes((prevState) => ({
-      ...prevState,
-      data: prevState.data.filter((index) => index._id !== currIndex),
-    }));
+    await deleteIndexMutation.mutateAsync(currIndex);
     hideDeleteConfirmationMessage();
   }
 
