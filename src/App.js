@@ -2,10 +2,8 @@ import "./App.css";
 import IndexForm from "./indexes/IndexForm";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-// import closeIcon from "./svg/Close.svg";
-// import backIcon from "./svg/Back.svg";
-import loadingSpinner from "./svg/LoadingSpinner.svg";
 import { useGetIndexes } from "./api/apiHooks";
+import { LoadingSpinner } from "./common/LoadingSpinner";
 
 /** UGC Analyzer application
  *
@@ -21,15 +19,7 @@ function App() {
   const { isLoading, data } = useGetIndexes();
   const indexes = data?.data.data;
 
-  if (isLoading)
-    return (
-      <div className="text-center">
-        <div className=" loading-spinner">
-          <img src={loadingSpinner} alt="Loading Spinner" />
-        </div>
-        Loading
-      </div>
-    );
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="App">

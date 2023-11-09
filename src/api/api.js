@@ -99,7 +99,10 @@ class TwelveLabsApi {
       method: "GET",
       params: { page_limit: "50" },
       url: `${API_URL}/indexes/${indexId}/videos`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
 
     try {

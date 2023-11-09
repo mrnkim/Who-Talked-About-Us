@@ -4,13 +4,14 @@ import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import closeIcon from "../svg/Close.svg";
 import backIcon from "../svg/Back.svg";
-import loadingSpinner from "../svg/LoadingSpinner.svg";
 import { Button, Container, Row, Modal } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
 import { useDeleteIndex } from "../api/apiHooks";
+import { useGetVideos } from "../api/apiHooks";
+import { LoadingSpinner } from "../common/LoadingSpinner";
 
 /**
  * Show video list and videos, search form and search result list
@@ -18,13 +19,17 @@ import { useDeleteIndex } from "../api/apiHooks";
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
 function VideoIndex({ index }) {
+  const currIndex = index._id;
+
+  const { isLoading: videosLoading, data: videosData } = useGetVideos(
+    index._id
+  );
+  const videos = videosData?.data;
+
   const deleteIndexMutation = useDeleteIndex();
 
-  const currIndex = index._id;
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
-  const [videos, setVideos] = useState({ data: null, isLoading: true });
-  console.log("🚀 > VideoIndex > videos=", videos)
   const [searchResults, setSearchResults] = useState({
     data: [],
     isLoading: true,
@@ -40,8 +45,8 @@ function VideoIndex({ index }) {
   const videosPerPage = 12;
   const indexOfLastVideo = currentPage * videosPerPage;
   const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
-  const currentVideos = videos.data?.slice(indexOfFirstVideo, indexOfLastVideo);
-  const totalPages = Math.ceil(videos.data?.length / videosPerPage);
+  const currentVideos = videos?.slice(indexOfFirstVideo, indexOfLastVideo);
+  const totalPages = Math.ceil(videos?.length / videosPerPage);
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -65,17 +70,6 @@ function VideoIndex({ index }) {
   const hideDeleteConfirmationMessage = () => {
     setShowDeleteConfirmation(false);
   };
-
-  useEffect(() => {
-    fetchVideos();
-    updateMetadata();
-  }, [indexedVideos]);
-
-  /** Fetches videos and update videos state */
-  async function fetchVideos() {
-    const fetchedVideos = await TwelveLabsApi.getVideos(currIndex);
-    setVideos({ data: fetchedVideos.data, isLoading: false });
-  }
 
   /** Deletes an index */
   async function deleteIndex() {
@@ -155,6 +149,11 @@ function VideoIndex({ index }) {
     return null;
   }
 
+  /** Update metadata of videos on mount */
+  useEffect(() => {
+    updateMetadata();
+  }, [indexedVideos]);
+
   return (
     <Container>
       <div
@@ -168,9 +167,7 @@ function VideoIndex({ index }) {
           <span style={{ marginLeft: "10px", fontSize: "1.1rem" }}>
             {index.index_name}
           </span>
-          <span style={{ marginLeft: "5px" }}>
-            ({videos.data?.length} videos)
-          </span>
+          <span style={{ marginLeft: "5px" }}>({videos?.length} videos)</span>
         </div>
         {showDeleteButton && (
           <button
@@ -214,7 +211,6 @@ function VideoIndex({ index }) {
             index={index}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
-            loadingSpinner={loadingSpinner}
           />
         </div>
       )}
@@ -243,15 +239,10 @@ function VideoIndex({ index }) {
           </div>
           <Container fluid className="mb-5">
             <Row>
-              {videos.data && (
-                <VideoList
-                  index_id={currIndex}
-                  videos={{
-                    data: currentVideos,
-                    isLoading: videos.isLoading,
-                  }}
-                />
+              {videos && (
+                <VideoList index_id={currIndex} videos={currentVideos} />
               )}
+              {videosLoading && <LoadingSpinner />}
               <Container fluid className="my-5 d-flex justify-content-center">
                 <CustomPagination
                   currentPage={currentPage}

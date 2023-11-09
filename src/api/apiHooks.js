@@ -20,3 +20,10 @@ export function useDeleteIndex() {
     onSuccess: () => queryClient.invalidateQueries(["indexes"]),
   });
 }
+
+export function useGetVideos(indexId) {
+  return useQuery({
+    queryKey: ["videos", indexId],
+    queryFn: () => TwelveLabsApi.getVideos(indexId),
+  });
+}

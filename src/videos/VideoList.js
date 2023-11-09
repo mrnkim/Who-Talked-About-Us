@@ -5,10 +5,10 @@ import "./VideoList.css";
 
 /** Shows list of the video in an index
  *
- *  VideoIndex -> VideoList 
+ *  VideoIndex -> VideoList
  */
 function VideoList({ videos }) {
-  return videos.data.map((video, index) => (
+  return videos.map((video, index) => (
     <Col
       sm={12}
       md={6}

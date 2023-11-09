@@ -4,6 +4,7 @@ import sanitize from "sanitize-filename";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
 import TwelveLabsApi from "../api/api";
+import { LoadingSpinner } from "../common/LoadingSpinner";
 
 const SERVER_BASE_URL = new URL("http://localhost:4001");
 const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
@@ -24,7 +25,6 @@ function UploadYoutubeVideo({
   index,
   taskVideos,
   setTaskVideos,
-  loadingSpinner,
 }) {
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [apiElement, setApiElement] = useState(null);
@@ -231,15 +231,7 @@ function UploadYoutubeVideo({
             key={video.video_url || video.url}
             className="indexingStatusContainer"
           >
-            {video.status === "ready" ? null : (
-              <div className="loading-spinner-wrapper">
-                <img
-                  src={loadingSpinner}
-                  alt="Loading Spinner"
-                  className="loading-spinner"
-                />
-              </div>
-            )}
+            {video.status === "ready" ? null : <LoadingSpinner />}
 
             <div>
               <Container
