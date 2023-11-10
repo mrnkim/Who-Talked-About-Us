@@ -1,7 +1,6 @@
 import React from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useRef, useState } from "react";
 
 import "./SearchResultList.css";
 
@@ -10,18 +9,6 @@ import "./SearchResultList.css";
  *  VideoIndex -> SearchResultList
  */
 function SearchResultList({ searchResults, videos }) {
-  const [loopingSegments, setLoopingSegments] = useState({});
-
-  const handleProgress = (progress, videoId) => {
-    const result = searchResults.find((data) => data.video_id === videoId);
-    if (result && progress.playedSeconds >= result.end) {
-      setLoopingSegments((prevSegments) => ({
-        ...prevSegments,
-        [videoId]: result.start,
-      }));
-    }
-  };
-
   // Function to convert seconds to "mm:ss" format
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -112,10 +99,6 @@ function SearchResultList({ searchResults, videos }) {
                             width="100%"
                             height="100%"
                             light={data.thumbnail_url}
-                            loop
-                            onProgress={(progress) =>
-                              handleProgress(progress, data.video_id)
-                            }
                           />
                           <div className="resultDescription">
                             Start {formatTime(data.start)} | End{" "}
