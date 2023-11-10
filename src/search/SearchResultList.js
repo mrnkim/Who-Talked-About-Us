@@ -1,7 +1,8 @@
 import React from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+
 import "./SearchResultList.css";
 
 /** Shows the search result
@@ -9,16 +10,15 @@ import "./SearchResultList.css";
  *  VideoIndex -> SearchResultList
  */
 function SearchResultList({ searchResults, videos }) {
-  const playerRef = useRef(null);
+  const [loopingSegments, setLoopingSegments] = useState({});
 
   const handleProgress = (progress, videoId) => {
-    // Find the result with the matching video_id
-    const result = searchResults.data.find((data) => data.video_id === videoId);
-
-    // Check if the video has reached the 'end' time
-    if (result && playerRef.current && progress.playedSeconds >= result.end) {
-      // Seek the video back to the 'start' time
-      playerRef.current.seekTo(result.start);
+    const result = searchResults.find((data) => data.video_id === videoId);
+    if (result && progress.playedSeconds >= result.end) {
+      setLoopingSegments((prevSegments) => ({
+        ...prevSegments,
+        [videoId]: result.start,
+      }));
     }
   };
 
@@ -33,9 +33,10 @@ function SearchResultList({ searchResults, videos }) {
 
   // Organize search results by author and video_id
   const organizedResults = {};
-  searchResults.data.forEach((result) => {
+  searchResults.forEach((result) => {
     const videoId = result.video_id;
-    const video = videos?.data.find((vid) => vid._id === videoId);
+    const video = videos?.find((vid) => vid._id === videoId);
+
     if (video) {
       const videoAuthor = video.metadata.author;
       const videoTitle = video.metadata.filename.replace(".mp4", "");
@@ -53,8 +54,7 @@ function SearchResultList({ searchResults, videos }) {
   });
 
   const noResultAuthors = [];
-
-  for (let video of videos.data) {
+  for (let video of videos) {
     const authors = Object.keys(organizedResults);
     const authorName = video.metadata.author;
     if (!authors.includes(authorName)) {
@@ -103,7 +103,7 @@ function SearchResultList({ searchResults, videos }) {
                           <ReactPlayer
                             url={
                               `${
-                                videos.data.find(
+                                videos.find(
                                   (vid) => vid._id === results[0].video_id
                                 ).metadata.youtubeUrl
                               }` + `?start=${data.start}&end=${data.end}`
@@ -113,18 +113,10 @@ function SearchResultList({ searchResults, videos }) {
                             height="100%"
                             light={data.thumbnail_url}
                             loop
-                            config={{
-                              youtube: {
-                                playerVars: {
-                                  start: data.start,
-                                },
-                              },
-                            }}
                             onProgress={(progress) =>
                               handleProgress(progress, data.video_id)
                             }
                           />
-
                           <div className="resultDescription">
                             Start {formatTime(data.start)} | End{" "}
                             {formatTime(data.end)} |{" "}
@@ -152,7 +144,7 @@ function SearchResultList({ searchResults, videos }) {
           );
         })}
 
-      {searchResults.data.length > 0 && noResultAuthors.length > 0 && (
+      {searchResults.length > 0 && noResultAuthors.length > 0 && (
         <div className="channelPills">
           <div
             style={{

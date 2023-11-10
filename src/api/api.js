@@ -119,13 +119,13 @@ class TwelveLabsApi {
       method: "POST",
       url: `${API_URL}/search`,
       headers: {
-        ...this.headers,
+        "x-api-key": API_KEY,
         " accept": "application/json",
       },
       data: {
         index_id: `${indexId}`,
         search_options: ["visual", "conversation", "text_in_video", "logo"],
-        query: { text: `${query}` },
+        query: `${query}`,
       },
     };
 
@@ -154,20 +154,20 @@ class TwelveLabsApi {
   }
 
   /** Creates a video upload task */
-  static async createTask(data) {
-    const config = {
-      method: "POST",
-      url: `${API_URL}/tasks`,
-      headers: { ...this.headers, "Content-Type": "multipart/form-data" },
-      data: data,
-    };
-    try {
-      const response = await axios.request(config);
-      return response.status;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // static async createTask(data) {
+  //   const config = {
+  //     method: "POST",
+  //     url: `${API_URL}/tasks`,
+  //     headers: { ...this.headers, "Content-Type": "multipart/form-data" },
+  //     data: data,
+  //   };
+  //   try {
+  //     const response = await axios.request(config);
+  //     return response.status;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   /** Check the status of a specific indexing task */
   static async checkStatus(taskId) {

@@ -27,3 +27,10 @@ export function useGetVideos(indexId) {
     queryFn: () => TwelveLabsApi.getVideos(indexId),
   });
 }
+
+export function useSearchVideo() {
+  return useMutation({
+    mutationFn: ({ indexId, query }) =>
+      TwelveLabsApi.searchVideo(indexId, query),
+  });
+}

@@ -9,8 +9,7 @@ import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
-import { useDeleteIndex } from "../api/apiHooks";
-import { useGetVideos } from "../api/apiHooks";
+import { useDeleteIndex, useGetVideos, useSearchVideo } from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 
 /**
@@ -26,14 +25,17 @@ function VideoIndex({ index }) {
   );
   const videos = videosData?.data;
 
+  const searchVideoMutation = useSearchVideo();
+  const searchResults = searchVideoMutation.data?.data;
+
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
-  const [searchResults, setSearchResults] = useState({
-    data: [],
-    isLoading: true,
-  });
+  // const [searchResults, setSearchResults] = useState({
+  //   data: [],
+  //   isLoading: true,
+  // });
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState(null);
@@ -111,17 +113,6 @@ function VideoIndex({ index }) {
     }
   }
 
-  /** Searches videos in an index with a given query*/
-  async function searchVideo(indexId, query) {
-    setSearchQuery(query);
-    const result = await TwelveLabsApi.searchVideo(indexId, searchQuery);
-    setSearchResults({
-      data: [...result?.data],
-      isLoading: false,
-    });
-    setSearchPerformed(true);
-  }
-
   /** Toggle whether to show or not show the components  */
   function handleClick() {
     setIsSelected(!isSelected);
@@ -134,19 +125,22 @@ function VideoIndex({ index }) {
   }
 
   const uniqueAuthors = new Set();
-  videos?.data?.forEach((vid) => {
+  videos?.forEach((vid) => {
     uniqueAuthors.add(vid.metadata.author);
   });
 
   function searchResultsContent() {
-    if (!searchResults.isLoading && searchResults.data.length === 0) {
-      return (
-        <div className="title">No results. Let's try with other queries!</div>
-      );
-    } else if (!searchResults.isLoading && searchResults.data.length > 0) {
-      return <SearchResultList searchResults={searchResults} videos={videos} />;
+    if (searchVideoMutation.isSuccess) {
+      if (searchResults.length === 0) {
+        return (
+          <div className="title">No results. Let's try with other queries!</div>
+        );
+      } else {
+        return (
+          <SearchResultList searchResults={searchResults} videos={videos} />
+        );
+      }
     }
-    return null;
   }
 
   /** Update metadata of videos on mount */
@@ -220,7 +214,13 @@ function VideoIndex({ index }) {
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
             <div className="m-auto p-3 searchFormContainer">
-              <SearchForm index={currIndex} search={searchVideo} />
+              <SearchForm
+                index={currIndex}
+                searchVideoMutation={searchVideoMutation}
+                setSearchPerformed={setSearchPerformed}
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+              />
             </div>
           </div>
           <div className="channelPills">
@@ -259,14 +259,18 @@ function VideoIndex({ index }) {
 
       {searchPerformed && (
         <div>
-          {!searchResults.isLoading && searchResults.data.length > 0 && (
+          {!searchVideoMutation.isPending && searchResults.length > 0 && (
             <div className="searchResultTitle">
               Search Results for "{searchQuery}"
             </div>
           )}
           <div className="videoSearchForm">
             <div className="m-auto p-3 searchFormContainer">
-              <SearchForm index={currIndex} search={searchVideo} />
+              <SearchForm
+                index={currIndex}
+                searchVideoMutation={searchVideoMutation}
+                setSearchPerformed={setSearchPerformed}
+              />
             </div>
           </div>
           <Container fluid className="m-3">
