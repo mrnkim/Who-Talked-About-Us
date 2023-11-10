@@ -11,6 +11,7 @@ import "./VideoIndex.css";
 import CustomPagination from "./CustomPagination";
 import { useDeleteIndex, useGetVideos, useSearchVideo } from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
+import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * Show video list and videos, search form and search result list
@@ -24,6 +25,9 @@ function VideoIndex({ index }) {
     index._id
   );
   const videos = videosData?.data;
+  console.log("🚀 > VideoIndex > videos=", videos)
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({ queryKey: ["videos"] });
 
   const searchVideoMutation = useSearchVideo();
   const searchResults = searchVideoMutation.data?.data;
@@ -31,10 +35,10 @@ function VideoIndex({ index }) {
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
+  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
   const [showComponents, setShowComponents] = useState(false);
 
   const [searchPerformed, setSearchPerformed] = useState(false);
-  const [indexedVideos, setIndexedVideos] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
@@ -79,11 +83,10 @@ function VideoIndex({ index }) {
   /** Add "author" and "youtubeUrl" metadata to each video **/
   async function updateMetadata() {
     //find the matching task video
-    if (indexedVideos) {
-      const updatePromises = indexedVideos.map(async (indexedVid) => {
+    if (taskVideos) {
+      const updatePromises = videos.map(async (vid) => {
         const matchingVid = taskVideos?.find(
-          (taskVid) =>
-            taskVid.metadata.filename === indexedVid.metadata.filename
+          (taskVid) => taskVid.metadata.filename === vid.metadata.filename
         );
 
         if (matchingVid) {
@@ -98,7 +101,7 @@ function VideoIndex({ index }) {
             },
           };
 
-          TwelveLabsApi.updateVideo(currIndex, indexedVid._id, data);
+          TwelveLabsApi.updateVideo(currIndex, vid._id, data);
         }
       });
 
@@ -143,7 +146,7 @@ function VideoIndex({ index }) {
   /** Update metadata of videos on mount */
   useEffect(() => {
     updateMetadata();
-  }, [indexedVideos]);
+  }, [videos]);
 
   return (
     <Container>
@@ -197,8 +200,6 @@ function VideoIndex({ index }) {
         <div className="videoUploadForm">
           <div className="display-6 m-4">Upload New Videos</div>
           <UploadYoutubeVideo
-            indexedVideos={indexedVideos}
-            setIndexedVideos={setIndexedVideos}
             index={index}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}

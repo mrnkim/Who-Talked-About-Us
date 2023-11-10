@@ -21,7 +21,6 @@ const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
  */
 
 function UploadYoutubeVideo({
-  setIndexedVideos,
   index,
   taskVideos,
   setTaskVideos,
@@ -40,7 +39,6 @@ function UploadYoutubeVideo({
 
   const handleReset = () => {
     setPendingApiRequest(false);
-    setIndexedVideos(null);
     setTaskVideos(null);
     setSelectedJSON(null);
     setYoutubeChannelId("");
@@ -91,9 +89,6 @@ function UploadYoutubeVideo({
     } else if (youtubePlaylistId) {
       const response = await getPlaylistVideoInfo(youtubePlaylistId);
       setTaskVideos(response);
-    } else if (indexId) {
-      const response = await getIndexInfo();
-      setIndexedVideos(response);
     }
     updateApiElement();
   };
@@ -119,18 +114,6 @@ function UploadYoutubeVideo({
     return await response.json();
   };
 
-  /** Get video information and merge additional data from a specified index */
-  const getIndexInfo = async () => {
-    const videos = await TwelveLabsApi.getVideos(index._id);
-    const mergedVideos = await Promise.all(
-      videos?.map(async (video) => {
-        const videoInfo = await TwelveLabsApi.getVideo(index._id, video._id);
-        const videoData = await videoInfo.data;
-        return { ...video, ...videoData };
-      })
-    );
-    return mergedVideos;
-  };
 
   const indexYouTubeVideos = async () => {
     updateApiElement(
@@ -189,8 +172,6 @@ function UploadYoutubeVideo({
       if (statuses.every((status) => status.status === "ready")) {
         poll = false;
         updateApiElement();
-        const response = await getIndexInfo();
-        setIndexedVideos(response);
       } else {
         await sleep(10000);
       }

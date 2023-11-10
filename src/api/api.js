@@ -73,15 +73,15 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get details on a video */
-  static async getVideo(indexId, videoId) {
+  /** Get all videos of an index */
+  static async getVideos(indexId) {
     const config = {
       method: "GET",
-      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
+      params: { page_limit: "50" },
+      url: `${API_URL}/indexes/${indexId}/videos`,
       headers: {
-        ...this.headers,
-        "Content-Type":
-          "multipart/form-data; boundary=---011000010111000001101001",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
       },
     };
 
@@ -93,15 +93,15 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get all videos of an index */
-  static async getVideos(indexId) {
+  /** Get details on a video */
+  static async getVideo(indexId, videoId) {
     const config = {
       method: "GET",
-      params: { page_limit: "50" },
-      url: `${API_URL}/indexes/${indexId}/videos`,
+      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: {
-        "Content-Type": "application/json",
-        "x-api-key": API_KEY,
+        ...this.headers,
+        "Content-Type":
+          "multipart/form-data; boundary=---011000010111000001101001",
       },
     };
 
