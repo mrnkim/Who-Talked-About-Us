@@ -34,3 +34,10 @@ export function useSearchVideo() {
       TwelveLabsApi.searchVideo(indexId, query),
   });
 }
+
+export function useGetTask(taskId) {
+  return useQuery({
+    queryKey: ["task", taskId],
+    queryFn: () => TwelveLabsApi.getTask(taskId),
+  });
+}

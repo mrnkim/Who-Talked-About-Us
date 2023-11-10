@@ -170,7 +170,7 @@ function UploadYoutubeVideo({
 
     while (poll) {
       const taskStatuses = taskIds.map(async (taskId) => {
-        const response = TwelveLabsApi.checkStatus(taskId._id);
+        const response = TwelveLabsApi.getTask(taskId._id);
         return response;
       });
       const statuses = await Promise.all(taskStatuses);

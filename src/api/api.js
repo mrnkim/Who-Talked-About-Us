@@ -153,24 +153,8 @@ class TwelveLabsApi {
     }
   }
 
-  /** Creates a video upload task */
-  // static async createTask(data) {
-  //   const config = {
-  //     method: "POST",
-  //     url: `${API_URL}/tasks`,
-  //     headers: { ...this.headers, "Content-Type": "multipart/form-data" },
-  //     data: data,
-  //   };
-  //   try {
-  //     const response = await axios.request(config);
-  //     return response.status;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
   /** Check the status of a specific indexing task */
-  static async checkStatus(taskId) {
+  static async getTask(taskId) {
     const config = {
       method: "GET",
       url: `${API_URL}/tasks/${taskId}`,
