@@ -31,8 +31,7 @@ function SearchForm({
   /** Calls parent function to search videos based on a query */
   async function handleSubmit(evt) {
     evt.preventDefault();
-    setSearchQuery(evt.target.value);
-    const trimmedQuery = searchQuery.trim();
+    const trimmedQuery = searchQuery?.trim();
 
     if (!trimmedQuery) {
       setError("Please enter the search term");
@@ -43,7 +42,6 @@ function SearchForm({
           query: trimmedQuery,
         });
         setSearchPerformed(true);
-        setSearchQuery("");
       } catch (error) {
         console.error(error);
       }
@@ -55,7 +53,6 @@ function SearchForm({
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
-        input={searchQuery}
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText="Search"
         icon={searchIcon}

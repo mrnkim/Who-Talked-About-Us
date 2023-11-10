@@ -32,13 +32,10 @@ function VideoIndex({ index }) {
 
   const [taskVideos, setTaskVideos] = useState(null);
   const [showComponents, setShowComponents] = useState(false);
-  // const [searchResults, setSearchResults] = useState({
-  //   data: [],
-  //   isLoading: true,
-  // });
+
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [indexedVideos, setIndexedVideos] = useState();
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -270,6 +267,8 @@ function VideoIndex({ index }) {
                 index={currIndex}
                 searchVideoMutation={searchVideoMutation}
                 setSearchPerformed={setSearchPerformed}
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
               />
             </div>
           </div>
