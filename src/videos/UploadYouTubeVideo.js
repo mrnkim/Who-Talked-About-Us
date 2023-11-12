@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Container } from "react-bootstrap";
 import sanitize from "sanitize-filename";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
 import TwelveLabsApi from "../api/api";
 import { LoadingSpinner } from "../common/LoadingSpinner";
+import { useQueryClient } from "@tanstack/react-query";
+import { UploadForm } from "./UploadForm";
+import { UploadConfirmation } from "./UploadConfirmation";
+import { TaskVideo } from "./TaskVideo";
+import { Task } from "./Task";
 
 const SERVER_BASE_URL = new URL("http://localhost:4001");
 const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
@@ -20,18 +25,28 @@ const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
  * App -> VideoIndex -> UploadYoutubeVideo
  */
 
-function UploadYoutubeVideo({
-  index,
+export function UploadYoutubeVideo({
+  currIndex,
   taskVideos,
   setTaskVideos,
+  taskVideosRef,
 }) {
+  console.log("🚀 > taskVideos=", taskVideos);
+  console.log("🚀 > taskVideosRef=", taskVideosRef);
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
-  const [apiElement, setApiElement] = useState(null);
+  const [mainMessage, setMainMessage] = useState(null);
   const [selectedJSON, setSelectedJSON] = useState(null);
   const [youtubeChannelId, setYoutubeChannelId] = useState("");
   const [youtubePlaylistId, setYoutubePlaylistId] = useState("");
   const [indexId, setIndexId] = useState(null);
   const [searchQuery, setSearchQuery] = useState(null);
+  const [taskIds, setTaskIds] = useState(null);
+  console.log("🚀 > UploadYoutubeVideo > taskIds=", taskIds);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [completeTasks, setCompleteTasks] = useState([]);
+  const [failedTasks, setFailedTasks] = useState([]);
+  console.log("🚀 > failedTasks=", failedTasks)
+  console.log("🚀 > completeTasks=", completeTasks);
 
   const handleJSONSelect = (event) => {
     setSelectedJSON(event.target.files[0]);
@@ -45,10 +60,10 @@ function UploadYoutubeVideo({
     setYoutubePlaylistId("");
     setSearchQuery(null);
     setIndexId(null);
-    updateApiElement(null);
+    updateMainMessage(null);
   };
 
-  const updateApiElement = (text) => {
+  const updateMainMessage = (text) => {
     if (text) {
       setPendingApiRequest(true);
 
@@ -58,10 +73,10 @@ function UploadYoutubeVideo({
           <div className="doNotLeaveMessage">{text}</div>
         </div>
       );
-      setApiElement(apiRequestElement);
+      setMainMessage(apiRequestElement);
     } else {
       setPendingApiRequest(false);
-      setApiElement(null);
+      setMainMessage(null);
     }
   };
 
@@ -74,7 +89,7 @@ function UploadYoutubeVideo({
   };
 
   const getInfo = async () => {
-    updateApiElement("Getting Data...");
+    updateMainMessage("Getting Data...");
     if (selectedJSON) {
       let fileReader = new FileReader();
       fileReader.readAsText(selectedJSON);
@@ -82,15 +97,18 @@ function UploadYoutubeVideo({
         const jsonVideos = JSON.parse(fileReader.result);
         const response = await Promise.all(jsonVideos.map(getJsonVideoInfo));
         setTaskVideos(response);
+        taskVideosRef.current = response;
       };
     } else if (youtubeChannelId) {
       const response = await getChannelVideoInfo(youtubeChannelId);
       setTaskVideos(response);
+      taskVideosRef.current = response;
     } else if (youtubePlaylistId) {
       const response = await getPlaylistVideoInfo(youtubePlaylistId);
       setTaskVideos(response);
+      taskVideosRef.current = response;
     }
-    updateApiElement();
+    updateMainMessage();
   };
 
   const getJsonVideoInfo = async (videoData) => {
@@ -114,9 +132,9 @@ function UploadYoutubeVideo({
     return await response.json();
   };
 
-
   const indexYouTubeVideos = async () => {
-    updateApiElement(
+    setIsSubmitting(true);
+    updateMainMessage(
       "Do not leave or refresh the page. Please wait until indexing is done for ALL videos."
     );
 
@@ -129,8 +147,7 @@ function UploadYoutubeVideo({
     });
     const requestData = {
       videoData: videoData,
-      index: index,
-      index_id: index._id,
+      index_id: currIndex,
     };
     const data = {
       method: "POST",
@@ -144,305 +161,132 @@ function UploadYoutubeVideo({
     const json = await response.json();
     const taskIds = json.taskIds;
     setIndexId(json.indexId);
-    await monitorTaskIds(taskIds);
+    setTaskIds(taskIds);
   };
 
-  const monitorTaskIds = async (taskIds) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    let poll = true;
-
-    while (poll) {
-      const taskStatuses = taskIds.map(async (taskId) => {
-        const response = TwelveLabsApi.getTask(taskId._id);
-        return response;
-      });
-      const statuses = await Promise.all(taskStatuses);
-      const videoTasksStatuses = statuses.map((status) => {
-        const taskMatch = taskVideos.filter((video) => {
-          const safeName = `${sanitize(video.title)}.mp4`;
-          if (safeName === status.metadata.filename) {
-            return video;
-          }
-        });
-        if (taskMatch) {
-          return { ...taskMatch[0], ...status };
-        }
-      });
-      setTaskVideos(videoTasksStatuses);
-      if (statuses.every((status) => status.status === "ready")) {
-        poll = false;
-        updateApiElement();
-      } else {
-        await sleep(10000);
-      }
+  useEffect(() => {
+    if (taskIds?.length === completeTasks.length + failedTasks.length) {
+      updateMetadata();
+      handleReset();
     }
-  };
+  }, [taskIds, completeTasks, failedTasks]);
 
-  let controls = <></>;
-  let videos = <></>;
+  async function updateMetadata() {
+    /**
+     * 1. get video id
+     * 2. find matching taskVideo and get author and youtubeUrl
+     * 3. update video
+     */
 
-  if (taskVideos) {
-    videos = taskVideos.map((video, index) => {
-      let indexingStatusContainer = null;
-
-      if (video.status) {
-        let indexingMessage =
-          video.status === "ready" ? (
-            <div className="statusMessage doneMessage">
-              {" "}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M10 1.66667C5.40001 1.66667 1.66667 5.40001 1.66667 10C1.66667 14.6 5.40001 18.3333 10 18.3333C14.6 18.3333 18.3333 14.6 18.3333 10C18.3333 5.40001 14.6 1.66667 10 1.66667ZM10.8333 14.1667H9.16667V9.16667H10.8333V14.1667ZM10.8333 7.50001H9.16667V5.83334H10.8333V7.50001Z"
-                  fill="#5AC903"
-                />
-              </svg>{" "}
-              Complete{" "}
-            </div>
-          ) : (
-            <div className="statusMessage">Waiting...</div>
-          );
-        indexingStatusContainer = (
-          <Container
-            key={video.video_url || video.url}
-            className="indexingStatusContainer"
-          >
-            {video.status === "ready" ? null : <LoadingSpinner />}
-
-            <div>
-              <Container
-                variant="body2"
-                color="text.secondary"
-                display="flex"
-                alignitems="center"
-                className="indexingStatus"
-              >
-                {video.process ? (
-                  <div className="statusMessage">
-                    Indexing... {Math.round(video.process.upload_percentage)}%
-                  </div>
-                ) : (
-                  indexingMessage
-                )}
-              </Container>
-            </div>
-          </Container>
-        );
-      }
-
-      let element = (
-        <Container key={video.video_url || video.url} className="taskVideo">
-          <Container>
-            <Card style={{ border: "none", margin: "0.5rem" }}>
-              <a href={video.video_url || video.url} target="_blank">
-                <Card.Img
-                  src={
-                    video.thumbnails[video.thumbnails.length - 1].url ||
-                    video.bestThumbnail.url
-                  }
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </a>
-            </Card>
-            <Container
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignitems: "center",
-                marginTop: "10px",
-              }}
-            >
-              {indexingStatusContainer ||
-                (pendingApiRequest ? (
-                  <div className="downloadSubmit">
-                    Downloading & Submitting...
-                  </div>
-                ) : null)}
-            </Container>
-          </Container>
-        </Container>
+    const updatePromises = completeTasks.map(async (completeTask) => {
+      const matchingVid = taskVideos?.find(
+        (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata?.filename
       );
 
-      return element;
+      if (matchingVid) {
+        const authorName = matchingVid.author.name;
+        const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
+
+        //include custom data to add to the existing metadata
+        const data = {
+          metadata: {
+            author: authorName,
+            youtubeUrl: youtubeUrl,
+          },
+        };
+        TwelveLabsApi.updateVideo(currIndex, completeTask.video_id, data);
+      }
     });
-    controls = (
-      <>
-        <Container
-          justifycontent="center"
-          alignitems="center"
-          direction="column"
-          disableequaloverflow="true"
-        >
-          <Container
-            direction="row"
-            sx={{ pb: "2vh", width: "100%", bgcolor: "#121212", "z-index": 5 }}
-            position="fixed"
-            top="0"
-            justifycontent="center"
-            alignitems="end"
-          >
-            <Container className="m-3">
-              <button
-                className="button"
-                onClick={indexYouTubeVideos}
-                disabled={pendingApiRequest ? true : false}
-                style={{ marginRight: "5px" }}
-              >
-                Continue
-              </button>
-              <button
-                className="button"
-                onClick={handleReset}
-                disabled={pendingApiRequest ? true : false}
-              >
-                Back
-              </button>
-            </Container>
-          </Container>
-
-          <Container
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: "2rem",
-              marginTop: "2rem",
-            }}
-          >
-            {apiElement}
-          </Container>
-
-          <Container fluid>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "8px",
-                justifyContent: "center",
-                alignitems: "center",
-              }}
-            >
-              {videos.length === 1 ? (
-                <div className="single-video">{videos}</div>
-              ) : (
-                videos
-              )}
-            </div>
-          </Container>
-        </Container>
-      </>
-    );
-  } else {
-    controls = (
-      <>
-        <Container
-          display="flex"
-          justifycontent="center"
-          alignitems="center"
-          direction="column"
-        >
-          <Container
-            style={{ marginBottom: "1rem" }}
-            display="flex"
-            justifycontent="center"
-            alignitems="center"
-          >
-            <label
-              htmlFor="jsonFileInput"
-              className={
-                !!selectedJSON || !!youtubeChannelId || !!youtubePlaylistId
-                  ? "jsonDisabled"
-                  : "selectJsonButton"
-              }
-            >
-              Select JSON File
-            </label>
-            <input
-              id="jsonFileInput"
-              type="file"
-              accept=".json"
-              hidden
-              onChange={handleJSONSelect}
-              disabled={
-                !!youtubeChannelId || !!youtubePlaylistId || pendingApiRequest
-              }
-              value={undefined}
-            />
-            <span className="selectedFile">
-              Selected File:
-              {selectedJSON ? selectedJSON.name : "none"}{" "}
-            </span>
-          </Container>
-
-          <Container display="flex" xs={3} style={{ marginBottom: "1rem" }}>
-            <input
-              className={
-                !!selectedJSON || !!indexId || !!youtubePlaylistId
-                  ? "customDisabled"
-                  : "youTubeId"
-              }
-              placeholder="YouTube Channel ID"
-              onChange={handleYoutubeChannelIdEntry}
-              disabled={!!selectedJSON || !!youtubePlaylistId}
-              value={youtubeChannelId}
-            />
-          </Container>
-
-          <Container display="flex" xs={3} style={{ marginBottom: "1rem" }}>
-            <input
-              className={
-                !!selectedJSON || !!indexId || !!youtubeChannelId
-                  ? "customDisabled"
-                  : "youTubeId"
-              }
-              placeholder="YouTube Playlist ID"
-              onChange={handleYoutubePlaylistIdEntry}
-              disabled={!!selectedJSON || !!youtubeChannelId}
-              value={youtubePlaylistId}
-            />
-          </Container>
-
-          <Container display="flex" className="buttons">
-            <button className="button" onClick={getInfo}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M7.99996 8.33333V7.83333H7.49996H5.37373L9.99996 3.20711L14.6262 7.83333H12.5H12V8.33333V12.8333H7.99996V8.33333ZM15.3333 15.5V16.1667H4.66663V15.5H15.3333Z"
-                  fill="black"
-                  stroke="black"
-                />
-              </svg>
-              Upload
-            </button>
-            <button className="button cancel" onClick={handleReset}>
-              Cancel
-            </button>
-          </Container>
-
-          <Container
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {apiElement}
-          </Container>
-        </Container>
-      </>
-    );
+    // Wait for all metadata updates to complete
+    await Promise.all(updatePromises);
   }
-  return controls;
+
+  return (
+    <div>
+      {!taskVideos && (
+        <UploadForm
+          selectedJSON={selectedJSON}
+          youtubeChannelId={youtubeChannelId}
+          youtubePlaylistId={youtubePlaylistId}
+          handleJSONSelect={handleJSONSelect}
+          indexId={indexId}
+          handleYoutubeChannelIdEntry={handleYoutubeChannelIdEntry}
+          handleYoutubePlaylistIdEntry={handleYoutubePlaylistIdEntry}
+          getInfo={getInfo}
+          handleReset={handleReset}
+          mainMessage={mainMessage}
+          pendingApiRequest={pendingApiRequest}
+        />
+      )}
+
+      {taskVideos && !isSubmitting && (
+        <>
+          <UploadConfirmation
+            indexYouTubeVideos={indexYouTubeVideos}
+            pendingApiRequest={pendingApiRequest}
+            handleReset={handleReset}
+            mainMessage={mainMessage}
+            taskVideos={taskVideos}
+          />
+
+          <div className="taskVideoContainer">
+            {taskVideos.map((taskVideo) => (
+              <div className="taskVideo" key={taskVideo.videoId}>
+                <TaskVideo
+                  key={taskVideo.videoId}
+                  taskVideo={taskVideo}
+                  pendingApiRequest={pendingApiRequest}
+                  className="taskVideo"
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {taskVideos && isSubmitting && (
+        <>
+          <div className="wrapper">
+            <Container className="mainMessageWrapper">{mainMessage}</Container>
+
+            <div className="taskVideoContainer">
+              {taskVideos.map((taskVideo) => (
+                <div className="taskVideo" key={taskVideo.videoId}>
+                  <TaskVideo
+                    key={taskVideo.videoId}
+                    taskVideo={taskVideo}
+                    pendingApiRequest={pendingApiRequest}
+                    className="taskVideo"
+                  />
+                </div>
+              ))}
+            </div>
+            {!taskIds && (
+              <div className="downloadSubmit">
+                <LoadingSpinner />
+                Downloading & Submitting...
+              </div>
+            )}
+            {taskIds && (
+              <div className="taskVideoContainer">
+                {taskIds.map((task) => (
+                  <div className="task" key={task._id}>
+                    <Task
+                      key={task._id}
+                      taskId={task._id}
+                      taskVideos={taskVideos}
+                      setCompleteTasks={setCompleteTasks}
+                      setFailedTasks={setFailedTasks}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default UploadYoutubeVideo;

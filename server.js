@@ -169,7 +169,7 @@ app.post(
         const chunkVideoIndexingResponses = await Promise.all(
           chunkDownloadedVideos.map(async (video) => {
             console.log(`Submitting ${video} For Indexing...`);
-            return await indexVideo(video, request.body.index._id);
+            return await indexVideo(video, request.body.index_id);
           })
         ).catch(next);
 
@@ -195,7 +195,7 @@ app.post(
 
       response.json({
         taskIds: videoIndexingResponses,
-        indexId: request.body.index._id,
+        indexId: request.body.index_id,
       });
     } catch (error) {
       next(error);

@@ -75,6 +75,10 @@ class TwelveLabsApi {
 
   /** Get all videos of an index */
   static async getVideos(indexId) {
+    console.log(
+      "🚀 > TwelveLabsApi > getVideos > getVideos=",
+      "getVideos Invoked!!!"
+    );
     const config = {
       method: "GET",
       params: { page_limit: "50" },
@@ -158,11 +162,15 @@ class TwelveLabsApi {
     const config = {
       method: "GET",
       url: `${API_URL}/tasks/${taskId}`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
 
     try {
       const response = await axios.request(config);
+      console.log("🚀 > TwelveLabsApi > getTask > response=", response);
       return response.data;
     } catch (error) {
       console.error(error);

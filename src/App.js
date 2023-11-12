@@ -4,6 +4,8 @@ import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 import { useGetIndexes } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 
 /** UGC Analyzer application
  *

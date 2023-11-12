@@ -178,38 +178,42 @@
     background: var(--TL-MossGreen-50, #F7FBF9);
   }
 
-  .apiElementWrapper {
-    display: 'flex';
-    justify-content: 'center';
-    align-items: 'center';
-    margin-bottom:'3rem';
+  .mainMessageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom:2rem;
+    margin-top: 2rem;
   }
 
   .statusMessage {
-    /* display: flex;
-    width: auto;
-    padding: 0.625rem 0.75rem;
-    justify-content: 'center';
-    align-items: center;
-    border: 1px solid var(--TL-Green-700, #6BDE11);
-    background: var(--TL-Green-50, #F7FEF2); */
-margin-top: 0;
+    margin-top: 0;
     font-size: 0.875rem;
-
+    text-transform: capitalize;
   }
 
-  .downloadSubmit {
+  .downloadSubmit, .doneMessage   {
     font-size: 0.875rem;
   }
 
-  .doneMessage {
-     /* display: flex;
-    width: auto;
-    padding: 0.625rem 0.75rem;
-    justify-content: 'center';
-    align-items: center;
-    border: 1px solid var(--TL-Green-700, #6BDE11);
-    background: var(--TL-Green-50, #F7FEF2); */
+  .taskVideoContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
 
-    font-size: 0.875rem;
+  .taskVideo, .task {
+    flex: 0 0 calc(25% - 16px); /* Ensure equal width for each video and account for margins */
+    margin: 8px;
+  }
+
+  .taskVideoTitle {
+    font-size: 0.75rem;
+  }
+
+  .wrapper {
+    justify-content: center;
+    align-items: center;
+
   }

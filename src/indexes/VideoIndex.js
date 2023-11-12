@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
@@ -19,15 +19,15 @@ import { useQueryClient } from "@tanstack/react-query";
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
 function VideoIndex({ index }) {
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({ queryKey: ["videos"] });
   const currIndex = index._id;
 
   const { isLoading: videosLoading, data: videosData } = useGetVideos(
     index._id
   );
   const videos = videosData?.data;
-  console.log("🚀 > VideoIndex > videos=", videos)
-  const queryClient = useQueryClient();
-  queryClient.invalidateQueries({ queryKey: ["videos"] });
+  console.log("🚀 > VideoIndex > videos=", videos);
 
   const searchVideoMutation = useSearchVideo();
   const searchResults = searchVideoMutation.data?.data;
@@ -35,7 +35,8 @@ function VideoIndex({ index }) {
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
-  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
+  const taskVideosRef = useRef();
+  console.log("🚀 > VideoIndex > taskVideosRef=", taskVideosRef);
   const [showComponents, setShowComponents] = useState(false);
 
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -82,11 +83,12 @@ function VideoIndex({ index }) {
 
   /** Add "author" and "youtubeUrl" metadata to each video **/
   async function updateMetadata() {
+    const taskVideos = taskVideosRef.current;
     //find the matching task video
     if (taskVideos) {
       const updatePromises = videos.map(async (vid) => {
         const matchingVid = taskVideos?.find(
-          (taskVid) => taskVid.metadata.filename === vid.metadata.filename
+          (taskVid) => taskVid.metadata?.filename === vid.metadata?.filename
         );
 
         if (matchingVid) {
@@ -108,8 +110,8 @@ function VideoIndex({ index }) {
       // Wait for all metadata updates to complete
       await Promise.all(updatePromises);
 
-      // Now that all updates are done, trigger the page reload
-      window.location.reload();
+      // // Now that all updates are done, trigger the page reload
+      // window.location.reload();
     }
   }
 
@@ -200,9 +202,10 @@ function VideoIndex({ index }) {
         <div className="videoUploadForm">
           <div className="display-6 m-4">Upload New Videos</div>
           <UploadYoutubeVideo
-            index={index}
+            currIndex={currIndex}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
+            taskVideosRef={taskVideosRef}
           />
         </div>
       )}
