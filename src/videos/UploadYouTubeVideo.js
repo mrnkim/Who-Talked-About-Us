@@ -208,12 +208,11 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
 
           <div className="taskVideoContainer">
             {taskVideos.map((taskVideo) => (
-              <div className="taskVideo" key={taskVideo.id}>
-                <TaskVideo
-                  key={taskVideo.id}
-                  taskVideo={taskVideo}
-                  className="taskVideo"
-                />
+              <div
+                className="taskVideo"
+                key={taskVideo.id || taskVideo.videoId}
+              >
+                <TaskVideo taskVideo={taskVideo} className="taskVideo" />
               </div>
             ))}
           </div>
@@ -227,9 +226,11 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
 
             <div className="taskVideoContainer">
               {taskVideos.map((taskVideo) => (
-                <div className="taskVideo" key={taskVideo.id}>
+                <div
+                  className="taskVideo"
+                  key={taskVideo.id || taskVideo.videoId}
+                >
                   <TaskVideo
-                    key={taskVideo.id}
                     taskVideo={taskVideo}
                     pendingApiRequest={pendingApiRequest}
                     className="taskVideo"
@@ -245,11 +246,10 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
             )}
             {taskIds && (
               <div className="taskVideoContainer">
-                {taskIds.map((task) => (
-                  <div className="task" key={task._id}>
+                {taskIds.map((taskId) => (
+                  <div className="task" key={taskId._id}>
                     <Task
-                      key={task._id}
-                      taskId={task._id}
+                      taskId={taskId._id}
                       taskVideos={taskVideos}
                       setCompleteTasks={setCompleteTasks}
                       setFailedTasks={setFailedTasks}

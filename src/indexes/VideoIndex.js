@@ -78,39 +78,6 @@ function VideoIndex({ index }) {
     hideDeleteConfirmationMessage();
   }
 
-  /** Add "author" and "youtubeUrl" metadata to each video **/
-  async function updateMetadata() {
-    //find the matching task video
-    if (taskVideos) {
-      const updatePromises = videos.map(async (vid) => {
-        const matchingVid = taskVideos?.find(
-          (taskVid) => taskVid.metadata?.filename === vid.metadata?.filename
-        );
-
-        if (matchingVid) {
-          const authorName = matchingVid.author.name;
-          const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-
-          //include custom data to add to the existing metadata
-          const data = {
-            metadata: {
-              author: authorName,
-              youtubeUrl: youtubeUrl,
-            },
-          };
-
-          TwelveLabsApi.updateVideo(currIndex, vid._id, data);
-        }
-      });
-
-      // Wait for all metadata updates to complete
-      await Promise.all(updatePromises);
-
-      // // Now that all updates are done, trigger the page reload
-      // window.location.reload();
-    }
-  }
-
   /** Toggle whether to show or not show the components  */
   function handleClick() {
     setIsSelected(!isSelected);
@@ -140,11 +107,6 @@ function VideoIndex({ index }) {
       }
     }
   }
-
-  /** Update metadata of videos on mount */
-  useEffect(() => {
-    updateMetadata();
-  }, [videos]);
 
   return (
     <Container>
