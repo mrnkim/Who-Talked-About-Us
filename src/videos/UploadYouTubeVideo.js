@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Card, Container } from "react-bootstrap";
-import sanitize from "sanitize-filename";
+import { Container } from "react-bootstrap";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
 import TwelveLabsApi from "../api/api";
 import { LoadingSpinner } from "../common/LoadingSpinner";
-import { useQueryClient } from "@tanstack/react-query";
 import { UploadForm } from "./UploadForm";
 import { UploadConfirmation } from "./UploadConfirmation";
 import { TaskVideo } from "./TaskVideo";
@@ -25,14 +23,7 @@ const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
  * App -> VideoIndex -> UploadYoutubeVideo
  */
 
-export function UploadYoutubeVideo({
-  currIndex,
-  taskVideos,
-  setTaskVideos,
-  taskVideosRef,
-}) {
-  console.log("🚀 > taskVideos=", taskVideos);
-  console.log("🚀 > taskVideosRef=", taskVideosRef);
+export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [mainMessage, setMainMessage] = useState(null);
   const [selectedJSON, setSelectedJSON] = useState(null);
@@ -41,12 +32,9 @@ export function UploadYoutubeVideo({
   const [indexId, setIndexId] = useState(null);
   const [searchQuery, setSearchQuery] = useState(null);
   const [taskIds, setTaskIds] = useState(null);
-  console.log("🚀 > UploadYoutubeVideo > taskIds=", taskIds);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
-  console.log("🚀 > failedTasks=", failedTasks)
-  console.log("🚀 > completeTasks=", completeTasks);
 
   const handleJSONSelect = (event) => {
     setSelectedJSON(event.target.files[0]);
@@ -97,16 +85,13 @@ export function UploadYoutubeVideo({
         const jsonVideos = JSON.parse(fileReader.result);
         const response = await Promise.all(jsonVideos.map(getJsonVideoInfo));
         setTaskVideos(response);
-        taskVideosRef.current = response;
       };
     } else if (youtubeChannelId) {
       const response = await getChannelVideoInfo(youtubeChannelId);
       setTaskVideos(response);
-      taskVideosRef.current = response;
     } else if (youtubePlaylistId) {
       const response = await getPlaylistVideoInfo(youtubePlaylistId);
       setTaskVideos(response);
-      taskVideosRef.current = response;
     }
     updateMainMessage();
   };
@@ -172,12 +157,6 @@ export function UploadYoutubeVideo({
   }, [taskIds, completeTasks, failedTasks]);
 
   async function updateMetadata() {
-    /**
-     * 1. get video id
-     * 2. find matching taskVideo and get author and youtubeUrl
-     * 3. update video
-     */
-
     const updatePromises = completeTasks.map(async (completeTask) => {
       const matchingVid = taskVideos?.find(
         (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata?.filename
@@ -187,7 +166,6 @@ export function UploadYoutubeVideo({
         const authorName = matchingVid.author.name;
         const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
 
-        //include custom data to add to the existing metadata
         const data = {
           metadata: {
             author: authorName,
@@ -197,7 +175,6 @@ export function UploadYoutubeVideo({
         TwelveLabsApi.updateVideo(currIndex, completeTask.video_id, data);
       }
     });
-    // Wait for all metadata updates to complete
     await Promise.all(updatePromises);
   }
 
@@ -231,11 +208,10 @@ export function UploadYoutubeVideo({
 
           <div className="taskVideoContainer">
             {taskVideos.map((taskVideo) => (
-              <div className="taskVideo" key={taskVideo.videoId}>
+              <div className="taskVideo" key={taskVideo.id}>
                 <TaskVideo
-                  key={taskVideo.videoId}
+                  key={taskVideo.id}
                   taskVideo={taskVideo}
-                  pendingApiRequest={pendingApiRequest}
                   className="taskVideo"
                 />
               </div>
@@ -251,9 +227,9 @@ export function UploadYoutubeVideo({
 
             <div className="taskVideoContainer">
               {taskVideos.map((taskVideo) => (
-                <div className="taskVideo" key={taskVideo.videoId}>
+                <div className="taskVideo" key={taskVideo.id}>
                   <TaskVideo
-                    key={taskVideo.videoId}
+                    key={taskVideo.id}
                     taskVideo={taskVideo}
                     pendingApiRequest={pendingApiRequest}
                     className="taskVideo"

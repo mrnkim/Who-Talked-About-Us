@@ -22,6 +22,7 @@ function VideoList({ videos }) {
         controls
         width="100%"
         height="100%"
+        key={video._id + "-" + index}
       ></ReactPlayer>
       <div className="channelAndVideoName">
         <div className="channelPillSmall">{video.metadata.author}</div>

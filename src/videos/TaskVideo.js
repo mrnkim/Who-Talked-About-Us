@@ -1,11 +1,15 @@
 import { Container, Card } from "react-bootstrap";
 
-export function TaskVideo({ taskVideo, pendingApiRequest }) {
+export function TaskVideo({ taskVideo }) {
   return (
     <Container key={taskVideo.video_url || taskVideo.url} className="taskVideo">
       <Container>
         <Card style={{ border: "none", margin: "0.5rem" }}>
-          <a href={taskVideo.video_url || taskVideo.url} target="_blank">
+          <a
+            href={taskVideo.video_url || taskVideo.url}
+            target="_blank"
+            rel="noreferrer"
+          >
             <Card.Img
               src={
                 taskVideo.thumbnails[taskVideo.thumbnails?.length - 1].url ||

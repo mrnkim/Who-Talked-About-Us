@@ -37,24 +37,6 @@ export function UploadConfirmation({
       </Container>
 
       <Container className="mainMessageWrapper">{mainMessage}</Container>
-
-      {/* <Container fluid>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "8px",
-            justifyContent: "center",
-            alignitems: "center",
-          }}
-        >
-          {taskVideos.length === 1 ? (
-            <div className="single-video">{taskVideos}</div>
-          ) : (
-            taskVideos
-          )}
-        </div>
-      </Container> */}
     </Container>
   );
 }

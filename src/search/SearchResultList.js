@@ -9,7 +9,7 @@ import "./SearchResultList.css";
  *  VideoIndex -> SearchResultList
  */
 function SearchResultList({ searchResults, videos }) {
-  // Function to convert seconds to "mm:ss" format
+  /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
@@ -18,7 +18,7 @@ function SearchResultList({ searchResults, videos }) {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  // Organize search results by author and video_id
+  /** Organize search results by author and video_id */
   const organizedResults = {};
   searchResults.forEach((result) => {
     const videoId = result.video_id;

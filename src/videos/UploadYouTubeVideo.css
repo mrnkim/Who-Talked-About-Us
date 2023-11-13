@@ -11,7 +11,7 @@
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 500;
-    line-height: 1.25rem; /* 125% */
+    line-height: 1.25rem;
   }
 
 .jsonDisabled {
@@ -27,7 +27,7 @@
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 1.25rem; /* 125% */
+  line-height: 1.25rem;
   background: var(--TL-Grey-200, #E5E6E4);
   color: var(--TL-Grey-500, #B7B9B4);
   cursor: not-allowed;
@@ -45,12 +45,12 @@
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 500;
-    line-height: 1.25rem; /* 125% */
+    line-height: 1.25rem;
     color: #222222;
     border: 1px solid var(--TL-Green-500, #9AED59);  }
 
   .single-video {
-    max-width: 500px; /* Adjust the max-width as needed */
+    max-width: 500px;
   }
 
   .selectedFile {
@@ -74,7 +74,7 @@
     font-size: 1rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.5rem; /* 150% */
+    line-height: 1.5rem; 
   }
 
   .youTubeId:hover {
@@ -121,7 +121,7 @@
     font-size: 1rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.5rem; /* 150% */
+    line-height: 1.5rem;
     cursor: not-allowed;
 
   }
@@ -157,7 +157,7 @@
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.25rem; /* 142.857% */
+    line-height: 1.25rem;
       }
 
   .icon {

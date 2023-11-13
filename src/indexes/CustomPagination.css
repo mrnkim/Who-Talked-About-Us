@@ -1,36 +1,32 @@
-/* CustomPagination.css */
-
 .custom-pagination button {
-  color: black; /* Desired color for page numbers */
-  background-color: transparent; /* Set background to transparent */
+  color: black;
+  background-color: transparent;
   outline: none !important;
   width: 2.5rem;
   height: 2.5rem;
   flex-shrink: 0;
   border-radius: 1.25rem;
-  transition: background-color 0.3s; /* Add a smooth transition effect */
-  margin: 0.38rem; /* Add margin to create spacing */
+  transition: background-color 0.3s;
+  margin: 0.38rem;
   border: none;
 }
 
 .custom-pagination button:hover {
-  background-color: transparent; /* Set background to transparent */
+  background-color: transparent;
   outline: none !important;
   border: 1px solid #D4D5D2;
-  border-radius: 1.25rem; /* Make it circular */
+  border-radius: 1.25rem;
 }
 
-/* Change the background color of the selected page */
 .custom-pagination button.active {
-  background-color: #D4D5D2; /* Desired background color for the selected page */
+  background-color: #D4D5D2;
   font-weight: 700;
   border: none;
-  border-radius: 1.25rem; /* Make it circular */
+  border-radius: 1.25rem;
   outline: none !important;
 }
 
 
 .custom-pagination button.disabled-button {
-  /* Remove the border for disabled buttons */
   border: none;
 }

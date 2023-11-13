@@ -25,7 +25,6 @@ class TwelveLabsApi {
         "x-api-key": API_KEY,
       },
     };
-
     try {
       const response = await axios.request(config);
       return response;
@@ -49,7 +48,6 @@ class TwelveLabsApi {
         index_name: indexName,
       },
     };
-
     try {
       const response = await axios.request(config);
       return response;
@@ -75,10 +73,6 @@ class TwelveLabsApi {
 
   /** Get all videos of an index */
   static async getVideos(indexId) {
-    console.log(
-      "🚀 > TwelveLabsApi > getVideos > getVideos=",
-      "getVideos Invoked!!!"
-    );
     const config = {
       method: "GET",
       params: { page_limit: "50" },
@@ -88,7 +82,6 @@ class TwelveLabsApi {
         "x-api-key": API_KEY,
       },
     };
-
     try {
       const response = await axios.request(config);
       return response.data;
@@ -108,7 +101,6 @@ class TwelveLabsApi {
           "multipart/form-data; boundary=---011000010111000001101001",
       },
     };
-
     try {
       const response = await axios.request(config);
       return response.data;
@@ -132,7 +124,6 @@ class TwelveLabsApi {
         query: `${query}`,
       },
     };
-
     try {
       const response = await axios.request(config);
       return response.data;
@@ -167,10 +158,8 @@ class TwelveLabsApi {
         "x-api-key": API_KEY,
       },
     };
-
     try {
       const response = await axios.request(config);
-      console.log("🚀 > TwelveLabsApi > getTask > response=", response);
       return response.data;
     } catch (error) {
       console.error(error);

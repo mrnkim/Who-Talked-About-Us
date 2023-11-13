@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import SearchForm from "../search/SearchForm";
 import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
@@ -27,7 +27,6 @@ function VideoIndex({ index }) {
     index._id
   );
   const videos = videosData?.data;
-  console.log("🚀 > VideoIndex > videos=", videos);
 
   const searchVideoMutation = useSearchVideo();
   const searchResults = searchVideoMutation.data?.data;
@@ -35,8 +34,6 @@ function VideoIndex({ index }) {
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
-  const taskVideosRef = useRef();
-  console.log("🚀 > VideoIndex > taskVideosRef=", taskVideosRef);
   const [showComponents, setShowComponents] = useState(false);
 
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -83,7 +80,6 @@ function VideoIndex({ index }) {
 
   /** Add "author" and "youtubeUrl" metadata to each video **/
   async function updateMetadata() {
-    const taskVideos = taskVideosRef.current;
     //find the matching task video
     if (taskVideos) {
       const updatePromises = videos.map(async (vid) => {
@@ -205,7 +201,6 @@ function VideoIndex({ index }) {
             currIndex={currIndex}
             taskVideos={taskVideos}
             setTaskVideos={setTaskVideos}
-            taskVideosRef={taskVideosRef}
           />
         </div>
       )}

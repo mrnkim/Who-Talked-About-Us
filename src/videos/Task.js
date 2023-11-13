@@ -4,13 +4,7 @@ import { Container } from "react-bootstrap";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import completeIcon from "../svg/Complete.svg";
 import { useEffect } from "react";
-export function Task({
-  taskId,
-  taskVideos,
-  setCompleteTasks,
-  setFailedTasks,
-}) {
-  console.log("🚀 > Task > taskVideos=", taskVideos);
+export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const query = {
     queryKey: ["task", taskId],
     queryFn: () => TwelveLabsApi.getTask(taskId),
@@ -31,12 +25,10 @@ export function Task({
       setFailedTasks((prev) => [...prev, task]);
       refetch({ enabled: false }); // Disable further refetching
     }
-  }, [task, refetch, setCompleteTasks]);
-
-  console.log("🚀 > VideoIndex > task=", task);
+  }, [task, refetch, setCompleteTasks, setFailedTasks]);
 
   return (
-    <Container className="indexingStatusContainer">
+    <Container className="indexingStatusContainer" key={taskId}>
       {isLoading && <LoadingSpinner />}
       {!isLoading && (
         <Container
