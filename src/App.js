@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import { useGetIndexes } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
 
-/** UGC Analyzer application
+/** Who Talked About Us App
  *
  * - indexes: list of indexes and loading status
  *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
