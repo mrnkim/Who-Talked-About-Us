@@ -184,13 +184,7 @@ function VideoIndex({ index }) {
             </div>
           </div>
           <div className="channelPills">
-            <div
-              style={{
-                fontSize: "1.8rem",
-              }}
-            >
-              All Channels in Index{" "}
-            </div>
+            <div className="subtitle">All Channels in Index </div>
             {[...uniqueAuthors].map((author) => (
               <div key={author + "-" + index} className="channelPill">
                 {author}

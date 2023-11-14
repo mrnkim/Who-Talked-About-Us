@@ -99,3 +99,7 @@ font-weight: 100;
   justify-content: center;
   margin-top: 0
 }
+
+.subtitle {
+  font-size: 1.8rem;
+}

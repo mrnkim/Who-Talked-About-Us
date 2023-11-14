@@ -129,13 +129,7 @@ function SearchResultList({ searchResults, videos }) {
 
       {searchResults.length > 0 && noResultAuthors.length > 0 && (
         <div className="channelPills">
-          <div
-            style={{
-              fontSize: "1.8rem",
-            }}
-          >
-            No results from
-          </div>
+          <div className="subtitle">No results from</div>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
             <div key={index} className="channelNoResultPill">
               {author}
