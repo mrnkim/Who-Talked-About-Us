@@ -25,6 +25,7 @@ function VideoIndex({ index }) {
   const { isLoading: videosLoading, data: videosData } = useGetVideos(
     index._id
   );
+
   const videos = videosData?.data;
 
   const searchVideoMutation = useSearchVideo();
@@ -154,6 +155,8 @@ function VideoIndex({ index }) {
           </Modal>
         )}
       </div>
+
+      {videosLoading && <LoadingSpinner />}
 
       {showComponents && !searchPerformed && (
         <div className="videoUploadForm">

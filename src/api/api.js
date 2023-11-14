@@ -9,12 +9,6 @@ const API_KEY = process.env.REACT_APP_API_KEY;
  *
  */
 class TwelveLabsApi {
-  /** Declare the `headers` object containing your API key */
-  static headers = {
-    "Content-Type": "application/json",
-    "x-api-key": API_KEY,
-  };
-
   /** Get indexes of a user */
   static async getIndexes() {
     const config = {
@@ -43,7 +37,7 @@ class TwelveLabsApi {
         "x-api-key": API_KEY,
       },
       data: {
-        engine_id: "marengo2.5",
+        engines: [{ engine_name: "marengo2.5" }],
         index_options: ["visual", "conversation", "text_in_video", "logo"],
         index_name: indexName,
       },
@@ -61,7 +55,10 @@ class TwelveLabsApi {
     const config = {
       method: "DELETE",
       url: `${API_URL}/indexes/${indexId}`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
     try {
       const response = await axios.request(config);
@@ -90,24 +87,6 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get details on a video */
-  static async getVideo(indexId, videoId) {
-    const config = {
-      method: "GET",
-      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
-      headers: {
-        ...this.headers,
-        "Content-Type": "multipart/form-data",
-      },
-    };
-    try {
-      const response = await axios.request(config);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   /** Search videos with a given query */
   static async searchVideo(indexId, query) {
     const config = {
@@ -115,7 +94,7 @@ class TwelveLabsApi {
       url: `${API_URL}/search`,
       headers: {
         "x-api-key": API_KEY,
-        " accept": "application/json",
+        accept: "application/json",
       },
       data: {
         index_id: `${indexId}`,
@@ -136,7 +115,10 @@ class TwelveLabsApi {
     const config = {
       method: "PUT",
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
       data: data,
     };
     try {
