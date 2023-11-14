@@ -4,12 +4,12 @@
 
 ## 👋 Introduction
 
-"Who Talked About Us?" is an influencer-searching app where a user can:
+"Who Talked About Us?" is an influencer-filtering app where a user can:
 
 1. Create an index (a library of videos)
-2. Upload videos by YouTube (public) playlist ID, channel ID, or JSON file
-3. Search specific timelines of videos by a keyword (e.g., applying MAC gold highlighter)
-4. See the search result by channel to easily capture who mentioned the keyword and who did not
+2. Upload YouTube videos in bulk by (public) playlist ID, channel ID, or JSON file
+3. Filter the videos and channels that mention a provided keyword (e.g., _applying MAC gold highlighter_)
+4. View specific timelines or references of videos mentioning the keyword
 
 This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for the rich, contextual video search. Twelve Labs is an AI-powered video understanding platform that extracts various types of information from videos, such as movement and actions, objects and people, sound, text on screen, and speech.
 
@@ -37,7 +37,6 @@ That's where the Who Talked About Us with Twelve Labs API can be a game-changer.
 
 In the search results (see the image above), you can effortlessly identify videos by Jean Watts, Allure, and Ssin that mention "_MAC gold highlighter_," along with the exact moments of reference. In contrast, the videos from Hindash, Risabae, and Vogue did not feature such mentions. Armed with this comprehensive result, you can strategically prioritize reaching out to influencers like Jean, Allure, and Ssin, armed with the right context for more impactful collaborations.
 
-
 ## 🚘 How to Use
 
 Follow this simple guide on how to use the Who Talked About Us:
@@ -45,12 +44,12 @@ Follow this simple guide on how to use the Who Talked About Us:
 1. Begin by uploading videos in bulk to the app using either YouTube [playlist ID](https://www.sociablekit.com/find-youtube-playlist-id/#:~:text=Go%20to%20your%20target%20YouTube,playlist%20ID%20is%20PLFs4vir_WsTwEd%2DnJgVJCZPNL3HALHHpF), [channel ID](https://mixedanalytics.com/blog/find-a-youtube-channel-id/), or JSON file.
 
    - A YouTube playlist and channel should be public
-   - JSON file format should be
+   - The format of a JSON file should follow below structure
 
      ```
      [
-      { "url": <VIDEO URL> },
-      { "url": <VIDEO URL> }
+      { "url": "<VIDEO URL>" },
+      { "url": "<VIDEO URL>" }
       ...
      ]
      ```
@@ -58,14 +57,12 @@ Follow this simple guide on how to use the Who Talked About Us:
 2. Once the videos are uploaded, you can conduct a search using any keyword. Here are some suggestions:
 
    - Enter your brand name or product name and discover who's already talking about you in their videos
-   - Enter your competitors' brand names to see what types of influencers they're attracting and the types of audiences they're reaching
+   - Enter your competitors' brand names to see what types of influencers they're attracting
    - You can also search for very specific or contextual keywords such as "_applying MAC gold highlighter_" or "_holding Gentle Monster sunglasses_"!
 
 3. The search results will be shown grouped by each channel (influencer) and video, displaying moments in videos where your keyword is mentioned or featured.
 
-4. Based on these results, you can prioritize influencers and begin your outreach efforts, forging partnerships that can expand your brand reach and influence
-
-Remember, success in influencer marketing is all about forming authentic partnerships!
+4. Based on these results, you can prioritize influencers and begin your outreach efforts, forging partnerships that can expand your brand reach and influence. Remember, success in influencer marketing is all about forming authentic partnerships!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
