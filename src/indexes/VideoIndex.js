@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SearchForm from "../search/SearchForm";
-import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import closeIcon from "../svg/Close.svg";
 import backIcon from "../svg/Back.svg";

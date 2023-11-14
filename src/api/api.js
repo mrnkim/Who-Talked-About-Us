@@ -97,8 +97,7 @@ class TwelveLabsApi {
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: {
         ...this.headers,
-        "Content-Type":
-          "multipart/form-data; boundary=---011000010111000001101001",
+        "Content-Type": "multipart/form-data",
       },
     };
     try {

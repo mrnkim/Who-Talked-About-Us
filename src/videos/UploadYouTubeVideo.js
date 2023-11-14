@@ -9,7 +9,7 @@ import { UploadConfirmation } from "./UploadConfirmation";
 import { TaskVideo } from "./TaskVideo";
 import { Task } from "./Task";
 
-const SERVER_BASE_URL = new URL("http://localhost:4001");
+const SERVER_BASE_URL = new URL(process.env.REACT_APP_SERVER_URL);
 const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
 const CHANNEL_VIDEO_INFO_URL = new URL("/channel-video-info", SERVER_BASE_URL);
 const PLAYLIST_VIDEO_INFO_URL = new URL(

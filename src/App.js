@@ -16,10 +16,11 @@ import { LoadingSpinner } from "./common/LoadingSpinner";
  */
 
 function App() {
-  const { isLoading, data } = useGetIndexes();
+  const { isLoading, data, error } = useGetIndexes();
   const indexes = data?.data.data;
 
   if (isLoading) return <LoadingSpinner />;
+  if (error) return <div className="errorMessage">{error}</div>;
 
   return (
     <div className="App">

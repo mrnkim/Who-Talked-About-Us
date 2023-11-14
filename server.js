@@ -15,10 +15,11 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-const API_BASE_URL = "https://api.twelvelabs.io/p/v1.1";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 const TWELVE_LABS_API = axios.create({
   baseURL: API_BASE_URL,
 });
+const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
 
 /** Set up middleware for Express */
 app.use(cors());
@@ -48,7 +49,7 @@ process.on("uncaughtException", function (exception) {
 });
 
 /** Set up Express server to listen on port 4001 */
-app.listen(4001, () => {
+app.listen(PORT_NUMBER, () => {
   console.log("Server Running. Listening on port 4001");
 });
 
