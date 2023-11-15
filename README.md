@@ -83,7 +83,7 @@ Follow this simple guide on how to use the Who Talked About Us:
    ```
    //.env
 
-   REACT_APP_API_URL=https://api.twelvelabs.io/v1.2
+   REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
    REACT_APP_API_KEY=<YOUR API KEY>
    REACT_APP_SERVER_URL=<YOUR SERVER URL>
    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER>
