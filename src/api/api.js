@@ -37,7 +37,7 @@ class TwelveLabsApi {
         "x-api-key": API_KEY,
       },
       data: {
-        engines: [{ engine_name: "marengo2.5" }],
+        engine_id: "marengo2.5",
         index_options: ["visual", "conversation", "text_in_video", "logo"],
         index_name: indexName,
       },
@@ -56,6 +56,7 @@ class TwelveLabsApi {
       method: "DELETE",
       url: `${API_URL}/indexes/${indexId}`,
       headers: {
+        accept: "application/json",
         "Content-Type": "application/json",
         "x-api-key": API_KEY,
       },
@@ -93,8 +94,9 @@ class TwelveLabsApi {
       method: "POST",
       url: `${API_URL}/search`,
       headers: {
-        "x-api-key": API_KEY,
         accept: "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
       },
       data: {
         index_id: `${indexId}`,
