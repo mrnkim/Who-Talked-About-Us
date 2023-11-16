@@ -4,23 +4,21 @@ import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 import { useGetIndexes } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
+import { ErrorBoundary } from "react-error-boundary";
+import { Suspense } from "react";
+import ErrorFallback from "./common/ErrorFallback";
+import infoIcon from "./svg/Info.svg";
 
 /** Who Talked About Us App
  *
  * - indexes: list of indexes and loading status
- *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
- *            {_id: '2', index_name: 'testIndex2', index_options: Array(4),...}]
- *          , isLoading: false }
  *
  * App -> { IndexForm, VideoIndex }
  */
 
 function App() {
-  const { isLoading, data, error } = useGetIndexes();
+  const { data, refetch } = useGetIndexes();
   const indexes = data?.data.data;
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <div className="errorMessage">{error}</div>;
 
   return (
     <div className="App">
@@ -31,14 +29,32 @@ function App() {
       <Container className="m-auto p-3 indexFormContainer">
         <IndexForm />
       </Container>
-      <Container className="m-auto p-3">
-        {indexes &&
-          indexes.map((index) => (
-            <div className="mb-3" key={index._id}>
-              <VideoIndex index={index} key={index._id} />
-            </div>
-          ))}
-      </Container>
+      {indexes?.length === 0 && (
+        <div className="doNotLeaveMessageWrapper">
+          <img src={infoIcon} alt="infoIcon" className="icon"></img>
+          <div className="doNotLeaveMessage">
+            There is no index. Start creating one!
+          </div>
+        </div>
+      )}
+      {indexes?.length > 0 && (
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onReset={() => refetch()}
+          resetKeys={[indexes]}
+        >
+          <Suspense fallback={<LoadingSpinner />}>
+            <Container className="m-auto p-3">
+              {indexes &&
+                indexes.map((index) => (
+                  <div className="mb-3" key={index._id}>
+                    <VideoIndex index={index} key={index._id} />
+                  </div>
+                ))}
+            </Container>{" "}
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </div>
   );
 }

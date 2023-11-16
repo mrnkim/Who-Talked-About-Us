@@ -2,6 +2,7 @@
   cursor: pointer;
   display: flex;
   height: 3rem;
+  width: 85%;
   padding: 0.25rem 0.75rem;
   justify-content: center;
   align-items: center;
@@ -14,6 +15,7 @@
 cursor: pointer;
 display: flex;
 height: 3rem;
+width: 85%;
 padding: 0.25rem 0.75rem;
 justify-content: center;
 align-items: center;
@@ -27,6 +29,7 @@ background: #FFF;
 .default-index:hover {
 display: flex;
 height: 3rem;
+width: 85%;
 padding: 0.25rem 0.75rem;
 justify-content: center;
 align-items: center;
@@ -38,11 +41,32 @@ background: var(--TL-Grey--100, #F4F4F3);
 background: #FFF;
 }
 
+.indexBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 100px;
+}
+
+
+.defaultContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteButtonWrapper {
+  margin-left: auto; /* Align to the right end */
+}
+
 .deleteButton {
   display: flex;
   padding: 10px 12px;
   justify-content: center;
-  align-items: center;
   border: none;
   background-color: transparent;
 }

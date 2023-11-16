@@ -20,7 +20,7 @@ function SearchResultList({ searchResults, videos }) {
 
   /** Organize search results by author and video_id */
   const organizedResults = {};
-  searchResults.forEach((result) => {
+  searchResults?.forEach((result) => {
     const videoId = result.video_id;
     const video = videos?.find((vid) => vid._id === videoId);
 
@@ -54,7 +54,7 @@ function SearchResultList({ searchResults, videos }) {
       {organizedResults &&
         Object.entries(organizedResults).map(([videoAuthor, authVids]) => {
           const totalSearchResults = Object.values(authVids).reduce(
-            (total, video) => total + video.length,
+            (total, video) => total + video?.length,
             0
           );
 
@@ -75,7 +75,7 @@ function SearchResultList({ searchResults, videos }) {
                         textAlign: "left",
                       }}
                     >
-                      {videoTitle} ({results.length})
+                      {videoTitle} ({results?.length})
                     </h6>
                     <Row>
                       {results.map((data, index) => (
@@ -127,7 +127,7 @@ function SearchResultList({ searchResults, videos }) {
           );
         })}
 
-      {searchResults.length > 0 && noResultAuthors.length > 0 && (
+      {searchResults?.length > 0 && noResultAuthors.length > 0 && (
         <div className="channelPills">
           <div className="subtitle">No results from</div>
           {Array.from(new Set(noResultAuthors)).map((author, index) => (
