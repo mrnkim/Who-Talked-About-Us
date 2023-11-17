@@ -48,9 +48,9 @@ process.on("uncaughtException", function (exception) {
   console.log(exception);
 });
 
-/** Set up Express server to listen on port 4001 */
+/** Set up Express server to listen on port */
 app.listen(PORT_NUMBER, () => {
-  console.log("Server Running. Listening on port 4001");
+  console.log(`Server Running. Listening on port ${PORT_NUMBER}`);
 });
 
 /** Takes a downloaded video and initiates the indexing process */

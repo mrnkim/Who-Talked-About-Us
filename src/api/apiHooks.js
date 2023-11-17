@@ -13,7 +13,7 @@ export function useCreateIndex() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexName) => TwelveLabsApi.createIndex(indexName),
-    onSuccess: () => queryClient.invalidateQueries(["indexes"]),
+    onSuccess: () => queryClient.invalidateQueries([keys.INDEXES]),
   });
 }
 
@@ -21,7 +21,7 @@ export function useDeleteIndex() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexId) => TwelveLabsApi.deleteIndex(indexId),
-    onSuccess: () => queryClient.invalidateQueries(["indexes"]),
+    onSuccess: () => queryClient.invalidateQueries([keys.INDEXES]),
   });
 }
 
