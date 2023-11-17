@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import SearchForm from "../search/SearchForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import closeIcon from "../svg/Close.svg";
 import backIcon from "../svg/Back.svg";
 import infoIcon from "../svg/Info.svg";
 import { ErrorBoundary } from "react-error-boundary";
-import { Suspense } from "react";
 import ErrorFallback from "../common/ErrorFallback";
 import { Button, Container, Row, Modal } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
@@ -15,6 +14,7 @@ import CustomPagination from "./CustomPagination";
 import { useDeleteIndex, useGetVideos, useSearchVideo } from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { useQueryClient } from "@tanstack/react-query";
+import { keys } from "../api/keys";
 
 /**
  * Show video list and videos, search form and search result list
@@ -27,7 +27,7 @@ function VideoIndex({ index }) {
   const videos = videosData?.data;
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["videos"] });
+    queryClient.invalidateQueries({ queryKey: [keys.VIDEOS] });
   }, [videos]);
 
   const currIndex = index._id;

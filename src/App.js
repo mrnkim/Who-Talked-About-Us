@@ -5,9 +5,11 @@ import Container from "react-bootstrap/Container";
 import { useGetIndexes } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import ErrorFallback from "./common/ErrorFallback";
 import infoIcon from "./svg/Info.svg";
+import { useQueryClient } from "@tanstack/react-query";
+import { keys } from "./api/keys";
 
 /** Who Talked About Us App
  *
@@ -17,8 +19,13 @@ import infoIcon from "./svg/Info.svg";
  */
 
 function App() {
-  const { data, refetch } = useGetIndexes();
-  const indexes = data?.data.data;
+  const queryClient = useQueryClient();
+  const { data: indexesData, refetch } = useGetIndexes();
+  const indexes = indexesData?.data.data;
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
+  }, [indexes]);
 
   return (
     <div className="App">

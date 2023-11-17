@@ -7,9 +7,11 @@ import { Suspense } from "react";
 import ErrorFallback from "../common/ErrorFallback";
 import completeIcon from "../svg/Complete.svg";
 import { useEffect } from "react";
+import { keys } from "../api/keys";
+
 export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const query = {
-    queryKey: ["task", taskId],
+    queryKey: [keys.TASK, taskId],
     queryFn: () => TwelveLabsApi.getTask(taskId),
     refetchOnWindowFocus: false,
     refetchInterval: (task) => (task.status === "ready" ? false : 5000),

@@ -1,9 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TwelveLabsApi from "./api";
+import { keys } from "./keys";
 
 export function useGetIndexes() {
   return useQuery({
-    queryKey: ["indexes"],
+    queryKey: [keys.INDEXES],
     queryFn: TwelveLabsApi.getIndexes,
   });
 }
@@ -26,7 +27,7 @@ export function useDeleteIndex() {
 
 export function useGetVideos(indexId) {
   return useQuery({
-    queryKey: ["videos", indexId],
+    queryKey: [keys.VIDEOS, indexId],
     queryFn: () => TwelveLabsApi.getVideos(indexId),
   });
 }
@@ -37,4 +38,3 @@ export function useSearchVideo() {
       TwelveLabsApi.searchVideo(indexId, query),
   });
 }
-
