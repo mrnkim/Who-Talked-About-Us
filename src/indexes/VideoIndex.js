@@ -187,7 +187,7 @@ function VideoIndex({ index }) {
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}
-          resetKeys={[videos]}
+          resetKeys={[keys.VIDEOS]}
         >
           <Suspense fallback={<LoadingSpinner />}>
             {/* Video Search Form */}

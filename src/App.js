@@ -22,7 +22,7 @@ function App() {
   const queryClient = useQueryClient();
   const { data: indexesData, refetch } = useGetIndexes();
   const indexes = indexesData?.data.data;
-
+  
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
   }, [indexes]);
@@ -48,7 +48,7 @@ function App() {
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}
-          resetKeys={[indexes]}
+          resetKeys={[keys.INDEXES]}
         >
           <Suspense fallback={<LoadingSpinner />}>
             <Container className="m-auto p-3">

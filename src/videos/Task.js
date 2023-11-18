@@ -43,7 +43,7 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}
-          resetKeys={[task._id]}
+          resetKeys={[keys.TASK]}
         >
           <Suspense fallback={<LoadingSpinner />}>
             <Container
