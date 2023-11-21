@@ -102,7 +102,7 @@ class TwelveLabsApi {
       data: {
         index_id: `${indexId}`,
         search_options: ["visual", "conversation", "text_in_video", "logo"],
-        query: `${query}`,
+        query,
       },
     };
     try {
