@@ -5,11 +5,14 @@ import Container from "react-bootstrap/Container";
 import { useGetIndexes } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ErrorFallback from "./common/ErrorFallback";
 import infoIcon from "./svg/Info.svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "./api/keys";
+import { PageNav } from "./common/PageNav";
+
+const PAGE_LIMIT = 10;
 
 /** Who Talked About Us App
  *
@@ -19,10 +22,17 @@ import { keys } from "./api/keys";
  */
 
 function App() {
+  const [page, setPage] = useState(1);
+
   const queryClient = useQueryClient();
-  const { data: indexesData, refetch } = useGetIndexes();
-  const indexes = indexesData?.data.data;
-  
+  const {
+    data: indexesData,
+    refetch,
+    isPreviousData,
+  } = useGetIndexes(page, PAGE_LIMIT);
+
+  const indexes = indexesData?.data;
+
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
   }, [indexes]);
@@ -59,6 +69,12 @@ function App() {
                   </div>
                 ))}
             </Container>{" "}
+            <PageNav
+              page={page}
+              setPage={setPage}
+              data={indexesData}
+              inPreviousData={isPreviousData}
+            />
           </Suspense>
         </ErrorBoundary>
       )}

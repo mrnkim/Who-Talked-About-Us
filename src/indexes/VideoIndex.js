@@ -1,20 +1,22 @@
 import { useState, useEffect, Suspense } from "react";
 import SearchForm from "../search/SearchForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
-import closeIcon from "../svg/Close.svg";
 import backIcon from "../svg/Back.svg";
 import infoIcon from "../svg/Info.svg";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../common/ErrorFallback";
-import { Button, Container, Row, Modal } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
-import CustomPagination from "./CustomPagination";
+import { PageNav } from "../common/PageNav";
 import { useDeleteIndex, useGetVideos, useSearchVideo } from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "../api/keys";
+import { IndexBar } from "./IndexBar";
+
+const PAGE_LIMIT = 12;
 
 /**
  * Show video list and videos, search form and search result list
@@ -22,8 +24,15 @@ import { keys } from "../api/keys";
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
 function VideoIndex({ index }) {
+  const [page, setPage] = useState(1);
+
   const queryClient = useQueryClient();
-  const { data: videosData, refetch } = useGetVideos(index._id);
+  const {
+    data: videosData,
+    refetch,
+    isPreviousData,
+  } = useGetVideos(index._id, page, PAGE_LIMIT);
+
   const videos = videosData?.data;
 
   useEffect(() => {
@@ -44,26 +53,6 @@ function VideoIndex({ index }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [isIndexSelected, setIsIndexSelected] = useState(false);
-
-  /** State variables for default pagination */
-  const [currentPage, setCurrentPage] = useState(1);
-  const videosPerPage = 12;
-  const indexOfLastVideo = currentPage * videosPerPage;
-  const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
-  const currentVideos = videos?.slice(indexOfFirstVideo, indexOfLastVideo);
-  const totalPages = Math.ceil(videos?.length / videosPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   /** State variables for delete confirmation modal */
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -112,86 +101,55 @@ function VideoIndex({ index }) {
 
   return (
     <Container className="m-auto defaultContainer">
-      <div
-        onClick={handleClick}
-        onMouseEnter={() => setShowDeleteButton(true)}
-        onMouseLeave={() => setShowDeleteButton(false)}
-        className={isIndexSelected ? "selected-index" : "default-index"}
-      >
-        <div className="indexBar">
-          <i className="bi bi-folder"></i>
-          <span style={{ marginLeft: "10px", fontSize: "1.1rem" }}>
-            {index.index_name}
-          </span>
-          <span style={{ marginLeft: "5px" }}>({videos?.length} videos)</span>
-        </div>
+      <IndexBar
+        handleClick={handleClick}
+        showDeleteButton={showDeleteButton}
+        setShowDeleteButton={setShowDeleteButton}
+        isIndexSelected={isIndexSelected}
+        index={index}
+        videosData={videosData}
+        showDeleteConfirmationMessage={showDeleteConfirmationMessage}
+        hideDeleteConfirmationMessage={hideDeleteConfirmationMessage}
+        showDeleteConfirmation={showDeleteConfirmation}
+        deleteIndex={deleteIndex}
+      />
+      {showVideos && videos?.length === 0 && (
+        <div>
+          <div className="doNotLeaveMessageWrapper">
+            <img src={infoIcon} alt="infoIcon" className="icon"></img>
+            <div className="doNotLeaveMessage">
+              There are no videos. Start indexing ones!
+            </div>
+          </div>
 
-        {/* Delete Index Button */}
-        <div className="deleteButtonWrapper">
-          {showDeleteButton && (
-            <button
-              className="deleteButton"
-              onClick={showDeleteConfirmationMessage}
-            >
-              {closeIcon && <img src={closeIcon} alt="Icon" className="icon" />}
-            </button>
-          )}
-        </div>
-
-        {/* Delete Index Confirmation Message */}
-        {showDeleteConfirmation && (
-          <Modal
-            show={showDeleteConfirmation}
-            onHide={hideDeleteConfirmationMessage}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Modal.Body>Are you sure you want to delete this index?</Modal.Body>
-            <Modal.Footer>
-              <Button variant="danger" onClick={deleteIndex}>
-                Delete
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={hideDeleteConfirmationMessage}
-              >
-                Cancel
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        )}
-      </div>
-
-      {/* Video Upload Form */}
-      {showVideos && !searchPerformed && (
-        <div className="videoUploadForm">
-          <div className="display-6 m-4">Upload New Videos</div>
-          <UploadYoutubeVideo
-            currIndex={currIndex}
-            taskVideos={taskVideos}
-            setTaskVideos={setTaskVideos}
-          />
-        </div>
-      )}
-
-      {videos?.length === 0 && showVideos && (
-        <div className="doNotLeaveMessageWrapper">
-          <img src={infoIcon} alt="infoIcon" className="icon"></img>
-          <div className="doNotLeaveMessage">
-            There are no videos. Start indexing ones!
+          <div className="videoUploadForm">
+            <div className="display-6 m-4">Upload New Videos</div>
+            <UploadYoutubeVideo
+              currIndex={currIndex}
+              taskVideos={taskVideos}
+              setTaskVideos={setTaskVideos}
+            />
           </div>
         </div>
       )}
 
-      {videos?.length > 0 && showVideos && (
+      {showVideos && videos?.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}
           resetKeys={[keys.VIDEOS]}
         >
           <Suspense fallback={<LoadingSpinner />}>
+            <div className="videoUploadForm">
+              <div className="display-6 m-4">Upload New Videos</div>
+              <UploadYoutubeVideo
+                currIndex={currIndex}
+                taskVideos={taskVideos}
+                setTaskVideos={setTaskVideos}
+              />
+            </div>
             {/* Video Search Form */}
-            {showVideos && !searchPerformed && currentVideos.length > 0 && (
+            {showVideos && !searchPerformed && videos.length > 0 && (
               <div>
                 <div className="videoSearchForm">
                   <div className="title">Search Videos</div>
@@ -216,18 +174,17 @@ function VideoIndex({ index }) {
                 <Container fluid className="mb-5">
                   <Row>
                     {videos && (
-                      <VideoList index_id={currIndex} videos={currentVideos} />
+                      <VideoList index_id={currIndex} videos={videos} />
                     )}
                     <Container
                       fluid
                       className="my-5 d-flex justify-content-center"
                     >
-                      <CustomPagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        nextPage={nextPage}
-                        prevPage={prevPage}
+                      <PageNav
+                        page={page}
+                        setPage={setPage}
+                        data={videosData}
+                        inPreviousData={isPreviousData}
                       />
                     </Container>
                   </Row>

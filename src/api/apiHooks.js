@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TwelveLabsApi from "./api";
 import { keys } from "./keys";
 
-export function useGetIndexes() {
+export function useGetIndexes(page, pageLimit) {
   return useQuery({
-    queryKey: [keys.INDEXES],
-    queryFn: TwelveLabsApi.getIndexes,
+    queryKey: [keys.INDEXES, page, pageLimit],
+    queryFn: () => TwelveLabsApi.getIndexes(page, pageLimit),
+    keepPreviousData: true,
   });
 }
 
@@ -25,10 +26,10 @@ export function useDeleteIndex() {
   });
 }
 
-export function useGetVideos(indexId) {
+export function useGetVideos(indexId, page, pageLimit) {
   return useQuery({
-    queryKey: [keys.VIDEOS, indexId],
-    queryFn: () => TwelveLabsApi.getVideos(indexId),
+    queryKey: [keys.VIDEOS, indexId, page, pageLimit],
+    queryFn: () => TwelveLabsApi.getVideos(indexId, page, pageLimit),
   });
 }
 

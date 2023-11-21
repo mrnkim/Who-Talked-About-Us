@@ -10,10 +10,11 @@ const API_KEY = process.env.REACT_APP_API_KEY;
  */
 class TwelveLabsApi {
   /** Get indexes of a user */
-  static async getIndexes() {
+  static async getIndexes(page, pageLimit) {
     const config = {
       method: "GET",
       url: `${API_URL}/indexes`,
+      params: { page: page, page_limit: pageLimit },
       headers: {
         "Content-Type": "application/json",
         "x-api-key": API_KEY,
@@ -21,7 +22,7 @@ class TwelveLabsApi {
     };
     try {
       const response = await axios.request(config);
-      return response;
+      return response.data;
     } catch (error) {
       console.error(error);
     }
@@ -70,10 +71,10 @@ class TwelveLabsApi {
   }
 
   /** Get all videos of an index */
-  static async getVideos(indexId) {
+  static async getVideos(indexId, page, pageLimit) {
     const config = {
       method: "GET",
-      params: { page_limit: "50" },
+      params: { page: page, page_limit: pageLimit },
       url: `${API_URL}/indexes/${indexId}/videos`,
       headers: {
         "Content-Type": "application/json",
