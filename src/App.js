@@ -31,7 +31,7 @@ function App() {
     isPreviousData,
   } = useGetIndexes(page, PAGE_LIMIT);
 
-  const indexes = indexesData?.data;
+  const indexes = indexesData?.data.filter(index => !index.deleted)
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
