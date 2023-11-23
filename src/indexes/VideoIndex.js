@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useCallback } from "react";
 import SearchForm from "../search/SearchForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import backIcon from "../svg/Back.svg";
@@ -10,13 +10,13 @@ import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
 import { PageNav } from "../common/PageNav";
-import { useDeleteIndex, useGetVideos, useSearchVideo } from "../api/apiHooks";
+import { useDeleteIndex, useGetVideos } from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
-import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "../api/keys";
 import { IndexBar } from "./IndexBar";
+import { useQueryClient } from "@tanstack/react-query";
 
-const PAGE_LIMIT = 12;
+const PAGE_LIMIT = 10;
 
 /**
  * Show video list and videos, search form and search result list
@@ -32,8 +32,7 @@ function VideoIndex({ index }) {
     refetch,
     isPreviousData,
   } = useGetVideos(index._id, page, PAGE_LIMIT);
-
-  const videos = videosData?.data;
+  const videos = videosData?.data.filter((vid) => vid.metadata.author);
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.VIDEOS] });
@@ -41,16 +40,17 @@ function VideoIndex({ index }) {
 
   const currIndex = index._id;
 
-  const searchVideoMutation = useSearchVideo();
-  const searchResults = searchVideoMutation.data?.data;
+  // const searchVideoMutation = useSearchVideo();
+  // const searchResults = searchVideoMutation.data?.data;
 
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
   const [showVideos, setShowVideos] = useState(false);
 
-  const [searchPerformed, setSearchPerformed] = useState(false);
+  // const [searchPerformed, setSearchPerformed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [isIndexSelected, setIsIndexSelected] = useState(false);
 
@@ -80,7 +80,8 @@ function VideoIndex({ index }) {
   /** Reset search and show videos */
   function reset() {
     setShowVideos(true);
-    setSearchPerformed(false);
+    setSearchQuery(false);
+    setFinalSearchQuery(false);
   }
 
   const uniqueAuthors = new Set();
@@ -88,16 +89,20 @@ function VideoIndex({ index }) {
     uniqueAuthors.add(vid.metadata.author);
   });
 
-  const searchResultsContent =
-    searchVideoMutation.isSuccess && searchResults.length === 0 ? (
-      <div className="title">No results. Let's try with other queries!</div>
-    ) : (
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<LoadingSpinner />}>
-          <SearchResultList searchResults={searchResults} videos={videos} />
-        </Suspense>
-      </ErrorBoundary>
-    );
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [keys.SEARCH] });
+  }, [finalSearchQuery]);
+
+  // const searchResultsContent =
+  //   searchResultData && searchResults.length === 0 ? (
+  //     <div className="title">No results. Let's try with other queries!</div>
+  //   ) : (
+  //     <ErrorBoundary FallbackComponent={ErrorFallback}>
+  //       <Suspense fallback={<LoadingSpinner />}>
+  //         <SearchResultList searchResults={searchResults} videos={videos} />
+  //       </Suspense>
+  //     </ErrorBoundary>
+  //   );
 
   return (
     <Container className="m-auto defaultContainer">
@@ -149,17 +154,16 @@ function VideoIndex({ index }) {
               />
             </div>
             {/* Video Search Form */}
-            {showVideos && !searchPerformed && videos.length > 0 && (
+            {!finalSearchQuery && (
               <div>
                 <div className="videoSearchForm">
                   <div className="title">Search Videos</div>
                   <div className="m-auto p-3 searchFormContainer">
                     <SearchForm
                       index={currIndex}
-                      searchVideoMutation={searchVideoMutation}
-                      setSearchPerformed={setSearchPerformed}
                       setSearchQuery={setSearchQuery}
                       searchQuery={searchQuery}
+                      setFinalSearchQuery={setFinalSearchQuery}
                     />
                   </div>
                 </div>
@@ -193,26 +197,32 @@ function VideoIndex({ index }) {
             )}
 
             {/* Video Search Results */}
-            {searchPerformed && (
+            {finalSearchQuery && (
               <div>
-                {!searchVideoMutation.isPending && searchResults.length > 0 && (
-                  <div className="searchResultTitle">
-                    Search Results for "{searchQuery}"
-                  </div>
-                )}
                 <div className="videoSearchForm">
                   <div className="m-auto p-3 searchFormContainer">
                     <SearchForm
                       index={currIndex}
-                      searchVideoMutation={searchVideoMutation}
-                      setSearchPerformed={setSearchPerformed}
                       setSearchQuery={setSearchQuery}
                       searchQuery={searchQuery}
+                      setFinalSearchQuery={setFinalSearchQuery}
                     />
                   </div>
                 </div>
                 <Container fluid className="m-3">
-                  <Row>{searchResultsContent}</Row>
+                  <Row>
+                    {" "}
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <Suspense fallback={<LoadingSpinner />}>
+                        <SearchResultList
+                          index={index}
+                          searchQuery={searchQuery}
+                          videos={videos}
+                          finalSearchQuery={finalSearchQuery}
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
+                  </Row>
                 </Container>
                 <div className="resetButtonWrapper">
                   <button className="resetButton" onClick={reset}>

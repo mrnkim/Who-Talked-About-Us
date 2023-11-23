@@ -1,14 +1,27 @@
-import React from "react";
+import { React } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-
+import { useSearchVideo } from "../api/apiHooks";
 import "./SearchResultList.css";
 
 /** Shows the search result
  *
  *  VideoIndex -> SearchResultList
  */
-function SearchResultList({ searchResults, videos }) {
+function SearchResultList({
+  index,
+  finalSearchQuery,
+  videos,
+  setSearchPerformed,
+  searchPerformed,
+}) {
+  const { data: searchResultData } = useSearchVideo(
+    index._id,
+    finalSearchQuery
+  );
+
+  const searchResults = searchResultData?.data;
+
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -49,8 +62,19 @@ function SearchResultList({ searchResults, videos }) {
     }
   }
 
+  console.log("organized results= ", organizedResults);
+
   return (
     <div>
+      {searchResults && searchResults.length === 0 && (
+        <div className="title">No results. Let's try with other queries!</div>
+      )}
+      {searchResults && searchResults.length > 0 && (
+        <div className="searchResultTitle">
+          Search Results for "{finalSearchQuery}"
+        </div>
+      )}
+
       {organizedResults &&
         Object.entries(organizedResults).map(([videoAuthor, authVids]) => {
           const totalSearchResults = Object.values(authVids).reduce(
@@ -64,6 +88,7 @@ function SearchResultList({ searchResults, videos }) {
                 {videoAuthor} ({totalSearchResults}{" "}
                 {totalSearchResults <= 1 ? "Result" : "Results"})
               </div>
+
               <Row>
                 {Object.entries(authVids).map(([videoTitle, results]) => (
                   <Container

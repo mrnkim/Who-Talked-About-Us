@@ -16,6 +16,7 @@ function SearchForm({
   setSearchPerformed,
   searchQuery,
   setSearchQuery,
+  setFinalSearchQuery,
 }) {
   const [error, setError] = useState("");
 
@@ -29,7 +30,7 @@ function SearchForm({
   }
 
   /** Calls parent function to search videos based on a query */
-  async function handleSubmit(evt) {
+  function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedQuery = searchQuery?.trim();
 
@@ -37,11 +38,11 @@ function SearchForm({
       setError("Please enter the search term");
     } else {
       try {
-        await searchVideoMutation.mutateAsync({
-          indexId: index,
-          query: trimmedQuery,
-        });
-        setSearchPerformed(true);
+        // searchVideoMutation.mutate({
+        //   indexId: index,
+        //   query: trimmedQuery,
+        // });
+        setFinalSearchQuery(trimmedQuery);
       } catch (error) {
         console.error(error);
       }
