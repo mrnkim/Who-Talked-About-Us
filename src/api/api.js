@@ -14,7 +14,7 @@ class TwelveLabsApi {
     const config = {
       method: "GET",
       url: `${API_URL}/indexes`,
-      params: { page: page, page_limit: pageLimit },
+      params: { page: page, page_limit: pageLimit, deleted: false },
       headers: {
         "Content-Type": "application/json",
         "x-api-key": API_KEY,
@@ -74,7 +74,7 @@ class TwelveLabsApi {
   static async getVideos(indexId, page, pageLimit) {
     const config = {
       method: "GET",
-      params: { page: page, page_limit: pageLimit },
+      params: { page: page, page_limit: pageLimit, whoTalkedAboutUs: true },
       url: `${API_URL}/indexes/${indexId}/videos`,
       headers: {
         "Content-Type": "application/json",

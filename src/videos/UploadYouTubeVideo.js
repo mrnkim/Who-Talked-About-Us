@@ -170,6 +170,7 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
           metadata: {
             author: authorName,
             youtubeUrl: youtubeUrl,
+            whoTalkedAboutUs: true,
           },
         };
         TwelveLabsApi.updateVideo(currIndex, completeTask.video_id, data);
