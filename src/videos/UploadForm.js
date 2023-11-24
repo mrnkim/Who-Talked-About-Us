@@ -94,16 +94,7 @@ export function UploadForm({
           Cancel
         </button>
       </Container>
-
-      <Container
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
         <Container className="mainMessageWrapper">{mainMessage}</Container>
       </Container>
-    </Container>
   );
 }

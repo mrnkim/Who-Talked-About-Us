@@ -33,13 +33,6 @@ export function useGetVideos(indexId, page, pageLimit) {
   });
 }
 
-// export function useSearchVideo() {
-//   return useMutation({
-//     mutationFn: ({ indexId, query }) =>
-//       TwelveLabsApi.searchVideo(indexId, query),
-//   });
-// }
-
 export function useSearchVideo(indexId, query) {
   return useQuery({
     queryKey: [keys.SEARCH, indexId, query],

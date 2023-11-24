@@ -1,4 +1,4 @@
-import { React } from "react";
+import React from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { useSearchVideo } from "../api/apiHooks";
@@ -15,7 +15,7 @@ function SearchResultList({
   setSearchPerformed,
   searchPerformed,
 }) {
-  const { data: searchResultData } = useSearchVideo(
+  const { data: searchResultData, refetch } = useSearchVideo(
     index._id,
     finalSearchQuery
   );
@@ -61,8 +61,6 @@ function SearchResultList({
       noResultAuthors.push(authorName);
     }
   }
-
-  console.log("organized results= ", organizedResults);
 
   return (
     <div>
@@ -151,17 +149,6 @@ function SearchResultList({
             </div>
           );
         })}
-
-      {searchResults?.length > 0 && noResultAuthors.length > 0 && (
-        <div className="channelPills">
-          <div className="subtitle">No results from</div>
-          {Array.from(new Set(noResultAuthors)).map((author, index) => (
-            <div key={index} className="channelNoResultPill">
-              {author}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
