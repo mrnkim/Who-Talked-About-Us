@@ -31,11 +31,11 @@ function App() {
     isPreviousData,
   } = useGetIndexes(page, PAGE_LIMIT);
 
-  const indexes = indexesData?.data.filter(index => !index.deleted)
+  const indexes = indexesData?.data;
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
-  }, [indexes]);
+  }, [indexes, page]);
 
   return (
     <div className="App">

@@ -10,14 +10,7 @@ import "./SearchForm.css";
  * VideoIndex -> SearchForm -> InputForm
  */
 
-function SearchForm({
-  index,
-  searchVideoMutation,
-  setSearchPerformed,
-  searchQuery,
-  setSearchQuery,
-  setFinalSearchQuery,
-}) {
+function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
   const [error, setError] = useState("");
 
   /** Updates form input */

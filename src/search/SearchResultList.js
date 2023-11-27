@@ -8,14 +8,8 @@ import "./SearchResultList.css";
  *
  *  VideoIndex -> SearchResultList
  */
-function SearchResultList({
-  index,
-  finalSearchQuery,
-  videos,
-  setSearchPerformed,
-  searchPerformed,
-}) {
-  const { data: searchResultData, refetch } = useSearchVideo(
+function SearchResultList({ index, finalSearchQuery, videos }) {
+  const { data: searchResultData } = useSearchVideo(
     index._id,
     finalSearchQuery
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, useCallback } from "react";
+import { useState, useEffect, Suspense } from "react";
 import SearchForm from "../search/SearchForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import backIcon from "../svg/Back.svg";
@@ -32,23 +32,19 @@ function VideoIndex({ index }) {
     refetch,
     isPreviousData,
   } = useGetVideos(index._id, page, PAGE_LIMIT);
-  const videos = videosData?.data.filter((vid) => vid.metadata.author);
+  const videos = videosData?.data;
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.VIDEOS] });
-  }, [videos]);
+  }, [videos, page]);
 
   const currIndex = index._id;
-
-  // const searchVideoMutation = useSearchVideo();
-  // const searchResults = searchVideoMutation.data?.data;
 
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
   const [showVideos, setShowVideos] = useState(false);
 
-  // const [searchPerformed, setSearchPerformed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
@@ -92,17 +88,6 @@ function VideoIndex({ index }) {
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.SEARCH] });
   }, [finalSearchQuery]);
-
-  // const searchResultsContent =
-  //   searchResultData && searchResults.length === 0 ? (
-  //     <div className="title">No results. Let's try with other queries!</div>
-  //   ) : (
-  //     <ErrorBoundary FallbackComponent={ErrorFallback}>
-  //       <Suspense fallback={<LoadingSpinner />}>
-  //         <SearchResultList searchResults={searchResults} videos={videos} />
-  //       </Suspense>
-  //     </ErrorBoundary>
-  //   );
 
   return (
     <Container className="m-auto defaultContainer">
