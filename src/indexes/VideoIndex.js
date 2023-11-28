@@ -38,7 +38,6 @@ function VideoIndex({ index }) {
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
-  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
   const [showVideos, setShowVideos] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");

@@ -42,20 +42,23 @@ export function UploadYoutubeVideo({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
-
   const handleJSONSelect = (event) => {
     setSelectedJSON(event.target.files[0]);
   };
 
   const handleReset = () => {
     setPendingApiRequest(false);
-    setTaskVideos(null);
+    setMainMessage(null);
     setSelectedJSON(null);
     setYoutubeChannelId("");
     setYoutubePlaylistId("");
-    setSearchQuery(null);
     setIndexId(null);
-    updateMainMessage(null);
+    setSearchQuery(null);
+    setTaskIds(null);
+    setIsSubmitting(false);
+    setCompleteTasks([]);
+    setFailedTasks([]);
+    setTaskVideos(null);
   };
 
   const updateMainMessage = (text) => {
@@ -187,7 +190,6 @@ export function UploadYoutubeVideo({
       const matchingVid = taskVideos?.find(
         (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata?.filename
       );
-
       if (matchingVid) {
         const authorName = matchingVid.author.name;
         const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
