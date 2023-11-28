@@ -3,8 +3,7 @@ import nextIcon from "../svg/ChevronRight.svg";
 import prevIconDisabled from "../svg/ChevronLeftDisabled.svg";
 import nextIconDisabled from "../svg/ChevronRightDisabled.svg";
 import "./PageNav.css";
-import { LoadingSpinner } from "./LoadingSpinner";
-import { Suspense } from "react";
+
 
 export function PageNav({ page, setPage, data, isPreviousData }) {
   const nextPage = () => setPage(page + 1);

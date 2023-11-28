@@ -2,9 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TwelveLabsApi from "./api";
 import { keys } from "./keys";
 
-const SERVER_BASE_URL = new URL(process.env.REACT_APP_SERVER_URL);
-const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
-
 export function useGetIndexes(page, pageLimit) {
   return useQuery({
     queryKey: [keys.INDEXES, page],
@@ -29,10 +26,10 @@ export function useDeleteIndex() {
   });
 }
 
-export function useGetVideos(indexId, page, pageLimit) {
+export function useGetVideos(currIndex, vidPage, pageLimit) {
   return useQuery({
-    queryKey: [keys.VIDEOS, indexId, page],
-    queryFn: () => TwelveLabsApi.getVideos(indexId, page, pageLimit),
+    queryKey: [keys.VIDEOS, currIndex, vidPage],
+    queryFn: () => TwelveLabsApi.getVideos(currIndex, vidPage, pageLimit),
   });
 }
 
@@ -42,4 +39,3 @@ export function useSearchVideo(indexId, query) {
     queryFn: () => TwelveLabsApi.searchVideo(indexId, query),
   });
 }
-

@@ -34,7 +34,7 @@ function App() {
   const indexes = indexesData?.data;
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.INDEXES] });
+    queryClient.invalidateQueries({ queryKey: [keys.INDEXES, page] });
   }, [indexes, page]);
 
   return (

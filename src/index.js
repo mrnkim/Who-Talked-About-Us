@@ -5,6 +5,7 @@ import App from "./App";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import reportWebVitals from "./reportWebVitals";
 import { LoadingSpinner } from "./common/LoadingSpinner";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,6 +19,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <Suspense fallback={<LoadingSpinner />}>
       <App />
+      <ReactQueryDevtools initialIsOpen />
     </Suspense>
   </QueryClientProvider>
 );
