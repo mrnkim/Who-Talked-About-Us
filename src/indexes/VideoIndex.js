@@ -85,10 +85,6 @@ function VideoIndex({ index }) {
     uniqueAuthors.add(vid.metadata.author);
   });
 
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.SEARCH] });
-  }, [finalSearchQuery]);
-
   return (
     <Container className="m-auto defaultContainer">
       <IndexBar
@@ -129,97 +125,94 @@ function VideoIndex({ index }) {
           onReset={() => refetch()}
           resetKeys={[keys.VIDEOS]}
         >
-          <Suspense fallback={<LoadingSpinner />}>
-            <div className="videoUploadForm">
-              <div className="display-6 m-4">Upload New Videos</div>
-              <UploadYoutubeVideo
-                currIndex={currIndex}
-                taskVideos={taskVideos}
-                setTaskVideos={setTaskVideos}
-              />
+          <div className="videoUploadForm">
+            <div className="display-6 m-4">Upload New Videos</div>
+            <UploadYoutubeVideo
+              currIndex={currIndex}
+              taskVideos={taskVideos}
+              setTaskVideos={setTaskVideos}
+            />
+          </div>
+          {/* Video Search Form */}
+          {!finalSearchQuery && (
+            <div>
+              <div className="videoSearchForm">
+                <div className="title">Search Videos</div>
+                <div className="m-auto p-3 searchFormContainer">
+                  <SearchForm
+                    index={currIndex}
+                    setSearchQuery={setSearchQuery}
+                    searchQuery={searchQuery}
+                    setFinalSearchQuery={setFinalSearchQuery}
+                  />
+                </div>
+              </div>
+              <div className="channelPills">
+                <div className="subtitle">All Channels in Index </div>
+                {[...uniqueAuthors].map((author) => (
+                  <div key={author + "-" + index} className="channelPill">
+                    {author}
+                  </div>
+                ))}
+              </div>
+              <Container fluid className="mb-5">
+                <Row>
+                  {videos && (
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <VideoList videos={videos} refetch={refetch} />
+                    </Suspense>
+                  )}
+                  <Container
+                    fluid
+                    className="my-5 d-flex justify-content-center"
+                  >
+                    <PageNav
+                      page={page}
+                      setPage={setPage}
+                      data={videosData}
+                      inPreviousData={isPreviousData}
+                    />
+                  </Container>
+                </Row>
+              </Container>
             </div>
-            {/* Video Search Form */}
-            {!finalSearchQuery && (
-              <div>
-                <div className="videoSearchForm">
-                  <div className="title">Search Videos</div>
-                  <div className="m-auto p-3 searchFormContainer">
-                    <SearchForm
-                      index={currIndex}
-                      setSearchQuery={setSearchQuery}
-                      searchQuery={searchQuery}
-                      setFinalSearchQuery={setFinalSearchQuery}
-                    />
-                  </div>
-                </div>
-                <div className="channelPills">
-                  <div className="subtitle">All Channels in Index </div>
-                  {[...uniqueAuthors].map((author) => (
-                    <div key={author + "-" + index} className="channelPill">
-                      {author}
-                    </div>
-                  ))}
-                </div>
-                <Container fluid className="mb-5">
-                  <Row>
-                    {videos && (
-                      <VideoList index_id={currIndex} videos={videos} />
-                    )}
-                    <Container
-                      fluid
-                      className="my-5 d-flex justify-content-center"
-                    >
-                      <PageNav
-                        page={page}
-                        setPage={setPage}
-                        data={videosData}
-                        inPreviousData={isPreviousData}
-                      />
-                    </Container>
-                  </Row>
-                </Container>
-              </div>
-            )}
+          )}
 
-            {/* Video Search Results */}
-            {finalSearchQuery && (
-              <div>
-                <div className="videoSearchForm">
-                  <div className="m-auto p-3 searchFormContainer">
-                    <SearchForm
-                      index={currIndex}
-                      setSearchQuery={setSearchQuery}
-                      searchQuery={searchQuery}
-                      setFinalSearchQuery={setFinalSearchQuery}
-                    />
-                  </div>
-                </div>
-                <Container fluid className="m-3">
-                  <Row>
-                    {" "}
-                    <ErrorBoundary FallbackComponent={ErrorFallback}>
-                      <Suspense fallback={<LoadingSpinner />}>
-                        <SearchResultList
-                          index={index}
-                          searchQuery={searchQuery}
-                          videos={videos}
-                          finalSearchQuery={finalSearchQuery}
-                        />
-                      </Suspense>
-                    </ErrorBoundary>
-                  </Row>
-                </Container>
-                <div className="resetButtonWrapper">
-                  <button className="resetButton" onClick={reset}>
-                    {backIcon && (
-                      <img src={backIcon} alt="Icon" className="icon" />
-                    )}
-                    &nbsp;Back to All Videos
-                  </button>
+          {/* Video Search Results */}
+          {finalSearchQuery && (
+            <div>
+              <div className="videoSearchForm">
+                <div className="m-auto p-3 searchFormContainer">
+                  <SearchForm
+                    index={currIndex}
+                    setSearchQuery={setSearchQuery}
+                    searchQuery={searchQuery}
+                    setFinalSearchQuery={setFinalSearchQuery}
+                  />
                 </div>
               </div>
-            )}
-          </Suspense>
+              <Container fluid className="m-3">
+                <Row>
+                  {" "}
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <SearchResultList
+                      currIndex={currIndex}
+                      videos={videos}
+                      finalSearchQuery={finalSearchQuery}
+                    />
+                  </Suspense>
+                </Row>
+              </Container>
+              <div className="resetButtonWrapper">
+                <button className="resetButton" onClick={reset}>
+                  {backIcon && (
+                    <img src={backIcon} alt="Icon" className="icon" />
+                  )}
+                  &nbsp;Back to All Videos
+                </button>
+              </div>
+            </div>
+          )}
         </ErrorBoundary>
       )}
     </Container>

@@ -1,16 +1,24 @@
-import React from "react";
+import { React, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import reportWebVitals from "./reportWebVitals";
+import { LoadingSpinner } from "./common/LoadingSpinner";
 
-const queryClient = new QueryClient();
-
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+    },
+  },
+});
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <QueryClientProvider client={queryClient}>
-    <App />
+    <Suspense fallback={<LoadingSpinner />}>
+      <App />
+    </Suspense>
   </QueryClientProvider>
 );
 

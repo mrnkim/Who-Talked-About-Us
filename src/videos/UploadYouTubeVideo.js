@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Container } from "react-bootstrap";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
 import TwelveLabsApi from "../api/api";
 import { LoadingSpinner } from "../common/LoadingSpinner";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../common/ErrorFallback";
 import { UploadForm } from "./UploadForm";
 import { UploadConfirmation } from "./UploadConfirmation";
 import { TaskVideo } from "./TaskVideo";
@@ -99,22 +101,40 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
   const getJsonVideoInfo = async (videoData) => {
     const queryUrl = JSON_VIDEO_INFO_URL;
     queryUrl.searchParams.set("URL", videoData.url);
-    const response = await fetch(queryUrl.href);
-    return await response.json();
+    try {
+      const response = await fetch(queryUrl.href);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching JSON video info:", error);
+      throw error;
+    }
   };
 
   const getChannelVideoInfo = async () => {
     const queryUrl = CHANNEL_VIDEO_INFO_URL;
     queryUrl.searchParams.set("CHANNEL_ID", youtubeChannelId);
-    const response = await fetch(queryUrl.href);
-    return await response.json();
+    try {
+      const response = await fetch(queryUrl.href);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching JSON video info:", error);
+      throw error;
+    }
   };
 
   const getPlaylistVideoInfo = async () => {
     const queryUrl = PLAYLIST_VIDEO_INFO_URL;
     queryUrl.searchParams.set("PLAYLIST_ID", youtubePlaylistId);
-    const response = await fetch(queryUrl.href);
-    return await response.json();
+    try {
+      const response = await fetch(queryUrl.href);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching JSON video info:", error);
+      throw error;
+    }
   };
 
   const indexYouTubeVideos = async () => {
@@ -209,12 +229,16 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
 
           <div className="taskVideoContainer">
             {taskVideos.map((taskVideo) => (
-              <div
-                className="taskVideo"
+              <ErrorBoundary
+                FallbackComponent={ErrorFallback}
                 key={taskVideo.id || taskVideo.videoId}
               >
-                <TaskVideo taskVideo={taskVideo} className="taskVideo" />
-              </div>
+                <Suspense fallback={<LoadingSpinner />}>
+                  <div className="taskVideo">
+                    <TaskVideo taskVideo={taskVideo} className="taskVideo" />
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
             ))}
           </div>
         </>
@@ -227,16 +251,20 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
 
             <div className="taskVideoContainer">
               {taskVideos.map((taskVideo) => (
-                <div
-                  className="taskVideo"
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallback}
                   key={taskVideo.id || taskVideo.videoId}
                 >
-                  <TaskVideo
-                    taskVideo={taskVideo}
-                    pendingApiRequest={pendingApiRequest}
-                    className="taskVideo"
-                  />
-                </div>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <div className="taskVideo">
+                      <TaskVideo
+                        taskVideo={taskVideo}
+                        pendingApiRequest={pendingApiRequest}
+                        className="taskVideo"
+                      />
+                    </div>
+                  </Suspense>
+                </ErrorBoundary>
               ))}
             </div>
             {!taskIds && (
@@ -248,14 +276,21 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
             {taskIds && (
               <div className="taskVideoContainer">
                 {taskIds.map((taskId) => (
-                  <div className="task" key={taskId._id}>
-                    <Task
-                      taskId={taskId._id}
-                      taskVideos={taskVideos}
-                      setCompleteTasks={setCompleteTasks}
-                      setFailedTasks={setFailedTasks}
-                    />
-                  </div>
+                  <ErrorBoundary
+                    FallbackComponent={ErrorFallback}
+                    key={taskId._id}
+                  >
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <div className="task">
+                        <Task
+                          taskId={taskId._id}
+                          taskVideos={taskVideos}
+                          setCompleteTasks={setCompleteTasks}
+                          setFailedTasks={setFailedTasks}
+                        />
+                      </div>
+                    </Suspense>
+                  </ErrorBoundary>
                 ))}
               </div>
             )}

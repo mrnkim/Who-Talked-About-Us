@@ -31,10 +31,6 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
       setError("Please enter the search term");
     } else {
       try {
-        // searchVideoMutation.mutate({
-        //   indexId: index,
-        //   query: trimmedQuery,
-        // });
         setFinalSearchQuery(trimmedQuery);
       } catch (error) {
         console.error(error);

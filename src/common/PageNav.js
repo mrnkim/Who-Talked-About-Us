@@ -3,6 +3,8 @@ import nextIcon from "../svg/ChevronRight.svg";
 import prevIconDisabled from "../svg/ChevronLeftDisabled.svg";
 import nextIconDisabled from "../svg/ChevronRightDisabled.svg";
 import "./PageNav.css";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { Suspense } from "react";
 
 export function PageNav({ page, setPage, data, isPreviousData }) {
   const nextPage = () => setPage(page + 1);
@@ -10,8 +12,8 @@ export function PageNav({ page, setPage, data, isPreviousData }) {
   const previousPage = () => setPage(page - 1);
 
   const pagesArray = Array(data.page_info.total_page)
-  .fill()
-  .map((_, index) => index + 1);
+    .fill()
+    .map((_, index) => index + 1);
 
   return (
     <nav className="pageNav">

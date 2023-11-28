@@ -60,22 +60,22 @@ function App() {
           onReset={() => refetch()}
           resetKeys={[keys.INDEXES]}
         >
-          <Suspense fallback={<LoadingSpinner />}>
-            <Container className="m-auto p-3">
-              {indexes &&
-                indexes.map((index) => (
-                  <div className="mb-3" key={index._id}>
-                    <VideoIndex index={index} key={index._id} />
-                  </div>
-                ))}
-            </Container>{" "}
-            <PageNav
-              page={page}
-              setPage={setPage}
-              data={indexesData}
-              inPreviousData={isPreviousData}
-            />
-          </Suspense>
+          <Container className="m-auto p-3">
+            {indexes &&
+              indexes.map((index) => (
+                <div className="mb-3" key={index._id}>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <VideoIndex index={index} />
+                  </Suspense>
+                </div>
+              ))}
+          </Container>{" "}
+          <PageNav
+            page={page}
+            setPage={setPage}
+            data={indexesData}
+            inPreviousData={isPreviousData}
+          />
         </ErrorBoundary>
       )}
     </div>
