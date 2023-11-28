@@ -11,11 +11,11 @@ import ErrorFallback from "../common/ErrorFallback";
  *
  *  VideoIndex -> VideoList
  */
-function VideoList({ videos, refetch }) {
+function VideoList({ videos, refetchVideos }) {
   return videos.map((video, index) => (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
-      onReset={() => refetch()}
+      onReset={() => refetchVideos()}
       resetKeys={[keys.VIDEOS]}
       key={video._id + "-" + index}
     >

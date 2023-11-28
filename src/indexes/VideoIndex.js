@@ -16,7 +16,7 @@ import { keys } from "../api/keys";
 import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
 
-const PAGE_LIMIT = 10;
+const PAGE_LIMIT = 12;
 
 /**
  * Show video list and videos, search form and search result list
@@ -24,25 +24,21 @@ const PAGE_LIMIT = 10;
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
 function VideoIndex({ index }) {
-  const [page, setPage] = useState(1);
+  const currIndex = index._id;
+  const [vidPage, setVidPage] = useState(1);
 
   const queryClient = useQueryClient();
   const {
     data: videosData,
-    refetch,
+    refetch: refetchVideos,
     isPreviousData,
-  } = useGetVideos(index._id, page, PAGE_LIMIT);
+  } = useGetVideos(currIndex, vidPage, PAGE_LIMIT);
   const videos = videosData?.data;
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.VIDEOS] });
-  }, [videos, page]);
-
-  const currIndex = index._id;
 
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
+  console.log("🚀 > VideoIndex > taskVideos=", taskVideos);
   const [showVideos, setShowVideos] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,6 +81,12 @@ function VideoIndex({ index }) {
     uniqueAuthors.add(vid.metadata.author);
   });
 
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.VIDEOS, currIndex, vidPage],
+    });
+  }, [videos, currIndex, vidPage]);
+
   return (
     <Container className="m-auto defaultContainer">
       <IndexBar
@@ -114,6 +116,7 @@ function VideoIndex({ index }) {
               currIndex={currIndex}
               taskVideos={taskVideos}
               setTaskVideos={setTaskVideos}
+              refetchVideos={refetchVideos}
             />
           </div>
         </div>
@@ -122,7 +125,7 @@ function VideoIndex({ index }) {
       {showVideos && videos?.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
-          onReset={() => refetch()}
+          onReset={() => refetchVideos()}
           resetKeys={[keys.VIDEOS]}
         >
           <div className="videoUploadForm">
@@ -131,6 +134,7 @@ function VideoIndex({ index }) {
               currIndex={currIndex}
               taskVideos={taskVideos}
               setTaskVideos={setTaskVideos}
+              refetchVideos={refetchVideos}
             />
           </div>
           {/* Video Search Form */}
@@ -159,7 +163,10 @@ function VideoIndex({ index }) {
                 <Row>
                   {videos && (
                     <Suspense fallback={<LoadingSpinner />}>
-                      <VideoList videos={videos} refetch={refetch} />
+                      <VideoList
+                        videos={videos}
+                        refetchVideos={refetchVideos}
+                      />
                     </Suspense>
                   )}
                   <Container
@@ -167,8 +174,8 @@ function VideoIndex({ index }) {
                     className="my-5 d-flex justify-content-center"
                   >
                     <PageNav
-                      page={page}
-                      setPage={setPage}
+                      page={vidPage}
+                      setPage={setVidPage}
                       data={videosData}
                       inPreviousData={isPreviousData}
                     />

@@ -25,7 +25,12 @@ const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
  * App -> VideoIndex -> UploadYoutubeVideo
  */
 
-export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
+export function UploadYoutubeVideo({
+  currIndex,
+  taskVideos,
+  setTaskVideos,
+  refetchVideos,
+}) {
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [mainMessage, setMainMessage] = useState(null);
   const [selectedJSON, setSelectedJSON] = useState(null);
@@ -173,6 +178,7 @@ export function UploadYoutubeVideo({ currIndex, taskVideos, setTaskVideos }) {
     if (taskIds?.length === completeTasks.length + failedTasks.length) {
       updateMetadata();
       handleReset();
+      refetchVideos();
     }
   }, [taskIds, completeTasks, failedTasks]);
 
