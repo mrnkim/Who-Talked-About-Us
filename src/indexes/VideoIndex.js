@@ -76,9 +76,11 @@ function VideoIndex({ index }) {
   }
 
   const uniqueAuthors = new Set();
-  videos?.forEach((vid) => {
-    uniqueAuthors.add(vid.metadata.author);
-  });
+  if (videos) {
+    videos.forEach((vid) => {
+      uniqueAuthors.add(vid.metadata.author);
+    });
+  }
 
   useEffect(() => {
     queryClient.invalidateQueries({
@@ -100,7 +102,7 @@ function VideoIndex({ index }) {
         showDeleteConfirmation={showDeleteConfirmation}
         deleteIndex={deleteIndex}
       />
-      {showVideos && videos?.length === 0 && (
+      {showVideos && videos && videos.length === 0 && (
         <div>
           <div className="doNotLeaveMessageWrapper">
             <img src={infoIcon} alt="infoIcon" className="icon"></img>
@@ -121,7 +123,7 @@ function VideoIndex({ index }) {
         </div>
       )}
 
-      {showVideos && videos?.length > 0 && (
+      {showVideos && videos && videos.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetchVideos()}

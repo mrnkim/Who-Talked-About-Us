@@ -26,7 +26,7 @@ export function IndexBar({
           {index.index_name}
         </span>
         <span style={{ marginLeft: "5px" }}>
-          ({videosData?.page_info?.total_results} videos)
+          ({videosData && videosData.page_info.total_results} videos)
         </span>
       </div>
 

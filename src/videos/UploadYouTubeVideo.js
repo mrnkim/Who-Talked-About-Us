@@ -178,7 +178,11 @@ export function UploadYoutubeVideo({
   };
 
   useEffect(() => {
-    if (taskIds?.length === completeTasks.length + failedTasks.length) {
+    if (
+      taskIds &&
+      taskVideos &&
+      taskIds.length === completeTasks.length + failedTasks.length
+    ) {
       updateMetadata();
       handleReset();
       refetchVideos();
@@ -187,8 +191,8 @@ export function UploadYoutubeVideo({
 
   async function updateMetadata() {
     const updatePromises = completeTasks.map(async (completeTask) => {
-      const matchingVid = taskVideos?.find(
-        (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata?.filename
+      const matchingVid = taskVideos.find(
+        (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata.filename
       );
       if (matchingVid) {
         const authorName = matchingVid.author.name;

@@ -25,15 +25,16 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
   /** Calls parent function to search videos based on a query */
   function handleSubmit(evt) {
     evt.preventDefault();
-    const trimmedQuery = searchQuery?.trim();
-
-    if (!trimmedQuery) {
-      setError("Please enter the search term");
-    } else {
-      try {
-        setFinalSearchQuery(trimmedQuery);
-      } catch (error) {
-        console.error(error);
+    if (searchQuery) {
+      const trimmedQuery = searchQuery.trim();
+      if (!trimmedQuery) {
+        setError("Please enter the search term");
+      } else {
+        try {
+          setFinalSearchQuery(trimmedQuery);
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
   }

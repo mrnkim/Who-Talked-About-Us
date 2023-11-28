@@ -46,7 +46,7 @@ function App() {
       <Container className="m-auto p-3 indexFormContainer">
         <IndexForm />
       </Container>
-      {indexes?.length === 0 && (
+      {indexes && indexes.length === 0 && (
         <div className="doNotLeaveMessageWrapper">
           <img src={infoIcon} alt="infoIcon" className="icon"></img>
           <div className="doNotLeaveMessage">
@@ -54,7 +54,7 @@ function App() {
           </div>
         </div>
       )}
-      {indexes?.length > 0 && (
+      {indexes && indexes.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}

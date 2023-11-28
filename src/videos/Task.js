@@ -22,13 +22,15 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const { data: task, refetch } = useQuery(query);
 
   useEffect(() => {
-    if (task?.status === "ready") {
-      setCompleteTasks((prev) => [...prev, task]);
-      refetch({ enabled: false }); // Disable further refetching
-    }
-    if (task?.status === "failed") {
-      setFailedTasks((prev) => [...prev, task]);
-      refetch({ enabled: false }); // Disable further refetching
+    if (task) {
+      if (task.status === "ready") {
+        setCompleteTasks((prev) => [...prev, task]);
+        refetch({ enabled: false });
+      }
+      if (task.status === "failed") {
+        setFailedTasks((prev) => [...prev, task]);
+        refetch({ enabled: false });
+      }
     }
   }, [task, refetch, setCompleteTasks, setFailedTasks]);
 
@@ -53,7 +55,7 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
               alignitems="center"
               className="indexingStatus"
             >
-              {task?.status === "ready" && (
+              {task.status === "ready" && (
                 <div className="statusMessage doneMessage">
                   {completeIcon && (
                     <img src={completeIcon} alt="Icon" className="icon" />
@@ -62,18 +64,17 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
                 </div>
               )}
 
-              {!task?.process && task?.status !== "ready" && (
+              {!task.process && task.status !== "ready" && (
                 <div className="statusMessage">
                   <LoadingSpinner />
-                  {task?.status}...
+                  {task.status}...
                 </div>
               )}
 
-              {task?.process && (
+              {task.process && (
                 <div className="statusMessage">
                   <LoadingSpinner />
-                  {task?.status}...{" "}
-                  {Math.round(task?.process.upload_percentage)}%
+                  {task.status}... {Math.round(task.process.upload_percentage)}%
                 </div>
               )}
             </Container>

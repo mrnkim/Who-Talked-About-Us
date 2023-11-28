@@ -11,10 +11,7 @@ export function TaskVideo({ taskVideo }) {
             rel="noreferrer"
           >
             <Card.Img
-              src={
-                taskVideo.thumbnails[taskVideo.thumbnails?.length - 1].url ||
-                taskVideo.bestThumbnail.url
-              }
+              src={taskVideo.thumbnails[0].url || taskVideo.bestThumbnail.url}
               style={{ width: "100%", height: "100%" }}
             />
           </a>

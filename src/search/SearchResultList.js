@@ -13,11 +13,10 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
  *  VideoIndex -> SearchResultList
  */
 function SearchResultList({ currIndex, finalSearchQuery, videos }) {
-
-  const {
-    data: searchResultData,
-    refetch,
-  } = useSearchVideo(currIndex, finalSearchQuery);
+  const { data: searchResultData, refetch } = useSearchVideo(
+    currIndex,
+    finalSearchQuery
+  );
 
   const searchResults = searchResultData?.data ?? [];
 
@@ -32,25 +31,23 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
 
   /** Organize search results by author and video_id */
   const organizedResults = {};
-  searchResults?.forEach((result) => {
-    const videoId = result.video_id;
-    const video = videos?.find((vid) => vid._id === videoId);
-
-    if (video) {
-      const videoAuthor = video.metadata.author;
-      const videoTitle = video.metadata.filename.replace(".mp4", "");
-
-      if (!organizedResults[videoAuthor]) {
-        organizedResults[videoAuthor] = {};
+  if (searchResults && videos) {
+    searchResults.forEach((result) => {
+      const videoId = result.video_id;
+      const video = videos.find((vid) => vid._id === videoId);
+      if (video) {
+        const videoAuthor = video.metadata.author;
+        const videoTitle = video.metadata.filename.replace(".mp4", "");
+        if (!organizedResults[videoAuthor]) {
+          organizedResults[videoAuthor] = {};
+        }
+        if (!organizedResults[videoAuthor][videoTitle]) {
+          organizedResults[videoAuthor][videoTitle] = [];
+        }
+        organizedResults[videoAuthor][videoTitle].push(result);
       }
-
-      if (!organizedResults[videoAuthor][videoTitle]) {
-        organizedResults[videoAuthor][videoTitle] = [];
-      }
-
-      organizedResults[videoAuthor][videoTitle].push(result);
-    }
-  });
+    });
+  }
 
   const noResultAuthors = [];
   for (let video of videos) {
@@ -72,7 +69,7 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
           {organizedResults &&
             Object.entries(organizedResults).map(([videoAuthor, authVids]) => {
               const totalSearchResults = Object.values(authVids).reduce(
-                (total, video) => total + (video?.length || 0),
+                (total, video) => total + (video.length || 0),
                 0
               );
 
@@ -96,7 +93,7 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
                               className="videoResults mt-2 mb-2"
                             >
                               <h6 style={{ textAlign: "left" }}>
-                                {videoTitle} ({results?.length})
+                                {videoTitle} ({results.length})
                               </h6>
                               <Row>
                                 {results.map((data, index) => (
