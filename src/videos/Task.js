@@ -11,8 +11,8 @@ import { keys } from "../api/keys";
 
 export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const query = {
-    queryKey: [keys.TASK, taskId],
-    queryFn: () => TwelveLabsApi.getTask(taskId),
+    queryKey: [keys.TASK, taskId._id],
+    queryFn: () => TwelveLabsApi.getTask(taskId._id),
     refetchOnWindowFocus: false,
     refetchInterval: (task) => (task.status === "ready" ? false : 5000),
     refetchIntervalInBackground: true,
@@ -22,15 +22,13 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const { data: task, refetch } = useQuery(query);
 
   useEffect(() => {
-    if (task) {
-      if (task.status === "ready") {
-        setCompleteTasks((prev) => [...prev, task]);
-        refetch({ enabled: false });
-      }
-      if (task.status === "failed") {
-        setFailedTasks((prev) => [...prev, task]);
-        refetch({ enabled: false });
-      }
+    if (task && task.status === "ready") {
+      setCompleteTasks((prev) => [...prev, task]);
+      refetch({ enabled: false });
+    }
+    if (task && task.status === "failed") {
+      setFailedTasks((prev) => [...prev, task]);
+      refetch({ enabled: false });
     }
   }, [task, refetch, setCompleteTasks, setFailedTasks]);
 
@@ -64,14 +62,14 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
                 </div>
               )}
 
-              {!task.process && task.status !== "ready" && (
+              {task.status !== "ready" && !task.process && (
                 <div className="statusMessage">
                   <LoadingSpinner />
                   {task.status}...
                 </div>
               )}
 
-              {task.process && (
+              {task.status !== "ready" && task.process && (
                 <div className="statusMessage">
                   <LoadingSpinner />
                   {task.status}... {Math.round(task.process.upload_percentage)}%

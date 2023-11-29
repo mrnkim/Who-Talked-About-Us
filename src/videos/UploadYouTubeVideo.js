@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
 import TwelveLabsApi from "../api/api";
@@ -10,6 +10,7 @@ import { UploadForm } from "./UploadForm";
 import { UploadConfirmation } from "./UploadConfirmation";
 import { TaskVideo } from "./TaskVideo";
 import { Task } from "./Task";
+import sanitize from "sanitize-filename";
 
 const SERVER_BASE_URL = new URL(process.env.REACT_APP_SERVER_URL);
 const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
@@ -151,17 +152,19 @@ export function UploadYoutubeVideo({
       "Do not leave or refresh the page. Please wait until indexing is done for ALL videos."
     );
 
-    const videoData = taskVideos.map((videoData) => {
+    const videoData = taskVideos.map((taskVideo) => {
       return {
-        url: videoData.video_url || videoData.url,
-        title: videoData.title,
-        authorName: videoData.author.name,
+        url: taskVideo.video_url || taskVideo.url,
+        title: taskVideo.title,
+        authorName: taskVideo.author.name,
+        thumbnails: taskVideo.thumbnails,
       };
     });
     const requestData = {
       videoData: videoData,
       index_id: currIndex,
     };
+
     const data = {
       method: "POST",
       headers: {
@@ -172,9 +175,8 @@ export function UploadYoutubeVideo({
     };
     const response = await fetch(DOWNLOAD_URL.toString(), data);
     const json = await response.json();
-    const taskIds = json.taskIds;
     setIndexId(json.indexId);
-    setTaskIds(taskIds);
+    setTaskIds(json.taskIds);
   };
 
   useEffect(() => {
@@ -192,7 +194,8 @@ export function UploadYoutubeVideo({
   async function updateMetadata() {
     const updatePromises = completeTasks.map(async (completeTask) => {
       const matchingVid = taskVideos.find(
-        (taskVid) => `${taskVid.title}.mp4` === completeTask.metadata.filename
+        (taskVid) =>
+          `${sanitize(taskVid.title)}.mp4` === completeTask.metadata.filename
       );
       if (matchingVid) {
         const authorName = matchingVid.author.name;
@@ -238,7 +241,6 @@ export function UploadYoutubeVideo({
             mainMessage={mainMessage}
             taskVideos={taskVideos}
           />
-
           <div className="taskVideoContainer">
             {taskVideos.map((taskVideo) => (
               <ErrorBoundary
@@ -256,58 +258,53 @@ export function UploadYoutubeVideo({
         </>
       )}
 
-      {taskVideos && isSubmitting && (
-        <>
-          <div className="wrapper">
-            <Container className="mainMessageWrapper">{mainMessage}</Container>
+      {taskVideos && isSubmitting && !taskIds && (
+        <div className="wrapper">
+          <Container className="mainMessageWrapper">{mainMessage}</Container>
 
-            <div className="taskVideoContainer">
-              {taskVideos.map((taskVideo) => (
-                <ErrorBoundary
-                  FallbackComponent={ErrorFallback}
-                  key={taskVideo.id || taskVideo.videoId}
-                >
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <div className="taskVideo">
-                      <TaskVideo
-                        taskVideo={taskVideo}
-                        pendingApiRequest={pendingApiRequest}
-                        className="taskVideo"
-                      />
+          <div className="taskVideoContainer">
+            {taskVideos.map((taskVideo) => (
+              <ErrorBoundary
+                FallbackComponent={ErrorFallback}
+                key={taskVideo.id || taskVideo.videoId}
+              >
+                <Suspense fallback={<LoadingSpinner />}>
+                  <div className="taskVideo">
+                    <TaskVideo taskVideo={taskVideo} className="taskVideo" />
+                    <div className="downloadSubmit">
+                      <LoadingSpinner />
+                      Downloading & Submitting
                     </div>
-                  </Suspense>
-                </ErrorBoundary>
-              ))}
-            </div>
-            {!taskIds && (
-              <div className="downloadSubmit">
-                <LoadingSpinner />
-                Downloading & Submitting...
-              </div>
-            )}
-            {taskIds && (
-              <div className="taskVideoContainer">
-                {taskIds.map((taskId) => (
-                  <ErrorBoundary
-                    FallbackComponent={ErrorFallback}
-                    key={taskId._id}
-                  >
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <div className="task">
-                        <Task
-                          taskId={taskId._id}
-                          taskVideos={taskVideos}
-                          setCompleteTasks={setCompleteTasks}
-                          setFailedTasks={setFailedTasks}
-                        />
-                      </div>
-                    </Suspense>
-                  </ErrorBoundary>
-                ))}
-              </div>
-            )}
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
+            ))}
           </div>
-        </>
+        </div>
+      )}
+
+      {taskVideos && isSubmitting && taskIds && (
+        <div className="taskVideoContainer">
+          {taskIds.map((taskId) => (
+            <ErrorBoundary FallbackComponent={ErrorFallback} key={taskId._id}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <div className="taskVideo">
+                  <TaskVideo
+                    taskVideo={taskId.videoData}
+                    className="taskVideo"
+                  />
+                  <div className="downloadSubmit">
+                    <Task
+                      taskId={taskId}
+                      setCompleteTasks={setCompleteTasks}
+                      setFailedTasks={setFailedTasks}
+                    />
+                  </div>
+                </div>
+              </Suspense>
+            </ErrorBoundary>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -152,7 +152,11 @@ app.post(
               await streamPipeline(stream, fs.createWriteStream(videoPath));
 
               console.log(`${videoPath} -- finished downloading`);
-              chunkDownloadedVideos.push(videoPath);
+
+              chunkDownloadedVideos.push({
+                videoPath: videoPath,
+                videoData: videoData,
+              });
             } catch (error) {
               console.log(`Error downloading ${videoData.title}`);
               console.error(error);
@@ -168,13 +172,20 @@ app.post(
         );
 
         const chunkVideoIndexingResponses = await Promise.all(
-          chunkDownloadedVideos.map(async (video) => {
-            console.log(`Submitting ${video} For Indexing...`);
-            return await indexVideo(video, request.body.index_id);
+          chunkDownloadedVideos.map(async (videoInfo) => {
+            console.log(`Submitting ${videoInfo.videoPath} For Indexing...`);
+            const indexingResponse = await indexVideo(
+              videoInfo.videoPath,
+              request.body.index_id
+            );
+
+            // Add videoData to indexingResponse
+            indexingResponse.videoData = videoInfo.videoData;
+
+            return indexingResponse;
           })
         ).catch(next);
 
-        // Log indexing completion and update progress
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
 
         processedVideosCount += videoChunk.length;
@@ -192,6 +203,7 @@ app.post(
       console.log(
         "Indexing Submission For All Videos Completed With Task IDs:"
       );
+
       console.log(videoIndexingResponses);
 
       response.json({
