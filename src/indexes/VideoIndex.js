@@ -201,7 +201,6 @@ function VideoIndex({ index }) {
               </div>
               <Container fluid className="m-3">
                 <Row>
-                  {" "}
                   <Suspense fallback={<LoadingSpinner />}>
                     <SearchResultList
                       currIndex={currIndex}
