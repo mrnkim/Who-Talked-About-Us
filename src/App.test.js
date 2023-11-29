@@ -1,37 +1,34 @@
 import React from "react";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { act } from "react-dom/test-utils"; // Add this import
-import TwelveLabsApi from "./api/api";
+import { render, screen, waitFor } from "@testing-library/react";
+import { useGetIndexes } from "./api/apiHooks";
 import App from "./App";
-import { TEST_INDEXES } from "./common/_testCommon";
 
-jest.mock("./api/api"); // Mock the api module
+jest.mock("./api/apiHooks");
 
-window.confirm = jest.fn(() => true);
+const mockIndexes = {
+  data: {
+    data: [
+      { _id: "1", index_name: "testIndex1", index_options: [] },
+      { _id: "2", index_name: "testIndex2", index_options: [] },
+    ],
+  },
+  isLoading: false,
+};
 
 describe("App", () => {
+  beforeEach(() => {
+    useGetIndexes.mockReturnValue(mockIndexes);
+  });
+
   it("renders without crashing", async () => {
     render(<App />);
 
-    // Test if the Loading text appears initially
-    expect(screen.getByText("Loading")).toBeInTheDocument();
-
-    // Once the data is loaded, test if the title appears
-    await waitFor(() =>
+    // Wait for the data to be loaded
+    await waitFor(() => {
+      expect(screen.getByText(/who talked about us/i)).toBeInTheDocument();
       expect(
-        screen.getByText(
-          "Find the right influencers (organic brand fans) to reach out"
-        )
-      ).toBeInTheDocument()
-    );
-  });
-
-  it("calls getIndexes on mount", async () => {
-    const getIndexesMock = jest.fn().mockResolvedValue([]);
-    TwelveLabsApi.getIndexes = getIndexesMock;
-
-    render(<App />);
-
-    expect(getIndexesMock).toHaveBeenCalledTimes(1);
+        screen.getByText(/find the right influencers/i)
+      ).toBeInTheDocument();
+    });
   });
 });

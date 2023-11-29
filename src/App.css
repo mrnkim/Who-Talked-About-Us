@@ -67,5 +67,5 @@ h1 {
 .loading-spinner {
   margin: auto;
   padding: 1rem;
-  animation: rotate 2s linear infinite; /* Adjust the duration as needed */
+  animation: rotate 2s linear infinite;
 }

@@ -1,58 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import SearchForm from "../search/SearchForm";
-import TwelveLabsApi from "../api/api";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
-import { Button, Container, Row, Modal } from "react-bootstrap";
+import backIcon from "../svg/Back.svg";
+import infoIcon from "../svg/Info.svg";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../common/ErrorFallback";
+import { Container, Row } from "react-bootstrap";
 import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
-import CustomPagination from "./CustomPagination";
+import { PageNav } from "../common/PageNav";
+import { useDeleteIndex, useGetVideos } from "../api/apiHooks";
+import { LoadingSpinner } from "../common/LoadingSpinner";
+import { keys } from "../api/keys";
+import { IndexBar } from "./IndexBar";
+import { useQueryClient } from "@tanstack/react-query";
+
+const PAGE_LIMIT = 12;
 
 /**
  * Show video list and videos, search form and search result list
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
-function VideoIndex({
-  index,
-  setIndexes,
-  closeIcon,
-  backIcon,
-  loadingSpinner,
-}) {
+function VideoIndex({ index }) {
   const currIndex = index._id;
+  const [vidPage, setVidPage] = useState(1);
+
+  const queryClient = useQueryClient();
+  const {
+    data: videosData,
+    refetch: refetchVideos,
+    isPreviousData,
+  } = useGetVideos(currIndex, vidPage, PAGE_LIMIT);
+  const videos = videosData?.data;
+
+  const deleteIndexMutation = useDeleteIndex();
+
   const [taskVideos, setTaskVideos] = useState(null);
-  const [showComponents, setShowComponents] = useState(false);
-  const [videos, setVideos] = useState({ data: null, isLoading: true });
-  const [searchResults, setSearchResults] = useState({
-    data: [],
-    isLoading: true,
-  });
-  const [searchPerformed, setSearchPerformed] = useState(false);
-  const [indexedVideos, setIndexedVideos] = useState();
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [showVideos, setShowVideos] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-
-  /** State variables for default pagination */
-  const [currentPage, setCurrentPage] = useState(1);
-  const videosPerPage = 12;
-  const indexOfLastVideo = currentPage * videosPerPage;
-  const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
-  const currentVideos = videos.data?.slice(indexOfFirstVideo, indexOfLastVideo);
-  const totalPages = Math.ceil(videos.data?.length / videosPerPage);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const [isIndexSelected, setIsIndexSelected] = useState(false);
 
   /** State variables for delete confirmation modal */
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -65,232 +56,171 @@ function VideoIndex({
     setShowDeleteConfirmation(false);
   };
 
-  useEffect(() => {
-    fetchVideos();
-    updateMetadata();
-  }, [indexedVideos]);
-
-  /** Fetches videos and update videos state */
-  async function fetchVideos() {
-    const fetchedVideos = await TwelveLabsApi.getVideos(currIndex);
-    setVideos({ data: fetchedVideos.data, isLoading: false });
-  }
-
   /** Deletes an index */
   async function deleteIndex() {
-    await TwelveLabsApi.deleteIndex(currIndex);
-    setIndexes((prevState) => ({
-      ...prevState,
-      data: prevState.data.filter((index) => index._id !== currIndex),
-    }));
+    await deleteIndexMutation.mutateAsync(currIndex);
     hideDeleteConfirmationMessage();
-  }
-
-  /** Add "author" and "youtubeUrl" metadata to each video **/
-  async function updateMetadata() {
-    //find the matching task video
-    if (indexedVideos) {
-      const updatePromises = indexedVideos.map(async (indexedVid) => {
-        const matchingVid = taskVideos?.find(
-          (taskVid) =>
-            taskVid.metadata.filename === indexedVid.metadata.filename
-        );
-
-        if (matchingVid) {
-          const authorName = matchingVid.author.name;
-          const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-
-          //include custom data to add to the existing metadata
-          const data = {
-            metadata: {
-              author: authorName,
-              youtubeUrl: youtubeUrl,
-            },
-          };
-
-          TwelveLabsApi.updateVideo(currIndex, indexedVid._id, data);
-        }
-      });
-
-      // Wait for all metadata updates to complete
-      await Promise.all(updatePromises);
-
-      // Now that all updates are done, trigger the page reload
-      window.location.reload();
-    }
-  }
-
-  /** Searches videos in an index with a given query*/
-  async function searchVideo(indexId, query) {
-    setSearchQuery(query);
-    const result = await TwelveLabsApi.searchVideo(indexId, searchQuery);
-    setSearchResults({
-      data: [...result?.data],
-      isLoading: false,
-    });
-    setSearchPerformed(true);
   }
 
   /** Toggle whether to show or not show the components  */
   function handleClick() {
-    setIsSelected(!isSelected);
-    setShowComponents(!showComponents);
+    setIsIndexSelected(!isIndexSelected);
+    setShowVideos(!showVideos);
   }
 
+  /** Reset search and show videos */
   function reset() {
-    setShowComponents(true);
-    setSearchPerformed(false);
+    setShowVideos(true);
+    setSearchQuery(false);
+    setFinalSearchQuery(false);
   }
 
   const uniqueAuthors = new Set();
-  videos?.data?.forEach((vid) => {
-    uniqueAuthors.add(vid.metadata.author);
-  });
-
-  function searchResultsContent() {
-    if (!searchResults.isLoading && searchResults.data.length === 0) {
-      return (
-        <div className="title">No results. Let's try with other queries!</div>
-      );
-    } else if (!searchResults.isLoading && searchResults.data.length > 0) {
-      return <SearchResultList searchResults={searchResults} videos={videos} />;
-    }
-    return null;
+  if (videos) {
+    videos.forEach((vid) => {
+      uniqueAuthors.add(vid.metadata.author);
+    });
   }
 
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.VIDEOS, currIndex, vidPage],
+    });
+  }, [videos, currIndex, vidPage]);
+
   return (
-    <Container>
-      <div
-        onClick={handleClick}
-        onMouseEnter={() => setShowDeleteButton(true)}
-        onMouseLeave={() => setShowDeleteButton(false)}
-        className={isSelected ? "selected-index" : "default-index"}
-      >
-        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-          <i className="bi bi-folder"></i>
-          <span style={{ marginLeft: "10px", fontSize: "1.1rem" }}>
-            {index.index_name}
-          </span>
-          <span style={{ marginLeft: "5px" }}>
-            ({videos.data?.length} videos)
-          </span>
-        </div>
-        {showDeleteButton && (
-          <button
-            className="deleteButton"
-            onClick={showDeleteConfirmationMessage}
-          >
-            {closeIcon && <img src={closeIcon} alt="Icon" className="icon" />}
-          </button>
-        )}
+    <Container className="m-auto defaultContainer">
+      <IndexBar
+        handleClick={handleClick}
+        showDeleteButton={showDeleteButton}
+        setShowDeleteButton={setShowDeleteButton}
+        isIndexSelected={isIndexSelected}
+        index={index}
+        videosData={videosData}
+        showDeleteConfirmationMessage={showDeleteConfirmationMessage}
+        hideDeleteConfirmationMessage={hideDeleteConfirmationMessage}
+        showDeleteConfirmation={showDeleteConfirmation}
+        deleteIndex={deleteIndex}
+      />
+      {showVideos && videos && videos.length === 0 && (
+        <div>
+          <div className="doNotLeaveMessageWrapper">
+            <img src={infoIcon} alt="infoIcon" className="icon"></img>
+            <div className="doNotLeaveMessage">
+              There are no videos. Start indexing ones!
+            </div>
+          </div>
 
-        {/* Delete Confirmation Message */}
-        {showDeleteConfirmation && (
-          <Modal
-            show={showDeleteConfirmation}
-            onHide={hideDeleteConfirmationMessage}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Modal.Body>Are you sure you want to delete this index?</Modal.Body>
-            <Modal.Footer>
-              <Button variant="danger" onClick={deleteIndex}>
-                Delete
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={hideDeleteConfirmationMessage}
-              >
-                Cancel
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        )}
-      </div>
-
-      {showComponents && !searchPerformed && (
-        <div className="videoUploadForm">
-          <div className="display-6 m-4">Upload New Videos</div>
-          <UploadYoutubeVideo
-            indexedVideos={indexedVideos}
-            setIndexedVideos={setIndexedVideos}
-            index={index}
-            taskVideos={taskVideos}
-            setTaskVideos={setTaskVideos}
-            loadingSpinner={loadingSpinner}
-          />
+          <div className="videoUploadForm">
+            <div className="display-6 m-4">Upload New Videos</div>
+            <UploadYoutubeVideo
+              currIndex={currIndex}
+              taskVideos={taskVideos}
+              setTaskVideos={setTaskVideos}
+              refetchVideos={refetchVideos}
+            />
+          </div>
         </div>
       )}
 
-      {showComponents && !searchPerformed && currentVideos.length > 0 && (
-        <div>
-          <div className="videoSearchForm">
-            <div className="title">Search Videos</div>
-            <div className="m-auto p-3 searchFormContainer">
-              <SearchForm index={currIndex} search={searchVideo} />
-            </div>
+      {showVideos && videos && videos.length > 0 && (
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onReset={() => refetchVideos()}
+          resetKeys={[keys.VIDEOS]}
+        >
+          <div className="videoUploadForm">
+            <div className="display-6 m-4">Upload New Videos</div>
+            <UploadYoutubeVideo
+              currIndex={currIndex}
+              taskVideos={taskVideos}
+              setTaskVideos={setTaskVideos}
+              refetchVideos={refetchVideos}
+            />
           </div>
-          <div className="channelPills">
-            <div
-              style={{
-                fontSize: "1.8rem",
-              }}
-            >
-              All Channels in Index{" "}
-            </div>
-            {[...uniqueAuthors].map((author) => (
-              <div key={author + "-" + index} className="channelPill">
-                {author}
+          {/* Video Search Form */}
+          {!finalSearchQuery && (
+            <div>
+              <div className="videoSearchForm">
+                <div className="title">Search Videos</div>
+                <div className="m-auto p-3 searchFormContainer">
+                  <SearchForm
+                    index={currIndex}
+                    setSearchQuery={setSearchQuery}
+                    searchQuery={searchQuery}
+                    setFinalSearchQuery={setFinalSearchQuery}
+                  />
+                </div>
               </div>
-            ))}
-          </div>
-          <Container fluid className="mb-5">
-            <Row>
-              {videos.data && (
-                <VideoList
-                  index_id={currIndex}
-                  videos={{
-                    data: currentVideos,
-                    isLoading: videos.isLoading,
-                  }}
-                />
-              )}
-              <Container fluid className="my-5 d-flex justify-content-center">
-                <CustomPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  nextPage={nextPage}
-                  prevPage={prevPage}
-                />
+              <div className="channelPills">
+                <div className="subtitle">All Channels in Index </div>
+                {[...uniqueAuthors].map((author) => (
+                  <div key={author + "-" + index} className="channelPill">
+                    {author}
+                  </div>
+                ))}
+              </div>
+              <Container fluid className="mb-5">
+                <Row>
+                  {videos && (
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <VideoList
+                        videos={videos}
+                        refetchVideos={refetchVideos}
+                      />
+                    </Suspense>
+                  )}
+                  <Container
+                    fluid
+                    className="my-5 d-flex justify-content-center"
+                  >
+                    <PageNav
+                      page={vidPage}
+                      setPage={setVidPage}
+                      data={videosData}
+                      inPreviousData={isPreviousData}
+                    />
+                  </Container>
+                </Row>
               </Container>
-            </Row>
-          </Container>
-        </div>
-      )}
-
-      {searchPerformed && (
-        <div>
-          {!searchResults.isLoading && searchResults.data.length > 0 && (
-            <div className="searchResultTitle">
-              Search Results for "{searchQuery}"
             </div>
           )}
-          <div className="videoSearchForm">
-            <div className="m-auto p-3 searchFormContainer">
-              <SearchForm index={currIndex} search={searchVideo} />
+
+          {/* Video Search Results */}
+          {finalSearchQuery && (
+            <div>
+              <div className="videoSearchForm">
+                <div className="m-auto p-3 searchFormContainer">
+                  <SearchForm
+                    index={currIndex}
+                    setSearchQuery={setSearchQuery}
+                    searchQuery={searchQuery}
+                    setFinalSearchQuery={setFinalSearchQuery}
+                  />
+                </div>
+              </div>
+              <Container fluid className="m-3">
+                <Row>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <SearchResultList
+                      currIndex={currIndex}
+                      videos={videos}
+                      finalSearchQuery={finalSearchQuery}
+                    />
+                  </Suspense>
+                </Row>
+              </Container>
+              <div className="resetButtonWrapper">
+                <button className="resetButton" onClick={reset}>
+                  {backIcon && (
+                    <img src={backIcon} alt="Icon" className="icon" />
+                  )}
+                  &nbsp;Back to All Videos
+                </button>
+              </div>
             </div>
-          </div>
-          <Container fluid className="m-3">
-            <Row>{searchResultsContent()}</Row>
-          </Container>
-          <div className="resetButtonWrapper">
-            <button className="resetButton" onClick={reset}>
-              {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
-              &nbsp;Back to All Videos
-            </button>
-          </div>
-        </div>
+          )}
+        </ErrorBoundary>
       )}
     </Container>
   );

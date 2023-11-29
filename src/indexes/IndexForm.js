@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import InputForm from "../common/InputForm";
 import icon from "../svg/Create.svg";
 import "./IndexForm.css";
+import { useCreateIndex } from "../api/apiHooks";
 
-/** Renders the input form for an index 
+/** Renders the input form for an index
  *
  * App -> IndexForm -> InputForm
  */
 
-function IndexForm({ addIndex }) {
+function IndexForm() {
+  const createIndexMutation = useCreateIndex();
+
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
 
@@ -27,8 +30,12 @@ function IndexForm({ addIndex }) {
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
-      addIndex(trimmedIndexName);
-      setIndexName("");
+      try {
+        await createIndexMutation.mutateAsync(trimmedIndexName);
+        setIndexName("");
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 

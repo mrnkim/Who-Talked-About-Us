@@ -1,55 +1,42 @@
 import "./App.css";
 import IndexForm from "./indexes/IndexForm";
-import { useEffect, useState } from "react";
-import TwelveLabsApi from "./api/api";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-import closeIcon from "./svg/Close.svg";
-import backIcon from "./svg/Back.svg";
-import loadingSpinner from "./svg/LoadingSpinner.svg";
+import { useGetIndexes } from "./api/apiHooks";
+import { LoadingSpinner } from "./common/LoadingSpinner";
+import { ErrorBoundary } from "react-error-boundary";
+import { Suspense, useEffect, useState } from "react";
+import ErrorFallback from "./common/ErrorFallback";
+import infoIcon from "./svg/Info.svg";
+import { useQueryClient } from "@tanstack/react-query";
+import { keys } from "./api/keys";
+import { PageNav } from "./common/PageNav";
 
-/** UGC Analyzer application
+const PAGE_LIMIT = 10;
+
+/** Who Talked About Us App
  *
  * - indexes: list of indexes and loading status
- *   { data: [{_id: '1', index_name: 'testIndex2', index_options: Array(4),...},
- *            {_id: '2', index_name: 'testIndex2', index_options: Array(4),...}]
- *          , isLoading: false }
  *
  * App -> { IndexForm, VideoIndex }
  */
 
 function App() {
-  const [indexes, setIndexes] = useState({
-    data: null,
-    isLoading: true,
-  });
+  const [page, setPage] = useState(1);
 
-  useEffect(function fetchIndexesOnMount() {
-    async function fetchIndexes() {
-      const response = await TwelveLabsApi.getIndexes();
-      setIndexes({ data: response, isLoading: false });
-    }
-    fetchIndexes();
-  }, []);
+  const queryClient = useQueryClient();
+  const {
+    data: indexesData,
+    refetch,
+    isPreviousData,
+  } = useGetIndexes(page, PAGE_LIMIT);
 
-  /** Triggered by index form submit; creates/adds a new index */
-  async function addIndex(indexName) {
-    const newIndex = await TwelveLabsApi.createIndex(indexName);
-    setIndexes((indexes) => ({
-      data: [{ ...newIndex, index_name: indexName }, ...indexes.data],
-      isLoading: false,
-    }));
-  }
+  const indexes = indexesData?.data;
 
-  if (indexes.isLoading)
-    return (
-      <div className="text-center">
-        <div className=" loading-spinner">
-          <img src={loadingSpinner} alt="Loading Spinner" />
-        </div>
-        Loading
-      </div>
-    );
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [keys.INDEXES, page] });
+  }, [indexes, page]);
+
   return (
     <div className="App">
       <Container className="m-auto p-3">
@@ -57,24 +44,40 @@ function App() {
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
       <Container className="m-auto p-3 indexFormContainer">
-        <IndexForm indexes={indexes.data} addIndex={addIndex} />
+        <IndexForm />
       </Container>
-      <Container className="m-auto p-3">
-        {indexes.data &&
-          indexes.data.map((index) => (
-            <div className="mb-3" key={index._id}>
-              <VideoIndex
-                indexes={indexes}
-                setIndexes={setIndexes}
-                index={index}
-                key={index._id}
-                closeIcon={closeIcon}
-                backIcon={backIcon}
-                loadingSpinner={loadingSpinner}
-              />
-            </div>
-          ))}
-      </Container>
+      {indexes && indexes.length === 0 && (
+        <div className="doNotLeaveMessageWrapper">
+          <img src={infoIcon} alt="infoIcon" className="icon"></img>
+          <div className="doNotLeaveMessage">
+            There is no index. Start creating one!
+          </div>
+        </div>
+      )}
+      {indexes && indexes.length > 0 && (
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onReset={() => refetch()}
+          resetKeys={[keys.INDEXES]}
+        >
+          <Container className="m-auto p-3">
+            {indexes &&
+              indexes.map((index) => (
+                <div className="mb-3" key={index._id}>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <VideoIndex index={index} />
+                  </Suspense>
+                </div>
+              ))}
+          </Container>{" "}
+          <PageNav
+            page={page}
+            setPage={setPage}
+            data={indexesData}
+            inPreviousData={isPreviousData}
+          />
+        </ErrorBoundary>
+      )}
     </div>
   );
 }

@@ -1,0 +1,32 @@
+.pageNav button {
+    color: black;
+    background-color: transparent;
+    outline: none !important;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 1.25rem;
+    transition: background-color 0.3s;
+    margin: 0.38rem;
+    border: none;
+  }
+
+  .pageNav button:hover {
+    background-color: transparent;
+    outline: none !important;
+    border: 1px solid #D4D5D2;
+    border-radius: 1.25rem;
+  }
+
+  .pageNav button.active {
+    background-color: #D4D5D2;
+    font-weight: 700;
+    border: none;
+    border-radius: 1.25rem;
+    outline: none !important;
+  }
+
+
+  .pageNav button.disabled-button {
+    border: none;
+  }

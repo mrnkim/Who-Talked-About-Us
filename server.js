@@ -15,10 +15,11 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-const API_BASE_URL = "https://api.twelvelabs.io/p/v1.1";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 const TWELVE_LABS_API = axios.create({
   baseURL: API_BASE_URL,
 });
+const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
 
 /** Set up middleware for Express */
 app.use(cors());
@@ -47,9 +48,9 @@ process.on("uncaughtException", function (exception) {
   console.log(exception);
 });
 
-/** Set up Express server to listen on port 4001 */
-app.listen(4001, () => {
-  console.log("Server Running. Listening on port 4001");
+/** Set up Express server to listen on port */
+app.listen(PORT_NUMBER, () => {
+  console.log(`Server Running. Listening on port ${PORT_NUMBER}`);
 });
 
 /** Takes a downloaded video and initiates the indexing process */
@@ -151,7 +152,11 @@ app.post(
               await streamPipeline(stream, fs.createWriteStream(videoPath));
 
               console.log(`${videoPath} -- finished downloading`);
-              chunkDownloadedVideos.push(videoPath);
+
+              chunkDownloadedVideos.push({
+                videoPath: videoPath,
+                videoData: videoData,
+              });
             } catch (error) {
               console.log(`Error downloading ${videoData.title}`);
               console.error(error);
@@ -167,13 +172,20 @@ app.post(
         );
 
         const chunkVideoIndexingResponses = await Promise.all(
-          chunkDownloadedVideos.map(async (video) => {
-            console.log(`Submitting ${video} For Indexing...`);
-            return await indexVideo(video, request.body.index._id);
+          chunkDownloadedVideos.map(async (videoInfo) => {
+            console.log(`Submitting ${videoInfo.videoPath} For Indexing...`);
+            const indexingResponse = await indexVideo(
+              videoInfo.videoPath,
+              request.body.index_id
+            );
+
+            // Add videoData to indexingResponse
+            indexingResponse.videoData = videoInfo.videoData;
+
+            return indexingResponse;
           })
         ).catch(next);
 
-        // Log indexing completion and update progress
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
 
         processedVideosCount += videoChunk.length;
@@ -191,11 +203,12 @@ app.post(
       console.log(
         "Indexing Submission For All Videos Completed With Task IDs:"
       );
+
       console.log(videoIndexingResponses);
 
       response.json({
         taskIds: videoIndexingResponses,
-        indexId: request.body.index._id,
+        indexId: request.body.index_id,
       });
     } catch (error) {
       next(error);

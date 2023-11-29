@@ -18,20 +18,17 @@ describe("TwelveLabsApi", () => {
     { _id: "video2", title: "Video 2" },
   ];
 
-  const mockVideo = { _id: "video1", title: "Video 1" };
-
-  const mockSearchResult = [{ _id: "video1", title: "Video 1" }];
-
   test("should fetch indexes", async () => {
-    axios.request.mockResolvedValueOnce({ data: { data: mockIndexes } });
+    axios.request.mockResolvedValueOnce({ data: mockIndexes });
 
     const indexes = await TwelveLabsApi.getIndexes();
 
-    expect(indexes).toEqual(mockIndexes);
+    expect(indexes.data).toEqual(mockIndexes);
     expect(axios.request).toHaveBeenCalledWith({
       method: "GET",
       url: `${process.env.REACT_APP_API_URL}/indexes`,
       headers: {
+        "Content-Type": "application/json",
         "x-api-key": process.env.REACT_APP_API_KEY,
       },
     });
@@ -41,24 +38,24 @@ describe("TwelveLabsApi", () => {
     const indexName = "New Index";
     const mockResponse = { _id: "new_index_id", index_name: indexName };
 
-    axios.post.mockResolvedValueOnce({ data: mockResponse });
+    axios.request.mockResolvedValueOnce(mockResponse);
 
     const response = await TwelveLabsApi.createIndex(indexName);
 
-    expect(response).toEqual(mockResponse);
-    expect(axios.post).toHaveBeenCalledWith(
-      `${process.env.REACT_APP_API_URL}/indexes`,
-      {
+    expect(response.data).toEqual(mockResponse.data);
+    expect(axios.request).toHaveBeenCalledWith({
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/indexes`,
+      data: {
         engine_id: "marengo2.5",
         index_options: ["visual", "conversation", "text_in_video", "logo"],
         index_name: indexName,
       },
-      {
-        headers: {
-          "x-api-key": process.env.REACT_APP_API_KEY,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+      },
+    });
   });
 
   test("should fetch videos", async () => {
@@ -68,11 +65,12 @@ describe("TwelveLabsApi", () => {
 
     const videos = await TwelveLabsApi.getVideos(indexId);
 
-    expect(videos).toEqual(mockVideos);
+    expect(videos.data).toEqual(mockVideos);
     expect(axios.request).toHaveBeenCalledWith({
       method: "GET",
       url: `${process.env.REACT_APP_API_URL}/indexes/${indexId}/videos`,
       headers: {
+        "Content-Type": "application/json",
         "x-api-key": process.env.REACT_APP_API_KEY,
       },
       params: {
@@ -80,32 +78,4 @@ describe("TwelveLabsApi", () => {
       },
     });
   });
-
-  //FIXME: fix test
-  // test("should search for videos", async () => {
-  //   const indexId = "index1";
-  //   const query = "search_query";
-
-  //   const mockSearchResult = { _id: "video1", title: "Video 1" }; // Modify the mockSearchResult
-
-  //   axios.request.mockResolvedValueOnce({ data: mockSearchResult });
-
-  //   const searchResult = await TwelveLabsApi.searchVideo(indexId, query);
-
-  //   // Compare the nested `data` object within the received `searchResult`
-  //   expect(searchResult.data).toEqual(mockSearchResult);
-
-  //   // Use expect.objectContaining for headers comparison
-  //   expect(axios.request).toHaveBeenCalledWith(
-  //     expect.objectContaining({
-  //       method: "POST",
-  //       url: `${process.env.REACT_APP_API_URL}/search`,
-  //       headers: expect.objectContaining({
-  //         "x-api-key": process.env.REACT_APP_API_KEY,
-  //         "Content-Type": "application/json",
-  //         accept: "application/json",
-  //       }),
-  //     })
-  //   );
-  // });
 });

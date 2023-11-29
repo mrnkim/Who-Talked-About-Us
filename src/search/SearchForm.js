@@ -10,29 +10,32 @@ import "./SearchForm.css";
  * VideoIndex -> SearchForm -> InputForm
  */
 
-function SearchForm({ index, search }) {
-  const [query, setQuery] = useState("");
+function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
   const [error, setError] = useState("");
 
   /** Updates form input */
   function handleChange(evt) {
     const input = evt.target;
-    setQuery(input.value);
+    setSearchQuery(input.value);
     if (error && input.value.trim() !== "") {
       setError("");
     }
   }
 
   /** Calls parent function to search videos based on a query */
-  async function handleSubmit(evt) {
+  function handleSubmit(evt) {
     evt.preventDefault();
-    const trimmedQuery = query.trim();
-
-    if (!trimmedQuery) {
-      setError("Please enter the search term");
-    } else {
-      search(index, trimmedQuery);
-      setQuery("");
+    if (searchQuery) {
+      const trimmedQuery = searchQuery.trim();
+      if (!trimmedQuery) {
+        setError("Please enter the search term");
+      } else {
+        try {
+          setFinalSearchQuery(trimmedQuery);
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   }
 
@@ -41,7 +44,6 @@ function SearchForm({ index, search }) {
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
-        input={query}
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText="Search"
         icon={searchIcon}

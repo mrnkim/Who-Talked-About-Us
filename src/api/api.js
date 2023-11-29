@@ -9,25 +9,23 @@ const API_KEY = process.env.REACT_APP_API_KEY;
  *
  */
 class TwelveLabsApi {
-  /** Declare the `headers` object containing your API key */
-  static headers = {
-    "Content-Type": "application/json",
-    "x-api-key": API_KEY,
-  };
-
   /** Get indexes of a user */
-  static async getIndexes() {
+  static async getIndexes(page, pageLimit) {
     const config = {
       method: "GET",
       url: `${API_URL}/indexes`,
-      headers: this.headers,
+      params: { page: page, page_limit: pageLimit, deleted: false },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
-
     try {
       const response = await axios.request(config);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   }
 
@@ -36,17 +34,19 @@ class TwelveLabsApi {
     const config = {
       method: "POST",
       url: `${API_URL}/indexes`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
       data: {
         engine_id: "marengo2.5",
         index_options: ["visual", "conversation", "text_in_video", "logo"],
         index_name: indexName,
       },
     };
-
     try {
       const response = await axios.request(config);
-      return response.data;
+      return response;
     } catch (error) {
       console.error(error);
     }
@@ -57,7 +57,11 @@ class TwelveLabsApi {
     const config = {
       method: "DELETE",
       url: `${API_URL}/indexes/${indexId}`,
-      headers: this.headers,
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
     try {
       const response = await axios.request(config);
@@ -67,35 +71,17 @@ class TwelveLabsApi {
     }
   }
 
-  /** Get details on a video */
-  static async getVideo(indexId, videoId) {
+  /** Get all videos of an index */
+  static async getVideos(indexId, page, pageLimit) {
     const config = {
       method: "GET",
-      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
+      params: { page: page, page_limit: pageLimit, whoTalkedAboutUs: true },
+      url: `${API_URL}/indexes/${indexId}/videos`,
       headers: {
-        ...this.headers,
-        "Content-Type":
-          "multipart/form-data; boundary=---011000010111000001101001",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
       },
     };
-
-    try {
-      const response = await axios.request(config);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /** Get all videos of an index */
-  static async getVideos(indexId) {
-    const config = {
-      method: "GET",
-      params: { page_limit: "50" },
-      url: `${API_URL}/indexes/${indexId}/videos`,
-      headers: this.headers,
-    };
-
     try {
       const response = await axios.request(config);
       return response.data;
@@ -110,16 +96,16 @@ class TwelveLabsApi {
       method: "POST",
       url: `${API_URL}/search`,
       headers: {
-        ...this.headers,
-        " accept": "application/json",
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
       },
       data: {
         index_id: `${indexId}`,
         search_options: ["visual", "conversation", "text_in_video", "logo"],
-        query: { text: `${query}` },
+        query,
       },
     };
-
     try {
       const response = await axios.request(config);
       return response.data;
@@ -133,23 +119,10 @@ class TwelveLabsApi {
     const config = {
       method: "PUT",
       url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
-      headers: this.headers,
-      data: data,
-    };
-    try {
-      const response = await axios.request(config);
-      return response.status;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /** Creates a video upload task */
-  static async createTask(data) {
-    const config = {
-      method: "POST",
-      url: `${API_URL}/tasks`,
-      headers: { ...this.headers, "Content-Type": "multipart/form-data" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
       data: data,
     };
     try {
@@ -161,13 +134,15 @@ class TwelveLabsApi {
   }
 
   /** Check the status of a specific indexing task */
-  static async checkStatus(taskId) {
+  static async getTask(taskId) {
     const config = {
       method: "GET",
       url: `${API_URL}/tasks/${taskId}`,
-      headers: this.headers,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
     };
-
     try {
       const response = await axios.request(config);
       return response.data;
