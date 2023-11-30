@@ -1,7 +1,9 @@
 import axios from "axios";
+import sanitize from "sanitize-filename";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const API_KEY = process.env.REACT_APP_API_KEY;
+const PAGE_LIMIT_MAX = 50;
 
 /** API Class
  *
@@ -77,6 +79,52 @@ class TwelveLabsApi {
       method: "GET",
       params: { page: page, page_limit: pageLimit, whoTalkedAboutUs: true },
       url: `${API_URL}/indexes/${indexId}/videos`,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY,
+      },
+    };
+    try {
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /** Get all authors of an index */
+  static async getAllAuthors(indexId, pageLimit = PAGE_LIMIT_MAX) {
+    const authors = new Set();
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await TwelveLabsApi.getVideos(indexId, page, pageLimit);
+
+      if (response && response.data.length > 0) {
+        response.data.forEach((video) => {
+          const sanitizedAuthor = sanitize(video.metadata.author);
+          authors.add(sanitizedAuthor);
+        });
+
+        if (response.page_info && response.page_info.total_page > page) {
+          page++;
+        } else {
+          hasMore = false;
+        }
+      } else {
+        break;
+      }
+    }
+
+    return Array.from(authors);
+  }
+
+  /** Get a video of an index */
+  static async getVideo(indexId, videoId) {
+    const config = {
+      method: "GET",
+      url: `${API_URL}/indexes/${indexId}/videos/${videoId}`,
       headers: {
         "Content-Type": "application/json",
         "x-api-key": API_KEY,

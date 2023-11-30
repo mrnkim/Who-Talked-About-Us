@@ -15,6 +15,7 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 import { keys } from "../api/keys";
 import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
+import TwelveLabsApi from "../api/api";
 
 const PAGE_LIMIT = 12;
 
@@ -26,6 +27,7 @@ const PAGE_LIMIT = 12;
 function VideoIndex({ index }) {
   const currIndex = index._id;
   const [vidPage, setVidPage] = useState(1);
+  const [allAuthors, setAllAuthors] = useState(null);
 
   const queryClient = useQueryClient();
   const {
@@ -34,6 +36,18 @@ function VideoIndex({ index }) {
     isPreviousData,
   } = useGetVideos(currIndex, vidPage, PAGE_LIMIT);
   const videos = videosData?.data;
+
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      try {
+        const authors = await TwelveLabsApi.getAllAuthors(currIndex);
+        setAllAuthors(authors);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAuthors();
+  }, [currIndex, videosData]);
 
   const deleteIndexMutation = useDeleteIndex();
 
@@ -73,13 +87,6 @@ function VideoIndex({ index }) {
     setShowVideos(true);
     setSearchQuery(false);
     setFinalSearchQuery(false);
-  }
-
-  const uniqueAuthors = new Set();
-  if (videos) {
-    videos.forEach((vid) => {
-      uniqueAuthors.add(vid.metadata.author);
-    });
   }
 
   useEffect(() => {
@@ -153,9 +160,11 @@ function VideoIndex({ index }) {
                 </div>
               </div>
               <div className="channelPills">
-                <div className="subtitle">All Channels in Index </div>
-                {[...uniqueAuthors].map((author) => (
-                  <div key={author + "-" + index} className="channelPill">
+                <div className="subtitle">
+                  All Channels in Index ({allAuthors?.length || 0}){" "}
+                </div>
+                {allAuthors.map((author) => (
+                  <div key={author} className="channelPill">
                     {author}
                   </div>
                 ))}
@@ -204,7 +213,7 @@ function VideoIndex({ index }) {
                   <Suspense fallback={<LoadingSpinner />}>
                     <SearchResultList
                       currIndex={currIndex}
-                      videos={videos}
+                      allAuthors={allAuthors}
                       finalSearchQuery={finalSearchQuery}
                     />
                   </Suspense>

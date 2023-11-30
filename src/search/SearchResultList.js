@@ -1,7 +1,7 @@
 import { React, Suspense } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useSearchVideo } from "../api/apiHooks";
+import { useGetVideoOfSearchResults } from "../api/apiHooks";
 import "./SearchResultList.css";
 import { keys } from "../api/keys";
 import { ErrorBoundary } from "react-error-boundary";
@@ -12,14 +12,9 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
  *
  *  VideoIndex -> SearchResultList
  */
-function SearchResultList({ currIndex, finalSearchQuery, videos }) {
-  const { data: searchResultData, refetch } = useSearchVideo(
-    currIndex,
-    finalSearchQuery
-  );
-
-  const searchResults = searchResultData?.data ?? [];
-
+function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
+  const { searchResults, searchResultVideos, refetch } =
+    useGetVideoOfSearchResults(currIndex, finalSearchQuery);
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -31,10 +26,10 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
 
   /** Organize search results by author and video_id */
   const organizedResults = {};
-  if (searchResults && videos) {
+  if (searchResults && searchResultVideos) {
     searchResults.forEach((result) => {
       const videoId = result.video_id;
-      const video = videos.find((vid) => vid._id === videoId);
+      const video = searchResultVideos.find((vid) => vid._id === videoId);
       if (video) {
         const videoAuthor = video.metadata.author;
         const videoTitle = video.metadata.filename.replace(".mp4", "");
@@ -50,11 +45,11 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
   }
 
   const noResultAuthors = [];
-  for (let video of videos) {
-    const authors = Object.keys(organizedResults);
-    const authorName = video.metadata.author;
-    if (!authors.includes(authorName)) {
-      noResultAuthors.push(authorName);
+
+  for (let author of allAuthors) {
+    const resultAuthors = Object.keys(organizedResults);
+    if (!resultAuthors.includes(author)) {
+      noResultAuthors.push(author);
     }
   }
 
@@ -108,7 +103,7 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
                                     <ReactPlayer
                                       url={
                                         `${
-                                          videos.find(
+                                          searchResultVideos.find(
                                             (vid) =>
                                               vid._id === results[0].video_id
                                           ).metadata.youtubeUrl
@@ -149,6 +144,16 @@ function SearchResultList({ currIndex, finalSearchQuery, videos }) {
                 </div>
               );
             })}
+          {searchResults?.length > 0 && noResultAuthors.length > 0 && (
+            <div className="channelPills">
+              <div className="subtitle">No results from</div>
+              {Array.from(new Set(noResultAuthors)).map((author, index) => (
+                <div key={index} className="channelNoResultPill">
+                  {author}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

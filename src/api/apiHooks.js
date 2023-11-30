@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueries,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import TwelveLabsApi from "./api";
 import { keys } from "./keys";
 
@@ -38,4 +43,21 @@ export function useSearchVideo(indexId, query) {
     queryKey: [keys.SEARCH, indexId, query],
     queryFn: () => TwelveLabsApi.searchVideo(indexId, query),
   });
+}
+
+export function useGetVideoOfSearchResults(indexId, query) {
+  const { data: searchVideoQuery, refetch } = useSearchVideo(indexId, query);
+  const searchResults = searchVideoQuery.data || [];
+
+  const results = useQueries({
+    queries: searchResults.map((result) => ({
+      queryKey: [keys.SEARCH, indexId, result.video_id],
+      queryFn: () => TwelveLabsApi.getVideo(indexId, result.video_id),
+    })),
+  });
+
+  // Extract 'data' property from each object in 'results'
+  const searchResultVideos = results.map(({ data }) => data);
+
+  return { searchResults, searchResultVideos, refetch };
 }
