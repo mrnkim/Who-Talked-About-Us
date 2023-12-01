@@ -25,6 +25,19 @@ const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
 
 /** Implements video download, submission, and indexing
  *
+ * - taskIds: [
+ *              {
+ *                 _id: '656a20abe44fccd3724bf2af',
+ *                 videoData: {
+ *                   url: 'https://www.youtube.com/watch?v=...',
+ *                   title: 'title',
+ *                   authorName: 'authorName',
+ *                   thumbnails: [Array]
+ *                 }
+ *               },
+ *               ...
+ *             ]
+ *
  * App -> VideoIndex -> UploadYoutubeVideo
  */
 
@@ -151,7 +164,7 @@ export function UploadYoutubeVideo({
   const indexYouTubeVideos = async () => {
     setIsSubmitting(true);
     updateMainMessage(
-      "Do not leave or refresh the page. Please wait until indexing is done for ALL videos."
+      "Do not close or refresh the page while videos are uploading. You can still do the search!"
     );
 
     const videoData = taskVideos.map((taskVideo) => {

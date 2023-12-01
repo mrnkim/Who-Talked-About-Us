@@ -172,7 +172,7 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 
       if (apiResponse && apiResponse.data.length > 0) {
         apiResponse.data.forEach((video) => {
-          const sanitizedAuthor = sanitize(video.metadata.author);
+          const sanitizedAuthor = sanitize(`${video.metadata.author}`);
           authors.add(sanitizedAuthor);
         });
 
@@ -245,7 +245,7 @@ app.get(
 app.put("/update/:indexId/:videoId", async (request, response, next) => {
   const indexId = request.params.indexId;
   const videoId = request.params.videoId;
-  const data = request.body; // Assuming the data is sent in the request body
+  const data = request.body;
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": TWELVE_LABS_API_KEY,
