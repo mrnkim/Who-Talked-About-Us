@@ -164,7 +164,7 @@ export function UploadYoutubeVideo({
   const indexYouTubeVideos = async () => {
     setIsSubmitting(true);
     updateMainMessage(
-      "Do not close or refresh the page while videos are uploading. You can still do the search!"
+      "Do not close the current index or refresh the page while videos are uploading. You can still do the search!"
     );
 
     const videoData = taskVideos.map((taskVideo) => {

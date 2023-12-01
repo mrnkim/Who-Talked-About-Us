@@ -107,6 +107,7 @@ function VideoIndex({ index }) {
         showDeleteConfirmation={showDeleteConfirmation}
         deleteIndex={deleteIndex}
       />
+
       {showVideos && videos && videos.length === 0 && (
         <div>
           <div className="doNotLeaveMessageWrapper">
@@ -143,20 +144,21 @@ function VideoIndex({ index }) {
               refetchVideos={refetchVideos}
             />
           </div>
-          {/* Video Search Form */}
+
+          <div className="videoSearchForm">
+            <div className="title">Search Videos</div>
+            <div className="m-auto p-3 searchFormContainer">
+              <SearchForm
+                index={currIndex}
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                setFinalSearchQuery={setFinalSearchQuery}
+              />
+            </div>
+          </div>
+
           {!finalSearchQuery && (
             <div>
-              <div className="videoSearchForm">
-                <div className="title">Search Videos</div>
-                <div className="m-auto p-3 searchFormContainer">
-                  <SearchForm
-                    index={currIndex}
-                    setSearchQuery={setSearchQuery}
-                    searchQuery={searchQuery}
-                    setFinalSearchQuery={setFinalSearchQuery}
-                  />
-                </div>
-              </div>
               <div className="channelPills">
                 <div className="subtitle">
                   All Channels in Index ({authors?.length || 0}){" "}
@@ -193,19 +195,8 @@ function VideoIndex({ index }) {
             </div>
           )}
 
-          {/* Video Search Results */}
           {finalSearchQuery && (
             <div>
-              <div className="videoSearchForm">
-                <div className="m-auto p-3 searchFormContainer">
-                  <SearchForm
-                    index={currIndex}
-                    setSearchQuery={setSearchQuery}
-                    searchQuery={searchQuery}
-                    setFinalSearchQuery={setFinalSearchQuery}
-                  />
-                </div>
-              </div>
               <Container fluid className="m-3">
                 <Row>
                   <Suspense fallback={<LoadingSpinner />}>
