@@ -20,6 +20,7 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Node](https://nodejs.org/en)
 - [React](https://react.dev/)
+- [React Query](https://tanstack.com/query/latest)
 - [React Bootstrap](https://react-bootstrap.netlify.app/)
 - [ytdl-core](https://www.npmjs.com/package/ytdl-core)
 - [ytpl](https://www.npmjs.com/package/ytpl)
@@ -74,27 +75,27 @@ Follow this simple guide on how to use the Who Talked About Us:
    - Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
 2. Create `.env` file in the root directory and update the values for each key
 
-   - You can simply copy-paste the below and customize the values
+   ```
+    .env
+
+    REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
+    REACT_APP_API_KEY=<YOUR API KEY>
+    REACT_APP_SERVER_URL=<YOUR SERVER URL>
+    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER>
+
+   ```
+
+   - You can simply copy-paste the above and customize the values
    - `REACT_APP_API_URL`: You can keep it as-is or update it as needed by checking [Twelve Labs API Reference](https://docs.twelvelabs.io/reference/api-reference)
    - `REACT_APP_API_KEY`: Store the API Key that you generated in the previous step
-   - `REACT_APP_SERVER_URL`: It could be something like "http://localhost:4001"
+   - `REACT_APP_SERVER_URL`: It could be something like "http://localhost"
    - `REACT_APP_PORT_NUMBER`: Set a port number you want to use (e.g., 4001)
-
-   ```
-   //.env
-
-   REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
-   REACT_APP_API_KEY=<YOUR API KEY>
-   REACT_APP_SERVER_URL=<YOUR SERVER URL>
-   REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER>
-
-   ```
 
 ### Step 2. Start the App
 
 1. Clone the current repo
    ```sh
-   git clone git@github.com:mrnkim/vid-analyzer-react.git
+   git clone git@github.com:mrnkim/Who-Talked-About-Us.git
    ```
 2. Start the server
 
