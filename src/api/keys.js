@@ -3,4 +3,5 @@ export const keys = {
   VIDEOS: "videos",
   TASK: "task",
   SEARCH: "search",
+  AUTHORS: "authors",
 };

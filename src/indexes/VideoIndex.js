@@ -10,14 +10,17 @@ import SearchResultList from "../search/SearchResultList";
 import VideoList from "../videos/VideoList";
 import "./VideoIndex.css";
 import { PageNav } from "../common/PageNav";
-import { useDeleteIndex, useGetVideos } from "../api/apiHooks";
+import {
+  useDeleteIndex,
+  useGetVideos,
+  useGetAllAuthors,
+} from "../api/apiHooks";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { keys } from "../api/keys";
 import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
-import TwelveLabsApi from "../api/api";
 
-const PAGE_LIMIT = 12;
+const VID_PAGE_LIMIT = 12;
 
 /**
  * Show video list and videos, search form and search result list
@@ -27,27 +30,16 @@ const PAGE_LIMIT = 12;
 function VideoIndex({ index }) {
   const currIndex = index._id;
   const [vidPage, setVidPage] = useState(1);
-  const [allAuthors, setAllAuthors] = useState(null);
 
   const queryClient = useQueryClient();
   const {
     data: videosData,
     refetch: refetchVideos,
     isPreviousData,
-  } = useGetVideos(currIndex, vidPage, PAGE_LIMIT);
+  } = useGetVideos(currIndex, vidPage, VID_PAGE_LIMIT);
   const videos = videosData?.data;
 
-  useEffect(() => {
-    const fetchAuthors = async () => {
-      try {
-        const authors = await TwelveLabsApi.getAllAuthors(currIndex);
-        setAllAuthors(authors);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchAuthors();
-  }, [currIndex, videosData]);
+  const { data: authors } = useGetAllAuthors(currIndex);
 
   const deleteIndexMutation = useDeleteIndex();
 
@@ -93,7 +85,13 @@ function VideoIndex({ index }) {
     queryClient.invalidateQueries({
       queryKey: [keys.VIDEOS, currIndex, vidPage],
     });
-  }, [videos, currIndex, vidPage]);
+  }, [taskVideos, currIndex, vidPage]);
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.AUTHORS, currIndex],
+    });
+  }, [videos, currIndex]);
 
   return (
     <Container className="m-auto defaultContainer">
@@ -161,9 +159,9 @@ function VideoIndex({ index }) {
               </div>
               <div className="channelPills">
                 <div className="subtitle">
-                  All Channels in Index ({allAuthors?.length || 0}){" "}
+                  All Channels in Index ({authors?.length || 0}){" "}
                 </div>
-                {allAuthors.map((author) => (
+                {authors.map((author) => (
                   <div key={author} className="channelPill">
                     {author}
                   </div>
@@ -213,7 +211,7 @@ function VideoIndex({ index }) {
                   <Suspense fallback={<LoadingSpinner />}>
                     <SearchResultList
                       currIndex={currIndex}
-                      allAuthors={allAuthors}
+                      allAuthors={authors}
                       finalSearchQuery={finalSearchQuery}
                     />
                   </Suspense>

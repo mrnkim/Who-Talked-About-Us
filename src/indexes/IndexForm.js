@@ -31,7 +31,7 @@ function IndexForm() {
       setError("Please enter the name of an index");
     } else {
       try {
-        await createIndexMutation.mutateAsync(trimmedIndexName);
+        await createIndexMutation.mutate(trimmedIndexName);
         setIndexName("");
       } catch (error) {
         console.error(error);

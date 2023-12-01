@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import TwelveLabsApi from "../api/api";
 import { Container } from "react-bootstrap";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
@@ -8,19 +6,13 @@ import ErrorFallback from "../common/ErrorFallback";
 import completeIcon from "../svg/Complete.svg";
 import { useEffect } from "react";
 import { keys } from "../api/keys";
+import { useGetTask } from "../api/apiHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
-  const query = {
-    queryKey: [keys.TASK, taskId._id],
-    queryFn: () => TwelveLabsApi.getTask(taskId._id),
-    refetchOnWindowFocus: false,
-    refetchInterval: (task) => (task.status === "ready" ? false : 5000),
-    refetchIntervalInBackground: true,
-    enabled: true,
-  };
-
-  const { data: task, refetch } = useQuery(query);
-
+  const queryClient = useQueryClient();
+  const { data: task, refetch } = useGetTask(taskId._id);
+  
   useEffect(() => {
     if (task && task.status === "ready") {
       setCompleteTasks((prev) => [...prev, task]);
@@ -31,6 +23,12 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
       refetch({ enabled: false });
     }
   }, [task, refetch, setCompleteTasks, setFailedTasks]);
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.TASK, taskId._id],
+    });
+  }, [task, taskId._id]);
 
   return (
     <Container className="indexingStatusContainer" key={taskId}>

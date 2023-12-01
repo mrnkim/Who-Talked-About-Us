@@ -1,8 +1,7 @@
 import { useState, useEffect, Suspense } from "react";
-import { Container, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
-import TwelveLabsApi from "../api/api";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../common/ErrorFallback";
@@ -12,7 +11,9 @@ import { TaskVideo } from "./TaskVideo";
 import { Task } from "./Task";
 import sanitize from "sanitize-filename";
 
-const SERVER_BASE_URL = new URL(process.env.REACT_APP_SERVER_URL);
+const SERVER_BASE_URL = new URL(
+  `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
+);
 const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
 const CHANNEL_VIDEO_INFO_URL = new URL("/channel-video-info", SERVER_BASE_URL);
 const PLAYLIST_VIDEO_INFO_URL = new URL(
@@ -20,6 +21,7 @@ const PLAYLIST_VIDEO_INFO_URL = new URL(
   SERVER_BASE_URL
 );
 const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
+const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
 
 /** Implements video download, submission, and indexing
  *
@@ -208,7 +210,20 @@ export function UploadYoutubeVideo({
             whoTalkedAboutUs: true,
           },
         };
-        TwelveLabsApi.updateVideo(currIndex, completeTask.video_id, data);
+        try {
+          await fetch(
+            `${UPDATE_VIDEO_URL}/${currIndex}/${completeTask.video_id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
     });
     await Promise.all(updatePromises);
