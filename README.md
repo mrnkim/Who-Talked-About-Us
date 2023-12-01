@@ -40,8 +40,6 @@ In the search results (see the image above), you can effortlessly identify video
 
 ## 🚘 How to Use
 
-Follow this simple guide on how to use the Who Talked About Us:
-
 1. Begin by uploading videos in bulk to the app using either YouTube [playlist ID](https://www.sociablekit.com/find-youtube-playlist-id/#:~:text=Go%20to%20your%20target%20YouTube,playlist%20ID%20is%20PLFs4vir_WsTwEd%2DnJgVJCZPNL3HALHHpF), [channel ID](https://mixedanalytics.com/blog/find-a-youtube-channel-id/), or JSON file.
 
    - A YouTube playlist and channel should be public
@@ -86,7 +84,7 @@ Follow this simple guide on how to use the Who Talked About Us:
    ```
 
    - You can simply copy-paste the above and customize the values
-   - `REACT_APP_API_URL`: You can keep it as-is or update it as needed by checking [Twelve Labs API Reference](https://docs.twelvelabs.io/reference/api-reference)
+   - `REACT_APP_API_URL`: This app supports v1.1
    - `REACT_APP_API_KEY`: Store the API Key that you generated in the previous step
    - `REACT_APP_SERVER_URL`: It could be something like "http://localhost"
    - `REACT_APP_PORT_NUMBER`: Set a port number you want to use (e.g., 4001)
