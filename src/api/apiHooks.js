@@ -31,7 +31,7 @@ export function useGetIndex(indexId) {
   });
 }
 
-export function useCreateIndex() {
+export function useCreateIndex(setIndexId) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexName) =>
@@ -40,12 +40,15 @@ export function useCreateIndex() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ indexName }),
       }).then((res) => res.json()),
-    onSuccess: () => queryClient.invalidateQueries([keys.INDEXES]),
+    onSuccess: (newIndex) => {
+      setIndexId(newIndex._id);
+      queryClient.invalidateQueries([keys.INDEX]);
+    },
     mutationKey: "createIndex",
   });
 }
 
-export function useDeleteIndex() {
+export function useDeleteIndex(setIndexId) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexId) =>
@@ -54,7 +57,10 @@ export function useDeleteIndex() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ indexId }),
       }).then((res) => res.json()),
-    onSuccess: () => queryClient.invalidateQueries([keys.INDEXES]),
+    onSuccess: (indexId) => {
+      setIndexId(null);
+      queryClient.invalidateQueries([keys.INDEX]);
+    },
     mutationKey: "deleteIndex",
   });
 }

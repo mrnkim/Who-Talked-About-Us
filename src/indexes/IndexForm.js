@@ -3,14 +3,15 @@ import InputForm from "../common/InputForm";
 import icon from "../svg/Create.svg";
 import "./IndexForm.css";
 import { useCreateIndex } from "../api/apiHooks";
+import { ErrorBoundary } from "react-error-boundary";
 
 /** Renders the input form for an index
  *
  * App -> IndexForm -> InputForm
  */
 
-function IndexForm() {
-  const createIndexMutation = useCreateIndex();
+function IndexForm({ setIndexId }) {
+  const createIndexMutation = useCreateIndex(setIndexId);
 
   const [indexName, setIndexName] = useState("");
   const [error, setError] = useState("");
@@ -26,15 +27,28 @@ function IndexForm() {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
+    console.log("🚀 > handleSubmit > trimmedIndexName =", trimmedIndexName);
 
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
       try {
-        await createIndexMutation.mutate(trimmedIndexName);
-        setIndexName("");
+        const { data: newIndex, error } = await createIndexMutation.mutateAsync(
+          trimmedIndexName
+        );
+
+        if (error) {
+          setError(
+            error.status === 409
+              ? `Index name ${trimmedIndexName} already exists. Please use another unique name and try again.`
+              : "Error creating index. Please try again."
+          );
+        } else {
+          console.log("🚀 > handleSubmit > newIndex=", newIndex);
+          setIndexName("");
+        }
       } catch (error) {
-        console.error(error);
+        setError("An error occurred. Please try again later.");
       }
     }
   }

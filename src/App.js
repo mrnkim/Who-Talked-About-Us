@@ -22,72 +22,38 @@ const PAGE_LIMIT = 10;
  */
 
 function App() {
-  const [page, setPage] = useState(1);
-  const [indexId, setIndexId] = useState();
-
-  console.log(
-    "🚀 > App > process.env.REACT_APP_INDEX_ID=",
-    process.env.REACT_APP_INDEX_ID
+  const [indexId, setIndexId] = useState(
+    process.env.REACT_APP_INDEX_ID || null
   );
-  console.log(
-    "🚀 > App > process.env.REACT_APP_API_URL=",
-    process.env.REACT_APP_API_URL
-  );
-  const queryClient = useQueryClient();
-
-  // const {
-  //   data: indexesData,
-  //   refetch,
-  //   isPreviousData,
-  // } = useGetIndexes(page, PAGE_LIMIT);
-
-  const {
-    data: index,
-    refetch,
-    isPreviousData,
-  } = useGetIndex(process.env.REACT_APP_INDEX_ID || null);
-
-  console.log("🚀 > App > index=", index);
-
-  // const indexes = indexesData?.data;
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.INDEX] });
-  }, [index]);
+  console.log("🚀 > App > indexId=", indexId);
 
   return (
     <div className="App">
-      <Container className="m-auto p-3">
-        <h1 className="m-3 display-5">Who Talked About Us?</h1>
+      <Container className="p-3">
+        <h1 className="display-5 p-2">Who Talked About Us?</h1>
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
-      {!index && (
+      {!indexId && (
         <div>
-          <div className="doNotLeaveMessageWrapper">
+          <Container className="m-auto p-3 indexFormContainer">
+            <IndexForm setIndexId={setIndexId} />
+          </Container>
+          {/* <div className="doNotLeaveMessageWrapper">
             <img src={infoIcon} alt="infoIcon" className="icon"></img>
             <div className="doNotLeaveMessage">
               There is no index. Start creating one!
             </div>
-          </div>
-          <Container className="m-auto p-3 indexFormContainer">
-            <IndexForm />
-          </Container>
+          </div> */}
         </div>
       )}
-      {index && (
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          onReset={() => refetch()}
-          resetKeys={[keys.INDEX]}
-        >
-          <Container className="m-auto p-3">
-            <div className="mb-3" key={index._id}>
-              <Suspense fallback={<LoadingSpinner />}>
-                <VideoIndex index={index} />
-              </Suspense>
-            </div>
-          </Container>{" "}
-        </ErrorBoundary>
+      {indexId && (
+        <Container className="m-auto p-3">
+          <div className="mb-3">
+            <Suspense fallback={<LoadingSpinner />}>
+              <VideoIndex indexId={indexId} setIndexId={setIndexId} />
+            </Suspense>
+          </div>
+        </Container>
       )}
     </div>
   );

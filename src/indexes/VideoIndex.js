@@ -12,6 +12,7 @@ import "./VideoIndex.css";
 import { PageNav } from "../common/PageNav";
 import {
   useDeleteIndex,
+  useGetIndex,
   useGetVideos,
   useGetAllAuthors,
 } from "../api/apiHooks";
@@ -27,11 +28,15 @@ const VID_PAGE_LIMIT = 12;
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
-function VideoIndex({ index }) {
-  const currIndex = index._id;
+function VideoIndex({ indexId, setIndexId }) {
   const [vidPage, setVidPage] = useState(1);
 
   const queryClient = useQueryClient();
+
+  const { data: index, refetch } = useGetIndex(indexId);
+  console.log("🚀 > VideoIndex > index=", index);
+  const currIndex = index._id;
+
   const {
     data: videosData,
     refetch: refetchVideos,
@@ -41,7 +46,7 @@ function VideoIndex({ index }) {
 
   const { data: authors } = useGetAllAuthors(currIndex);
 
-  const deleteIndexMutation = useDeleteIndex();
+  const deleteIndexMutation = useDeleteIndex(setIndexId);
 
   const [taskVideos, setTaskVideos] = useState(null);
   // const [showVideos, setShowVideos] = useState(false);
@@ -82,6 +87,10 @@ function VideoIndex({ index }) {
   }
 
   useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [keys.INDEX] });
+  }, [index]);
+
+  useEffect(() => {
     queryClient.invalidateQueries({
       queryKey: [keys.VIDEOS, currIndex, vidPage],
     });
@@ -95,17 +104,25 @@ function VideoIndex({ index }) {
 
   return (
     <Container className="m-auto defaultContainer">
-      <IndexBar
-        showDeleteButton={showDeleteButton}
-        setShowDeleteButton={setShowDeleteButton}
-        isIndexSelected={isIndexSelected}
-        index={index}
-        videosData={videosData}
-        showDeleteConfirmationMessage={showDeleteConfirmationMessage}
-        hideDeleteConfirmationMessage={hideDeleteConfirmationMessage}
-        showDeleteConfirmation={showDeleteConfirmation}
-        deleteIndex={deleteIndex}
-      />
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onReset={() => refetch()}
+        resetKeys={[keys.INDEX]}
+      >
+        <Suspense fallback={<LoadingSpinner />}>
+          <IndexBar
+            showDeleteButton={showDeleteButton}
+            setShowDeleteButton={setShowDeleteButton}
+            isIndexSelected={isIndexSelected}
+            index={index}
+            videosData={videosData}
+            showDeleteConfirmationMessage={showDeleteConfirmationMessage}
+            hideDeleteConfirmationMessage={hideDeleteConfirmationMessage}
+            showDeleteConfirmation={showDeleteConfirmation}
+            deleteIndex={deleteIndex}
+          />
+        </Suspense>
+      </ErrorBoundary>
 
       {videos && videos.length === 0 && (
         <div>

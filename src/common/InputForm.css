@@ -19,7 +19,7 @@
 
   .textField {
     display: flex;
-    width: 64.5625rem;
+    min-width: 50rem;
     padding-top: 12px;
     flex-direction: column;
     align-items: flex-start;
