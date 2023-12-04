@@ -10,6 +10,7 @@ const SERVER_BASE_URL = new URL(
   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
 );
 const INDEXES_URL = new URL("/indexes", SERVER_BASE_URL);
+const INDEX_URL = new URL("/index", SERVER_BASE_URL);
 const SEARCH_URL = new URL("/search", SERVER_BASE_URL);
 const TASKS_URL = new URL("/tasks", SERVER_BASE_URL);
 
@@ -20,6 +21,13 @@ export function useGetIndexes(page, pageLimit) {
       fetch(`${INDEXES_URL}?page=${page}&page_limit=${pageLimit}`).then((res) =>
         res.json()
       ),
+  });
+}
+
+export function useGetIndex(indexId) {
+  return useQuery({
+    queryKey: [keys.INDEX],
+    queryFn: () => fetch(`${INDEXES_URL}/${indexId}`).then((res) => res.json()),
   });
 }
 

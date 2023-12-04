@@ -1,4 +1,4 @@
-.selected-index {
+.default-index {
   cursor: pointer;
   display: flex;
   height: 3rem;
@@ -11,7 +11,7 @@
   background: var(--TL-Green-500, #9AED59)
   }
 
-.default-index {
+/* .default-index {
 cursor: pointer;
 display: flex;
 height: 3rem;
@@ -24,7 +24,7 @@ flex-shrink: 0;
 border: 1px solid var(--TL-Grey-500, #B7B9B4);
 color: var(--TL-Grey-700, #6F706D);
 background: #FFF;
-}
+} */
 
 .default-index:hover {
 display: flex;

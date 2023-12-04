@@ -73,6 +73,28 @@ app.get("/indexes", async (request, response, next) => {
   }
 });
 
+/** Get index */
+app.get("/indexes/:indexId", async (request, response, next) => {
+  console.log("🚀 > app.get > request.params.indexId=", request.params.indexId)
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": TWELVE_LABS_API_KEY,
+  };
+
+  try {
+    const apiResponse = await TWELVE_LABS_API.get(
+      `/indexes/${request.params.indexId}`,
+      {
+        headers,
+      }
+    );
+    console.log("🚀 > app.get > apiResponse =", apiResponse )
+    response.json(apiResponse.data);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 /** Creates an index */
 app.post("/indexes", async (request, response, next) => {
   const headers = {

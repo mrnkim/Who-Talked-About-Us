@@ -44,7 +44,7 @@ function VideoIndex({ index }) {
   const deleteIndexMutation = useDeleteIndex();
 
   const [taskVideos, setTaskVideos] = useState(null);
-  const [showVideos, setShowVideos] = useState(false);
+  // const [showVideos, setShowVideos] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [finalSearchQuery, setFinalSearchQuery] = useState("");
@@ -69,16 +69,16 @@ function VideoIndex({ index }) {
   }
 
   /** Toggle whether to show or not show the components  */
-  function handleClick() {
-    setIsIndexSelected(!isIndexSelected);
-    setShowVideos(!showVideos);
-  }
+  // function handleClick() {
+  //   setIsIndexSelected(!isIndexSelected);
+  //   setShowVideos(!showVideos);
+  // }
 
   /** Reset search and show videos */
   function reset() {
-    setShowVideos(true);
-    setSearchQuery(false);
-    setFinalSearchQuery(false);
+    // setShowVideos(true);
+    setSearchQuery("");
+    setFinalSearchQuery("");
   }
 
   useEffect(() => {
@@ -96,7 +96,6 @@ function VideoIndex({ index }) {
   return (
     <Container className="m-auto defaultContainer">
       <IndexBar
-        handleClick={handleClick}
         showDeleteButton={showDeleteButton}
         setShowDeleteButton={setShowDeleteButton}
         isIndexSelected={isIndexSelected}
@@ -108,7 +107,7 @@ function VideoIndex({ index }) {
         deleteIndex={deleteIndex}
       />
 
-      {showVideos && videos && videos.length === 0 && (
+      {videos && videos.length === 0 && (
         <div>
           <div className="doNotLeaveMessageWrapper">
             <img src={infoIcon} alt="infoIcon" className="icon"></img>
@@ -129,7 +128,7 @@ function VideoIndex({ index }) {
         </div>
       )}
 
-      {showVideos && videos && videos.length > 0 && (
+      {videos && videos.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetchVideos()}

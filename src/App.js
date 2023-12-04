@@ -2,7 +2,7 @@ import "./App.css";
 import IndexForm from "./indexes/IndexForm";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
-import { useGetIndexes } from "./api/apiHooks";
+import { useGetIndex } from "./api/apiHooks";
 import { LoadingSpinner } from "./common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense, useEffect, useState } from "react";
@@ -23,19 +23,37 @@ const PAGE_LIMIT = 10;
 
 function App() {
   const [page, setPage] = useState(1);
+  const [indexId, setIndexId] = useState();
 
+  console.log(
+    "🚀 > App > process.env.REACT_APP_INDEX_ID=",
+    process.env.REACT_APP_INDEX_ID
+  );
+  console.log(
+    "🚀 > App > process.env.REACT_APP_API_URL=",
+    process.env.REACT_APP_API_URL
+  );
   const queryClient = useQueryClient();
+
+  // const {
+  //   data: indexesData,
+  //   refetch,
+  //   isPreviousData,
+  // } = useGetIndexes(page, PAGE_LIMIT);
+
   const {
-    data: indexesData,
+    data: index,
     refetch,
     isPreviousData,
-  } = useGetIndexes(page, PAGE_LIMIT);
+  } = useGetIndex(process.env.REACT_APP_INDEX_ID || null);
 
-  const indexes = indexesData?.data;
+  console.log("🚀 > App > index=", index);
+
+  // const indexes = indexesData?.data;
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.INDEXES, page] });
-  }, [indexes, page]);
+    queryClient.invalidateQueries({ queryKey: [keys.INDEX] });
+  }, [index]);
 
   return (
     <div className="App">
@@ -43,39 +61,32 @@ function App() {
         <h1 className="m-3 display-5">Who Talked About Us?</h1>
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
-      <Container className="m-auto p-3 indexFormContainer">
-        <IndexForm />
-      </Container>
-      {indexes && indexes.length === 0 && (
-        <div className="doNotLeaveMessageWrapper">
-          <img src={infoIcon} alt="infoIcon" className="icon"></img>
-          <div className="doNotLeaveMessage">
-            There is no index. Start creating one!
+      {!index && (
+        <div>
+          <div className="doNotLeaveMessageWrapper">
+            <img src={infoIcon} alt="infoIcon" className="icon"></img>
+            <div className="doNotLeaveMessage">
+              There is no index. Start creating one!
+            </div>
           </div>
+          <Container className="m-auto p-3 indexFormContainer">
+            <IndexForm />
+          </Container>
         </div>
       )}
-      {indexes && indexes.length > 0 && (
+      {index && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetch()}
-          resetKeys={[keys.INDEXES]}
+          resetKeys={[keys.INDEX]}
         >
           <Container className="m-auto p-3">
-            {indexes &&
-              indexes.map((index) => (
-                <div className="mb-3" key={index._id}>
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <VideoIndex index={index} />
-                  </Suspense>
-                </div>
-              ))}
+            <div className="mb-3" key={index._id}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <VideoIndex index={index} />
+              </Suspense>
+            </div>
           </Container>{" "}
-          <PageNav
-            page={page}
-            setPage={setPage}
-            data={indexesData}
-            inPreviousData={isPreviousData}
-          />
         </ErrorBoundary>
       )}
     </div>
