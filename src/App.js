@@ -1,5 +1,6 @@
 import "./App.css";
 import IndexForm from "./indexes/IndexForm";
+import ExistingIndexForm from "./indexes/ExistingIndexForm";
 import VideoIndex from "./indexes/VideoIndex";
 import Container from "react-bootstrap/Container";
 import { useGetIndex } from "./api/apiHooks";
@@ -11,6 +12,7 @@ import infoIcon from "./svg/Info.svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "./api/keys";
 import { PageNav } from "./common/PageNav";
+import { useRef } from "react";
 
 const PAGE_LIMIT = 10;
 
@@ -25,8 +27,7 @@ function App() {
   const [indexId, setIndexId] = useState(
     process.env.REACT_APP_INDEX_ID || null
   );
-  console.log("🚀 > App > indexId=", indexId);
-
+  const [currIndex, setCurrIndex] = useState(null);
   return (
     <div className="App">
       <Container className="p-3">
@@ -37,6 +38,9 @@ function App() {
         <div>
           <Container className="m-auto p-3 indexFormContainer">
             <IndexForm setIndexId={setIndexId} />
+          </Container>
+          <Container className="m-auto p-3 indexFormContainer">
+            <ExistingIndexForm setIndexId={setIndexId} />
           </Container>
           {/* <div className="doNotLeaveMessageWrapper">
             <img src={infoIcon} alt="infoIcon" className="icon"></img>
@@ -50,7 +54,12 @@ function App() {
         <Container className="m-auto p-3">
           <div className="mb-3">
             <Suspense fallback={<LoadingSpinner />}>
-              <VideoIndex indexId={indexId} setIndexId={setIndexId} />
+              <VideoIndex
+                indexId={indexId}
+                setIndexId={setIndexId}
+                setCurrIndex={setCurrIndex}
+                currIndex={currIndex}
+              />
             </Suspense>
           </div>
         </Container>

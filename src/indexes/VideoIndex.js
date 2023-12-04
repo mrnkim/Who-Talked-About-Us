@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import SearchForm from "../search/SearchForm";
 import UploadYoutubeVideo from "../videos/UploadYouTubeVideo";
 import backIcon from "../svg/Back.svg";
@@ -28,15 +28,15 @@ const VID_PAGE_LIMIT = 12;
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
-function VideoIndex({ indexId, setIndexId }) {
+function VideoIndex({ indexId, setIndexId, setCurrIndex, currIndex }) {
+  const indexIdRef = useRef(indexId);
   const [vidPage, setVidPage] = useState(1);
 
   const queryClient = useQueryClient();
 
   const { data: index, refetch } = useGetIndex(indexId);
-  console.log("🚀 > VideoIndex > index=", index);
-  const currIndex = index._id;
-
+  // const currIndex = indexIdRef.current;
+  setCurrIndex(indexIdRef.current);
   const {
     data: videosData,
     refetch: refetchVideos,
@@ -126,13 +126,14 @@ function VideoIndex({ indexId, setIndexId }) {
 
       {videos && videos.length === 0 && (
         <div>
-          <div className="doNotLeaveMessageWrapper">
-            <img src={infoIcon} alt="infoIcon" className="icon"></img>
-            <div className="doNotLeaveMessage">
-              There are no videos. Start indexing ones!
+          {!taskVideos && (
+            <div className="doNotLeaveMessageWrapper">
+              <img src={infoIcon} alt="infoIcon" className="icon"></img>
+              <div className="doNotLeaveMessage">
+                There are no videos. Start indexing ones!
+              </div>
             </div>
-          </div>
-
+          )}
           <div className="videoUploadForm">
             <div className="display-6 m-4">Upload New Videos</div>
             <UploadYoutubeVideo
