@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { keys } from "./api/keys";
 import { PageNav } from "./common/PageNav";
 import { useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const PAGE_LIMIT = 10;
 
@@ -58,6 +59,7 @@ function App() {
           </div>
         </Container>
       )}
+      <Toaster />
     </div>
   );
 }

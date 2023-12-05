@@ -29,14 +29,12 @@ export function useGetIndexes(page, pageLimit) {
 export function useGetIndex(indexId) {
   return useQuery({
     queryKey: [keys.INDEX],
-    queryFn: () =>
-      axiosInstance.get(`${INDEXES_URL}/${indexId}`).then((res) => res.data),
-    onError: (error, query) => {
-      // 🎉 only show error toasts if we already have data in the cache
-      // which indicates a failed background update
-      if (query.state.data !== undefined) {
-        toast.error(`Something went wrong: ${error.message}`);
+    queryFn: async () => {
+      const response = await axiosInstance.get(`${INDEXES_URL}/${indexId}`);
+      if (response.data.error) {
+        return { error: response.data.error };
       }
+      return response.data;
     },
   });
 }
@@ -69,15 +67,22 @@ export function useDeleteIndex(setIndexId) {
   });
 }
 
-export function useGetVideos(currIndex, vidPage, vidPageLimit) {
+export function useGetVideos(indexId, page, pageLimit) {
   return useQuery({
-    queryKey: [keys.VIDEOS, currIndex, vidPage],
-    queryFn: () =>
-      axiosInstance
-        .get(
-          `${INDEXES_URL}/${currIndex}/videos?page=${vidPage}&page_limit=${vidPageLimit}`
-        )
-        .then((res) => res.data),
+    queryKey: [keys.VIDEOS, indexId, page],
+    queryFn: async () => {
+      try {
+        const response = await axiosInstance.get(
+          `${INDEXES_URL}/${indexId}/videos`,
+          {
+            params: { page, page_limit: pageLimit },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        throw error.response?.data || error;
+      }
+    },
   });
 }
 

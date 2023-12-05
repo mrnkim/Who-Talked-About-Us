@@ -20,6 +20,7 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 import { keys } from "../api/keys";
 import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const VID_PAGE_LIMIT = 12;
 
@@ -34,9 +35,9 @@ function VideoIndex({ indexId, setIndexId }) {
   const queryClient = useQueryClient();
 
   const { data: index, refetch, error, isError } = useGetIndex(indexId);
-  console.log("🚀 > VideoIndex > isError=", isError)
-  console.log("🚀 > VideoIndex > index=", index)
-  console.log("🚀 > VideoIndex > error=", error)
+  console.log("🚀 > VideoIndex > isError=", isError);
+  console.log("🚀 > VideoIndex > index=", index);
+  console.log("🚀 > VideoIndex > error=", error);
   // const currIndex = indexIdRef.current;
   const currIndex = index?._id;
 
@@ -99,12 +100,6 @@ function VideoIndex({ indexId, setIndexId }) {
     });
   }, [taskVideos, currIndex, vidPage]);
 
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: [keys.AUTHORS, currIndex],
-    });
-  }, [videos, currIndex]);
-
   return (
     <Container className="m-auto defaultContainer">
       <ErrorBoundary
@@ -126,7 +121,6 @@ function VideoIndex({ indexId, setIndexId }) {
           />
         </Suspense>
       </ErrorBoundary>
-
       {videos && videos.length === 0 && (
         <div>
           {!taskVideos && (
@@ -148,7 +142,6 @@ function VideoIndex({ indexId, setIndexId }) {
           </div>
         </div>
       )}
-
       {videos && videos.length > 0 && (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
@@ -251,7 +244,7 @@ function VideoIndex({ indexId, setIndexId }) {
             </div>
           )}
         </ErrorBoundary>
-      )}
+      )}{" "}
     </Container>
   );
 }

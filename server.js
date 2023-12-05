@@ -89,7 +89,9 @@ app.get("/indexes/:indexId", async (request, response, next) => {
     );
     response.json(apiResponse.data);
   } catch (error) {
-    response.json({ error });
+    const errorResponse = { error: error.response.data };
+    console.log("🚀 > app.get > errorResponse=", errorResponse);
+    response.json(errorResponse);
   }
 });
 
@@ -160,7 +162,9 @@ app.get("/indexes/:indexId/videos", async (request, response, next) => {
     );
     response.json(apiResponse.data);
   } catch (error) {
-    return next(error);
+    console.error("Error getting videos:", error);
+    const errorResponse = { error: error.response.data };
+    response.json(errorResponse);
   }
 });
 
