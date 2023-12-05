@@ -28,6 +28,7 @@ function App() {
   const [indexId, setIndexId] = useState(
     process.env.REACT_APP_INDEX_ID || null
   );
+
   return (
     <div className="App">
       <Container className="p-3">

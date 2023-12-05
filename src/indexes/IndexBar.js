@@ -1,24 +1,48 @@
+import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import closeIcon from "../svg/Close.svg";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteIndex } from "../api/apiHooks";
+import { keys } from "../api/keys";
 
-export function IndexBar({
-  // handleClick,
-  showDeleteButton,
-  setShowDeleteButton,
-  isIndexSelected,
-  index,
-  videosData,
-  showDeleteConfirmationMessage,
-  hideDeleteConfirmationMessage,
-  showDeleteConfirmation,
-  deleteIndex,
-}) {
+import "./VideoIndex.css";
+
+export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const queryClient = useQueryClient();
+  const videosData = queryClient.getQueryData([
+    keys.VIDEOS,
+    index?._id,
+    vidPage,
+  ]);
+  const deleteIndexMutation = useDeleteIndex(setIndexId);
+
+  const showDeleteConfirmationMessage = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmationMessage = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  async function deleteIndex() {
+    await deleteIndexMutation.mutateAsync(index._id);
+    hideDeleteConfirmationMessage();
+  }
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.VIDEOS, index._id, vidPage],
+    });
+  }, [taskVideos, index._id, vidPage]);
+
   return (
     <div
-      // onClick={handleClick}
       onMouseEnter={() => setShowDeleteButton(true)}
       onMouseLeave={() => setShowDeleteButton(false)}
-      className={isIndexSelected ? "selected-index" : "default-index"}
+      className="default-index"
     >
       <div className="indexBar">
         <i className="bi bi-folder"></i>
@@ -26,7 +50,11 @@ export function IndexBar({
           {index.index_name}
         </span>
         <span style={{ marginLeft: "5px" }}>
-          ({videosData && videosData.page_info.total_results} videos)
+          (
+          {videosData &&
+            videosData.page_info &&
+            videosData.page_info.total_results}{" "}
+          videos)
         </span>
       </div>
 
