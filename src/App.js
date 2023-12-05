@@ -27,7 +27,6 @@ function App() {
   const [indexId, setIndexId] = useState(
     process.env.REACT_APP_INDEX_ID || null
   );
-  const [currIndex, setCurrIndex] = useState(null);
   return (
     <div className="App">
       <Container className="p-3">
@@ -54,12 +53,7 @@ function App() {
         <Container className="m-auto p-3">
           <div className="mb-3">
             <Suspense fallback={<LoadingSpinner />}>
-              <VideoIndex
-                indexId={indexId}
-                setIndexId={setIndexId}
-                setCurrIndex={setCurrIndex}
-                currIndex={currIndex}
-              />
+              <VideoIndex indexId={indexId} setIndexId={setIndexId} />
             </Suspense>
           </div>
         </Container>

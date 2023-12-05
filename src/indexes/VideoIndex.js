@@ -209,6 +209,18 @@ function VideoIndex({ indexId, setIndexId }) {
                   </Container>
                 </Row>
               </Container>
+
+              <div className="resetButtonWrapper">
+                <button
+                  className="resetButton"
+                  onClick={() => setIndexId(null)}
+                >
+                  {backIcon && (
+                    <img src={backIcon} alt="Icon" className="icon" />
+                  )}
+                  &nbsp;Back to Start
+                </button>
+              </div>
             </div>
           )}
 
