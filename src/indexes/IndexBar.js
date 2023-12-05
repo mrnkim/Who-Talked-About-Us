@@ -2,7 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import closeIcon from "../svg/Close.svg";
 
 export function IndexBar({
-  handleClick,
+  // handleClick,
   showDeleteButton,
   setShowDeleteButton,
   isIndexSelected,
@@ -15,7 +15,7 @@ export function IndexBar({
 }) {
   return (
     <div
-      onClick={handleClick}
+      // onClick={handleClick}
       onMouseEnter={() => setShowDeleteButton(true)}
       onMouseLeave={() => setShowDeleteButton(false)}
       className={isIndexSelected ? "selected-index" : "default-index"}

@@ -28,15 +28,15 @@ const VID_PAGE_LIMIT = 12;
  *
  * App -> VideoIndex -> { SearchForm, SearchResultList, UploadYoutubeVideo, VideoList}
  */
-function VideoIndex({ indexId, setIndexId, setCurrIndex, currIndex }) {
-  const indexIdRef = useRef(indexId);
+function VideoIndex({ indexId, setIndexId }) {
   const [vidPage, setVidPage] = useState(1);
 
   const queryClient = useQueryClient();
 
   const { data: index, refetch } = useGetIndex(indexId);
   // const currIndex = indexIdRef.current;
-  setCurrIndex(indexIdRef.current);
+  const currIndex = index?._id;
+
   const {
     data: videosData,
     refetch: refetchVideos,

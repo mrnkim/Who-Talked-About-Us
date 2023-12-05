@@ -8,7 +8,7 @@ import "./InputForm.css";
  *
  */
 
-function InputForm({ handleSubmit, handleChange, input, type, icon }) {
+function InputForm({ handleSubmit, handleChange, value, type, icon }) {
   const [isInputFocused, setInputFocused] = useState(false);
 
   const handleInputFocus = () => {
@@ -34,7 +34,7 @@ function InputForm({ handleSubmit, handleChange, input, type, icon }) {
           name={type}
           placeholder={type}
           onChange={handleChange}
-          value={input}
+          value={value}
           aria-label={type}
           data-testid="search-input"
           className="textField"

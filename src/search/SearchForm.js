@@ -47,6 +47,7 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
         buttonText="Search"
         icon={searchIcon}
+        value={searchQuery}
       />
       {error && <div className="errorMessageSearch">{error}</div>}
     </div>

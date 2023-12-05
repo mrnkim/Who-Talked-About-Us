@@ -58,7 +58,7 @@ function IndexForm({ setIndexId }) {
       <InputForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
-        input={indexName}
+        value={indexName}
         type="Create an index and start analyzing videos!"
         icon={icon}
       />
