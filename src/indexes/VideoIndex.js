@@ -33,7 +33,10 @@ function VideoIndex({ indexId, setIndexId }) {
 
   const queryClient = useQueryClient();
 
-  const { data: index, refetch } = useGetIndex(indexId);
+  const { data: index, refetch, error, isError } = useGetIndex(indexId);
+  console.log("🚀 > VideoIndex > isError=", isError)
+  console.log("🚀 > VideoIndex > index=", index)
+  console.log("🚀 > VideoIndex > error=", error)
   // const currIndex = indexIdRef.current;
   const currIndex = index?._id;
 

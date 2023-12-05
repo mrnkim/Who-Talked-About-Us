@@ -89,7 +89,7 @@ app.get("/indexes/:indexId", async (request, response, next) => {
     );
     response.json(apiResponse.data);
   } catch (error) {
-    return next(error);
+    response.json({ error });
   }
 });
 

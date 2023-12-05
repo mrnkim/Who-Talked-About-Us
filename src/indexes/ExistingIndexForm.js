@@ -25,7 +25,7 @@ function ExistingIndexForm({ setIndexId }) {
     const trimmedIndexId = inputIndexId.trim();
 
     if (!trimmedIndexId) {
-      setError("Please enter the name of an index");
+      setError("Please enter the id of an index");
     } else {
       try {
         setIndexId(trimmedIndexId);
