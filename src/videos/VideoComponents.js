@@ -73,6 +73,12 @@ export function VideoComponents({
               refetchVideos={refetchVideos}
             />
           </div>
+          <div className="resetButtonWrapper">
+            <button className="resetButton" onClick={() => setIndexId(null)}>
+              {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
+              &nbsp;Back to Start
+            </button>
+          </div>
         </div>
       )}
 

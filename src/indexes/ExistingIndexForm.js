@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputForm from "../common/InputForm";
-import icon from "../svg/Create.svg";
+import icon from "../svg/Folder.svg";
 import "./IndexForm.css";
 
 /** Renders the input form for an index

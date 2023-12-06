@@ -27,8 +27,6 @@ function IndexForm({ setIndexId }) {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
-    console.log("🚀 > handleSubmit > trimmedIndexName =", trimmedIndexName);
-
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
@@ -44,7 +42,6 @@ function IndexForm({ setIndexId }) {
               : "Error creating index. Please try again."
           );
         } else {
-          console.log("🚀 > handleSubmit > newIndex=", newIndex);
           setIndexName("");
         }
       } catch (error) {
@@ -59,7 +56,7 @@ function IndexForm({ setIndexId }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         value={indexName}
-        type="Create Index (e.g., March Videos)"
+        type="Create Index (e.g., January Videos)"
         icon={icon}
         className="textField"
       />

@@ -9,6 +9,7 @@ import "./VideoIndex.css";
 
 export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const [showIndexId, setShowIndexId] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const queryClient = useQueryClient();
@@ -40,33 +41,40 @@ export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
 
   return (
     <div
-      onMouseEnter={() => setShowDeleteButton(true)}
-      onMouseLeave={() => setShowDeleteButton(false)}
+      onMouseEnter={() => {
+        setShowDeleteButton(true);
+        setShowIndexId(true);
+      }}
+      onMouseLeave={() => {
+        setShowDeleteButton(false);
+        setShowIndexId(false);
+      }}
       className="default-index"
     >
       <div className="indexBar">
         <i className="bi bi-folder"></i>
-        <span style={{ marginLeft: "10px", fontSize: "1.1rem" }}>
-          {index.index_name}
-        </span>
-        <span style={{ marginLeft: "5px" }}>
+        <span className="indexName">{index.index_name}</span>
+        <span>
           (
           {videosData &&
             videosData.page_info &&
             videosData.page_info.total_results}{" "}
           videos)
         </span>
+        {showIndexId && <div className="indexId">Id: {index._id}</div>}
       </div>
 
       {/* Delete Index Button */}
       <div className="deleteButtonWrapper">
         {showDeleteButton && (
-          <button
-            className="deleteButton"
-            onClick={showDeleteConfirmationMessage}
-          >
-            {closeIcon && <img src={closeIcon} alt="Icon" className="icon" />}
-          </button>
+          <>
+            <button
+              className="deleteButton"
+              onClick={showDeleteConfirmationMessage}
+            >
+              {closeIcon && <img src={closeIcon} alt="Icon" className="icon" />}
+            </button>
+          </>
         )}
       </div>
 

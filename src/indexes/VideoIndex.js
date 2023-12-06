@@ -38,6 +38,9 @@ function VideoIndex({ indexId, setIndexId }) {
 
   const { data: index, refetch, error, isError } = useGetIndex(indexId);
   // const currIndex = indexIdRef.current;
+  if (index.deleted) {
+    index.error = { message: "This index no longer exists" };
+  }
   const currIndex = index?._id;
 
   // const {

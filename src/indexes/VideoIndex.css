@@ -53,6 +53,15 @@ background: #FFF;
   min-width: 100px;
 }
 
+.indexName {
+  margin-left: 10px;
+  font-size: 1.1rem;
+}
+
+.indexId {
+  margin-left: 10px;
+}
+
 
 .defaultContainer {
     display: flex;

@@ -169,6 +169,7 @@
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
+    align-self: center;
     min-width: 35rem;
     max-width: 45rem;
     height: 3.4375rem;
@@ -176,6 +177,8 @@
     gap: 0.5rem;
     border: 1px solid var(--TL-MossGreen-400, #B3D7C3);
     background: var(--TL-MossGreen-50, #F7FBF9);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .mainMessageWrapper {
