@@ -5,15 +5,13 @@ import "./SearchForm.css";
 
 /** Form to search videos
  *
- * - query: search term that updates based on the user input
+ * VideoComponents -> SearchForm -> InputForm
  *
- * VideoIndex -> SearchForm -> InputForm
  */
 
 function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
   const [error, setError] = useState("");
 
-  /** Updates form input */
   function handleChange(evt) {
     const input = evt.target;
     setSearchQuery(input.value);
@@ -22,7 +20,6 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
     }
   }
 
-  /** Calls parent function to search videos based on a query */
   function handleSubmit(evt) {
     evt.preventDefault();
     if (searchQuery) {

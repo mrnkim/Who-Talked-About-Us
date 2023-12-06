@@ -100,7 +100,6 @@ export function VideoComponents({
             <div className="title">Search Videos</div>
             <div className="m-auto p-3 searchFormContainer">
               <SearchForm
-                index={currIndex}
                 setSearchQuery={setSearchQuery}
                 searchQuery={searchQuery}
                 setFinalSearchQuery={setFinalSearchQuery}

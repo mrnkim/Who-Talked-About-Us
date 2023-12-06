@@ -1,40 +1,51 @@
+.title {
+  font-size: 2.5rem;
+  font-weight: 100;
+ }
+
+.searchResultTitle {
+  font-size: 2.5rem;
+  font-weight: 100;
+  margin-bottom: 2rem;
+ }
+
 .channelResultPill {
-    display: flex;
-    padding: 0.5rem 0.75rem;
-    border-radius: 2.5rem;
-    background: var(--TL-Green-300, #C3F49C);
-    font-size: 1.25rem;
-    max-width: 90%;
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  border-radius: 2.5rem;
+  background: var(--TL-Green-300, #C3F49C);
+  font-size: 1.25rem;
+  max-width: 90%;
+ }
+
+ .resultDescription {
+   font-size: 0.875rem;
+   font-family: 'Figtree', sans-serif;
+   margin-top: 0.25rem;
+   margin-bottom: 0.25rem;
   }
 
-  .confidence {
-    display: inline-flex;
-    padding: 0.125rem 0.25rem;
-    align-items: center;
-    gap: 0.25rem;
-    text-transform: capitalize;
-}
-
-  .resultDescription {
-    font-size: 0.875rem;
-    font-family: 'Figtree', sans-serif;
-    margin-top: 0.25rem;
-    margin-bottom: 0.25rem;
-}
+.confidence {
+  display: inline-flex;
+  padding: 0.125rem 0.25rem;
+  align-items: center;
+  gap: 0.25rem;
+  text-transform: capitalize;
+ }
 
 .channelPills {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-  }
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+ }
 
-  .channelNoResultPill {
-    display: flex;
-    padding: 0.5rem 0.75rem;
-    align-items: flex-start;
-    border-radius: 2.5rem;
-    font-size: 1.25rem;
-    background: #D4D5D2
-  }
+.channelNoResultPill {
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  align-items: flex-start;
+  border-radius: 2.5rem;
+  font-size: 1.25rem;
+  background: #D4D5D2
+ }

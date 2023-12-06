@@ -1,20 +1,22 @@
 import { React, Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import { useGetVideoOfSearchResults } from "../apiHooks/apiHooks";
-import "./SearchResultList.css";
 import keys from "../apiHooks/keys";
-import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../common/ErrorFallback";
 import LoadingSpinner from "../common/LoadingSpinner";
+import "./SearchResultList.css";
 
 /** Shows the search result
  *
- *  VideoIndex -> SearchResultList
+ *  VideoComponents -> SearchResultList
+ *
  */
 function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
   const { searchResults, searchResultVideos, refetch } =
     useGetVideoOfSearchResults(currIndex, finalSearchQuery);
+
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -45,7 +47,6 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
   }
 
   const noResultAuthors = [];
-
   for (let author of allAuthors) {
     const resultAuthors = Object.keys(organizedResults);
     if (!resultAuthors.includes(author)) {
@@ -58,6 +59,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
       {searchResults && searchResults.length === 0 && (
         <div className="title">No results. Let's try with other queries!</div>
       )}
+
       {searchResults && searchResults.length > 0 && (
         <div className="searchResultTitle">
           Search Results for "{finalSearchQuery}"
@@ -67,7 +69,6 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                 (total, video) => total + (video.length || 0),
                 0
               );
-
               return (
                 <div key={videoAuthor} className="m-3">
                   <div className="channelResultPill">
@@ -83,10 +84,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                       <Row>
                         {Object.entries(authVids).map(
                           ([videoTitle, results]) => (
-                            <Container
-                              key={videoTitle}
-                              className="videoResults mt-2 mb-2"
-                            >
+                            <Container key={videoTitle} className="mt-2 mb-2">
                               <h6 style={{ textAlign: "left" }}>
                                 {videoTitle} ({results.length})
                               </h6>
