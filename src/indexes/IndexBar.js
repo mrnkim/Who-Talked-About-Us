@@ -4,8 +4,7 @@ import closeIcon from "../svg/Close.svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteIndex } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
-
-import "./VideoIndex.css";
+import "./IndexBar.css";
 
 export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
@@ -13,11 +12,13 @@ export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const queryClient = useQueryClient();
+
   const videosData = queryClient.getQueryData([
     keys.VIDEOS,
     index?._id,
     vidPage,
   ]);
+
   const deleteIndexMutation = useDeleteIndex(setIndexId);
 
   const showDeleteConfirmationMessage = () => {
@@ -51,6 +52,7 @@ export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
       }}
       className="default-index"
     >
+      {/* Index Bar */}
       <div className="indexBar">
         <i className="bi bi-folder"></i>
         <span className="indexName">{index.index_name}</span>

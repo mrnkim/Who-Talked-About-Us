@@ -1,0 +1,61 @@
+.indexBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100px;
+  }
+
+  .indexName {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 1.1rem;
+  }
+
+  .indexId {
+    margin-left: 10px;
+    font-style: italic;
+  }
+
+  .default-index {
+    cursor: pointer;
+    display: flex;
+    height: 3rem;
+    min-width: 50rem;
+    padding: 0.25rem 0.75rem;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    background: var(--TL-Green-500, #9AED59)
+    }
+
+  .default-index:hover {
+    display: flex;
+    height: 3rem;
+    min-width: 50rem;
+    padding: 0.25rem 0.75rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--TL-Green-500, #9AED59);
+    color: var(--TL-Black, #222);
+    background: var(--TL-Grey--100, #F4F4F3);
+  }
+
+  .deleteButtonWrapper {
+    margin-left: auto;
+  }
+
+  .deleteButton {
+    display: flex;
+    padding: 10px 12px;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+  }

@@ -5,7 +5,8 @@ import "./IndexForm.css";
 
 /** Renders the input form for an index
  *
- * App -> IndexForm -> InputForm
+ * App -> ExistingIndexForm -> InputForm
+ * 
  */
 
 function ExistingIndexForm({ setIndexId }) {

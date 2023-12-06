@@ -2,7 +2,7 @@
     display: flex;
     padding: 0.5rem 0.75rem;
     border-radius: 2.5rem;
-    background: var(--TL-Green-500, #C3F49C);
+    background: var(--TL-Green-300, #C3F49C);
     font-size: 1.25rem;
     max-width: 90%;
   }
