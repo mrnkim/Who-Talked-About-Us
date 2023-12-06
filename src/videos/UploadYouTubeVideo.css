@@ -126,24 +126,7 @@
 
   }
 
-  @keyframes rotate {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 
-
-  .loading-spinner {
-    animation: rotate 2s linear infinite;
-    padding: 0.2rem;
-  }
-
-  .loading-spinner-wrapper {
-    margin-bottom: 0.2rem;
-  }
 
   .doNotLeaveMessage {
     display: flex;

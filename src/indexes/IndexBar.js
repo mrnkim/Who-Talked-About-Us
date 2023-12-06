@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import closeIcon from "../svg/Close.svg";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDeleteIndex } from "../api/apiHooks";
-import { keys } from "../api/keys";
+import { useDeleteIndex } from "../apiHooks/apiHooks";
+import keys from "../apiHooks/keys";
 
 import "./VideoIndex.css";
 

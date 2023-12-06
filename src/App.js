@@ -1,24 +1,20 @@
-import "./App.css";
+import { Suspense, useState } from "react";
+import Container from "react-bootstrap/Container";
 import IndexForm from "./indexes/IndexForm";
 import ExistingIndexForm from "./indexes/ExistingIndexForm";
 import VideoIndex from "./indexes/VideoIndex";
-import Container from "react-bootstrap/Container";
-import { LoadingSpinner } from "./common/LoadingSpinner";
-import { Suspense, useState } from "react";
-
-const PAGE_LIMIT = 10;
+import LoadingSpinner from "./common/LoadingSpinner";
+import "./App.css";
 
 /** Who Talked About Us App
  *
- * - indexes: list of indexes and loading status
+ * - indexId: id of an index to work with
  *
  * App -> { IndexForm, VideoIndex }
  */
 
 function App() {
-  const [indexId, setIndexId] = useState(
-    process.env.REACT_APP_INDEX_ID || null
-  );
+  const [indexId, setIndexId] = useState(null);
 
   return (
     <div className="App">
@@ -26,6 +22,7 @@ function App() {
         <h1 className="display-5 p-2">Who Talked About Us?</h1>
         <h4>Find the right influencers (organic brand fans) to reach out </h4>
       </Container>
+
       {!indexId && (
         <div className="formContainer">
           <Container className="m-auto p-3 indexFormContainer">
@@ -36,6 +33,7 @@ function App() {
           </Container>
         </div>
       )}
+
       {indexId && (
         <Container className="m-auto p-3">
           <div className="mb-3">

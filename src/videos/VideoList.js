@@ -2,9 +2,9 @@ import { React, Suspense } from "react";
 import { Col } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import "./VideoList.css";
-import { LoadingSpinner } from "../common/LoadingSpinner";
+import LoadingSpinner from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
-import { keys } from "../api/keys";
+import keys from "../apiHooks/keys";
 import ErrorFallback from "../common/ErrorFallback";
 
 /** Shows list of the video in an index

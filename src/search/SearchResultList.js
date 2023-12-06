@@ -1,12 +1,12 @@
 import { React, Suspense } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useGetVideoOfSearchResults } from "../api/apiHooks";
+import { useGetVideoOfSearchResults } from "../apiHooks/apiHooks";
 import "./SearchResultList.css";
-import { keys } from "../api/keys";
+import keys from "../apiHooks/keys";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../common/ErrorFallback";
-import { LoadingSpinner } from "../common/LoadingSpinner";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 /** Shows the search result
  *

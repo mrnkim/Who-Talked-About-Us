@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense } from "react";
 import { Container } from "react-bootstrap";
 import "./UploadYouTubeVideo.css";
 import infoIcon from "../svg/Info.svg";
-import { LoadingSpinner } from "../common/LoadingSpinner";
+import  LoadingSpinner from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../common/ErrorFallback";
 import { UploadForm } from "./UploadForm";

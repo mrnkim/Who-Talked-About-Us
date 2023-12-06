@@ -1,18 +1,18 @@
 import { Container } from "react-bootstrap";
-import { LoadingSpinner } from "../common/LoadingSpinner";
+import LoadingSpinner from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import ErrorFallback from "../common/ErrorFallback";
 import completeIcon from "../svg/Complete.svg";
 import { useEffect } from "react";
-import { keys } from "../api/keys";
-import { useGetTask } from "../api/apiHooks";
+import keys from "../apiHooks/keys";
+import { useGetTask } from "../apiHooks/apiHooks";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const queryClient = useQueryClient();
   const { data: task, refetch } = useGetTask(taskId._id);
-  
+
   useEffect(() => {
     if (task && task.status === "ready") {
       setCompleteTasks((prev) => [...prev, task]);

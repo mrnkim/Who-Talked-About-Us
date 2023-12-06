@@ -5,14 +5,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { keys } from "./keys";
+import keys from "./keys";
 
 const SERVER_BASE_URL = `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`;
-const axiosInstance = axios.create({
-  baseURL: SERVER_BASE_URL,
-});
+const axiosInstance = axios.create({ baseURL: SERVER_BASE_URL });
 const INDEXES_URL = "/indexes";
-const INDEX_URL = "/index";
 const SEARCH_URL = "/search";
 const TASKS_URL = "/tasks";
 
@@ -120,9 +117,7 @@ export function useGetTask(taskId) {
 
 export function useGetVideoOfSearchResults(indexId, query) {
   const { data: searchVideoQuery, refetch } = useSearchVideo(indexId, query);
-
   const searchResults = searchVideoQuery.data || [];
-
   const results = useQueries({
     queries: searchResults.map((result) => ({
       queryKey: [keys.SEARCH, indexId, result.video_id],
@@ -132,9 +127,6 @@ export function useGetVideoOfSearchResults(indexId, query) {
           .then((res) => res.data),
     })),
   });
-
-  // Extract 'data' property from each object in 'results'
   const searchResultVideos = results.map(({ data }) => data);
-
   return { searchResults, searchResultVideos, refetch };
 }

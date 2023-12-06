@@ -12,7 +12,7 @@
     border-bottom: 2px solid #D4D5D2;
     justify-content: center;
     align-items: center;
-    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    transition: border-color 0.3s;
     margin-top: 0.75rem;
     margin-bottom: 0.625rem;
     height: 3.5rem;
@@ -30,7 +30,7 @@
     background: #FFF;
     border: none;
     border-bottom: 2px solid #D4D5D2;
-    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    transition: border-color 0.3s;
     margin-top: 0.75rem;
     margin-bottom: 0.625rem;
     font-size: 1.2rem;
@@ -49,11 +49,17 @@
     background: #FFF;
     border: none;
     border-bottom: 2px solid #D4D5D2;
-    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    transition: border-color 0.3s; 
     margin-top: 0.75rem;
     margin-bottom: 0.625rem;
     font-size: 1.2rem;
     height: 3.5rem;
+  }
+
+  .inputForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .inputForm:hover {
@@ -61,17 +67,14 @@
     background: var(--TL-Grey--100, #F4F4F3);
   }
 
-  /* Add a class to change the border color of both button and input when typing */
   .inputFocused .primaryButton,
   .inputFocused .textField {
-    border-bottom: 2px solid #9AED59; /* Change to your desired color */
+    border-bottom: 2px solid #9AED59;
   }
 
-  /* Remove the blue outline for focused input elements */
-.textField:focus {
+  .textField:focus {
     outline: none;
   }
-
 
   .icon {
     margin-right: 0.3rem;

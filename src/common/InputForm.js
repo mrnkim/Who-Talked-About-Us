@@ -4,7 +4,7 @@ import "./InputForm.css";
 
 /** User input form
  *
- * { IndexForm, SearchForm } -> InputForm
+ * { IndexForm, ExistingIndexForm, SearchForm } -> InputForm
  *
  */
 
@@ -27,10 +27,7 @@ function InputForm({
   };
 
   return (
-    <form
-      className="d-flex justify-content-center align-items-center inputForm"
-      onSubmit={handleSubmit}
-    >
+    <form className="inputForm" onSubmit={handleSubmit}>
       <div className={`inputContainer ${isInputFocused ? "inputFocused" : ""}`}>
         <button className="primaryButton" type="submit">
           {icon && <img src={icon} alt="Icon" className="icon" />}

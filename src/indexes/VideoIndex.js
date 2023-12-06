@@ -15,9 +15,9 @@ import {
   useGetIndex,
   useGetVideos,
   useGetAllAuthors,
-} from "../api/apiHooks";
-import { LoadingSpinner } from "../common/LoadingSpinner";
-import { keys } from "../api/keys";
+} from "../apiHooks/apiHooks";
+import LoadingSpinner from "../common/LoadingSpinner";
+import keys from "../apiHooks/keys";
 import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -132,7 +132,6 @@ function VideoIndex({ indexId, setIndexId }) {
             index.error && (
               <ErrorFallback
                 error={{ message: index.error.message }}
-                resetErrorBoundary={() => refetch()}
                 setIndexId={setIndexId}
               />
             )

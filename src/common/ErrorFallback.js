@@ -2,7 +2,7 @@ import React from "react";
 import WarningIcon from "../svg/Warning.svg";
 import "./ErrorFallback.css";
 
-function ErrorFallback({ error, resetErrorBoundary, setIndexId }) {
+function ErrorFallback({ error, setIndexId }) {
   return (
     <div role="alert">
       <p>Something went wrong</p>

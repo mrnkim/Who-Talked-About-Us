@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputForm from "../common/InputForm";
 import icon from "../svg/Create.svg";
 import "./IndexForm.css";
-import { useCreateIndex } from "../api/apiHooks";
+import { useCreateIndex } from "../apiHooks/apiHooks";
 import { ErrorBoundary } from "react-error-boundary";
 
 /** Renders the input form for an index
