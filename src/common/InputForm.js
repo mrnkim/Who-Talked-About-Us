@@ -8,7 +8,14 @@ import "./InputForm.css";
  *
  */
 
-function InputForm({ handleSubmit, handleChange, value, type, icon }) {
+function InputForm({
+  handleSubmit,
+  handleChange,
+  value,
+  type,
+  icon,
+  className,
+}) {
   const [isInputFocused, setInputFocused] = useState(false);
 
   const handleInputFocus = () => {
@@ -37,7 +44,7 @@ function InputForm({ handleSubmit, handleChange, value, type, icon }) {
           value={value}
           aria-label={type}
           data-testid="search-input"
-          className="textField"
+          className={className}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
         />

@@ -5,6 +5,7 @@
 
   .primaryButton {
     display: flex;
+    min-height: 4rem;
     padding-top: 12px;
     background: #FFF;
     border: none;
@@ -19,10 +20,31 @@
 
   .textField {
     display: flex;
-    min-width: 50rem;
+    min-width: 27rem;
+    min-height: 4rem;
     padding-top: 12px;
     flex-direction: column;
-    align-items: flex-start;
+    text-wrap:wrap;
+    /* align-items: flex-start; */
+    gap: 0.625rem;
+    background: #FFF;
+    border: none;
+    border-bottom: 2px solid #D4D5D2;
+    transition: border-color 0.3s; /* Add a transition for smoother color change */
+    margin-top: 0.75rem;
+    margin-bottom: 0.625rem;
+    font-size: 1.2rem;
+    height: 3.5rem;
+  }
+
+  .searchTextField {
+    display: flex;
+    min-width: 60rem;
+    min-height: 4rem;
+    padding-top: 12px;
+    flex-direction: column;
+    text-wrap:wrap;
+    /* align-items: flex-start; */
     gap: 0.625rem;
     background: #FFF;
     border: none;

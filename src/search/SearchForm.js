@@ -48,6 +48,7 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
         buttonText="Search"
         icon={searchIcon}
         value={searchQuery}
+        className="searchTextField"
       />
       {error && <div className="errorMessageSearch">{error}</div>}
     </div>

@@ -109,6 +109,7 @@ function VideoIndex({ indexId, setIndexId }) {
           {index && !index.error ? (
             <div>
               <IndexBar
+                className="indexBar"
                 vidPage={vidPage}
                 index={index}
                 setIndexId={setIndexId}

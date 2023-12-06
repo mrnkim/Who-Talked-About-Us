@@ -34,6 +34,17 @@
   color: #61dafb;
 }
 
+.formContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+
+
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

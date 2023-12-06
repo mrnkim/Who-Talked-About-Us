@@ -59,8 +59,9 @@ function IndexForm({ setIndexId }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         value={indexName}
-        type="Create an index and start analyzing videos!"
+        type="Create Index (e.g., March Videos)"
         icon={icon}
+        className="textField"
       />
       {error && <div className="errorMessage">{error}</div>}
     </div>

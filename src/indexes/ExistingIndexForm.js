@@ -41,8 +41,9 @@ function ExistingIndexForm({ setIndexId }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         input={inputIndexId}
-        type="Provide the id of your existing index (e.g., 656e4c39e44fccd3724bf7a2)"
+        type="Access Index (e.g., 656e4c39e44fccd3724bf7a2)"
         icon={icon}
+        className="textField"
       />
       {error && <div className="errorMessage">{error}</div>}
     </div>
