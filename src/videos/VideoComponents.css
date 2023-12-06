@@ -1,0 +1,83 @@
+.doNotLeaveMessageWrapper {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    min-width: 35rem;
+    max-width: 45rem;
+    height: 3.4375rem;
+    padding: 0.625rem 0.75rem;
+    gap: 0.5rem;
+    border: 1px solid var(--TL-MossGreen-400, #B3D7C3);
+    background: var(--TL-MossGreen-50, #F7FBF9);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.doNotLeaveMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 0 0;
+    align-self: stretch;
+    color: var(--TL-Grey-900, #2D2D2D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.25rem;
+  }
+
+.icon {
+    margin-right: 0.3rem;
+  }
+
+.videoUploadForm, .videoSearchForm{
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+.resetButtonWrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+.resetButton {
+    padding: 10px 12px;
+    align-items: center;
+    background: var(--TL-Green-500, #9AED59);
+    border: none;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 100;
+  }
+
+.searchFormContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0
+  }
+
+.channelPills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+.subtitle {
+    font-size: 1.8rem;
+  }
+
+.channelPill {
+    display: flex;
+    padding: 0.5rem 0.75rem;
+    align-items: flex-start;
+    border-radius: 2.5rem;
+    background: var(--TL-Green-300, #C3F49C);
+  }

@@ -10,7 +10,9 @@ import ErrorFallback from "../common/ErrorFallback";
 /** Shows list of the video in an index
  *
  *  VideoIndex -> VideoList
+ *
  */
+
 function VideoList({ videos, refetchVideos }) {
   return videos.map((video, index) => (
     <ErrorBoundary

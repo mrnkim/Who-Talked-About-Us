@@ -1,8 +1,8 @@
 import { Container } from "react-bootstrap";
-import "./UploadYouTubeVideo.css";
 import uploadIcon from "../svg/Upload.svg";
+import "./UploadForm.css";
 
-export function UploadForm({
+function UploadForm({
   selectedJSON,
   youtubeChannelId,
   youtubePlaylistId,
@@ -94,7 +94,9 @@ export function UploadForm({
           Cancel
         </button>
       </Container>
-        <Container className="mainMessageWrapper">{mainMessage}</Container>
-      </Container>
+      <Container className="mainMessageWrapper">{mainMessage}</Container>
+    </Container>
   );
 }
+
+export default UploadForm;

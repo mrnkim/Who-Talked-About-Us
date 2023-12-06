@@ -1,15 +1,15 @@
 import { useState, useEffect, Suspense } from "react";
-import { Container } from "react-bootstrap";
-import "./UploadYouTubeVideo.css";
-import infoIcon from "../svg/Info.svg";
-import  LoadingSpinner from "../common/LoadingSpinner";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../common/ErrorFallback";
-import { UploadForm } from "./UploadForm";
-import { UploadConfirmation } from "./UploadConfirmation";
-import { TaskVideo } from "./TaskVideo";
-import { Task } from "./Task";
+import { Container } from "react-bootstrap";
 import sanitize from "sanitize-filename";
+import ErrorFallback from "../common/ErrorFallback";
+import infoIcon from "../svg/Info.svg";
+import LoadingSpinner from "../common/LoadingSpinner";
+import UploadForm from "./UploadForm";
+import UploadConfirmation from "./UploadConfirmation";
+import TaskVideo from "./TaskVideo";
+import Task from "./Task";
+import "./UploadYouTubeVideo.css";
 
 const SERVER_BASE_URL = new URL(
   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
@@ -39,6 +39,7 @@ const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
  *             ]
  *
  * App -> VideoIndex -> UploadYoutubeVideo
+ *
  */
 
 export function UploadYoutubeVideo({
@@ -47,17 +48,18 @@ export function UploadYoutubeVideo({
   setTaskVideos,
   refetchVideos,
 }) {
-  const [pendingApiRequest, setPendingApiRequest] = useState(false);
-  const [mainMessage, setMainMessage] = useState(null);
   const [selectedJSON, setSelectedJSON] = useState(null);
   const [youtubeChannelId, setYoutubeChannelId] = useState("");
   const [youtubePlaylistId, setYoutubePlaylistId] = useState("");
-  const [indexId, setIndexId] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(null);
   const [taskIds, setTaskIds] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(null);
+  const [indexId, setIndexId] = useState(null);
+  const [pendingApiRequest, setPendingApiRequest] = useState(false);
+  const [mainMessage, setMainMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleJSONSelect = (event) => {
     setSelectedJSON(event.target.files[0]);
   };
@@ -80,7 +82,6 @@ export function UploadYoutubeVideo({
   const updateMainMessage = (text) => {
     if (text) {
       setPendingApiRequest(true);
-
       let apiRequestElement = (
         <div className="doNotLeaveMessageWrapper">
           <img src={infoIcon} alt="infoIcon" className="icon"></img>
@@ -175,6 +176,7 @@ export function UploadYoutubeVideo({
         thumbnails: taskVideo.thumbnails,
       };
     });
+
     const requestData = {
       videoData: videoData,
       index_id: currIndex,
@@ -188,6 +190,7 @@ export function UploadYoutubeVideo({
       },
       body: JSON.stringify(requestData),
     };
+
     const response = await fetch(DOWNLOAD_URL.toString(), data);
     const json = await response.json();
     setIndexId(json.indexId);
@@ -215,7 +218,6 @@ export function UploadYoutubeVideo({
       if (matchingVid) {
         const authorName = matchingVid.author.name;
         const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-
         const data = {
           metadata: {
             author: authorName,
@@ -267,7 +269,6 @@ export function UploadYoutubeVideo({
             pendingApiRequest={pendingApiRequest}
             handleReset={handleReset}
             mainMessage={mainMessage}
-            taskVideos={taskVideos}
           />
           <div className="taskVideoContainer">
             {taskVideos.map((taskVideo) => (
@@ -277,7 +278,7 @@ export function UploadYoutubeVideo({
               >
                 <Suspense fallback={<LoadingSpinner />}>
                   <div className="taskVideo">
-                    <TaskVideo taskVideo={taskVideo} className="taskVideo" />
+                    <TaskVideo taskVideo={taskVideo} />
                   </div>
                 </Suspense>
               </ErrorBoundary>
@@ -298,7 +299,7 @@ export function UploadYoutubeVideo({
               >
                 <Suspense fallback={<LoadingSpinner />}>
                   <div className="taskVideo">
-                    <TaskVideo taskVideo={taskVideo} className="taskVideo" />
+                    <TaskVideo taskVideo={taskVideo} />
                     <div className="downloadSubmit">
                       <LoadingSpinner />
                       Downloading & Submitting
@@ -317,10 +318,7 @@ export function UploadYoutubeVideo({
             <ErrorBoundary FallbackComponent={ErrorFallback} key={taskId._id}>
               <Suspense fallback={<LoadingSpinner />}>
                 <div className="taskVideo">
-                  <TaskVideo
-                    taskVideo={taskId.videoData}
-                    className="taskVideo"
-                  />
+                  <TaskVideo taskVideo={taskId.videoData} />
                   <div className="downloadSubmit">
                     <Task
                       taskId={taskId}

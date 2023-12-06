@@ -1,6 +1,7 @@
 import { Container, Card } from "react-bootstrap";
+import "./TaskVideo.css";
 
-export function TaskVideo({ taskVideo }) {
+function TaskVideo({ taskVideo }) {
   return (
     <Container key={taskVideo.video_url || taskVideo.url} className="taskVideo">
       <Container>
@@ -21,3 +22,5 @@ export function TaskVideo({ taskVideo }) {
     </Container>
   );
 }
+
+export default TaskVideo;

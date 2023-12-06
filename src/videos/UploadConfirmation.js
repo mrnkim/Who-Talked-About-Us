@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
-import "./UploadYouTubeVideo.css";
+import "./UploadForm.css";
 
-export function UploadConfirmation({
+function UploadConfirmation({
   indexYouTubeVideos,
   pendingApiRequest,
   handleReset,
@@ -40,3 +40,5 @@ export function UploadConfirmation({
     </Container>
   );
 }
+
+export default UploadConfirmation;

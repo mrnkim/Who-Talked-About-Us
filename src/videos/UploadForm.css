@@ -1,0 +1,136 @@
+.selectJsonButton {
+    display: inline-block;
+    padding: 0.625rem 0.75rem;
+    background: #fff;
+    color: #B7B9B4;
+    border: 1px solid #6C757D;
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid var(--TL-Grey-500, #B7B9B4);
+    color: var(--TL-Grey-700, #6F706D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+  }
+
+.selectJsonButton:hover {
+    display: inline-block;
+    padding: 0.625rem 0.75rem;
+    background: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid var(--TL-Grey-500, #B7B9B4);
+    color: var(--TL-Grey-700, #6F706D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+    color: #222222;
+    border: 1px solid var(--TL-Green-500, #9AED59);
+  }
+
+.jsonDisabled {
+    display: inline-block;
+    padding: 0.625rem 0.75rem;
+    background: #fff;
+    color: #B7B9B4;
+    border: 1px solid #6C757D;
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid var(--TL-Grey-500, #B7B9B4);
+    color: var(--TL-Grey-700, #6F706D);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+    background: var(--TL-Grey-200, #E5E6E4);
+    color: var(--TL-Grey-500, #B7B9B4);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+.selectedFile {
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+.customDisabled {
+    min-width: 30rem;
+    height: 3rem;
+    padding: 0.25rem 0.75rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: var(--TL-Grey-200, #E5E6E4);
+    color: var(--TL-Grey-500, #B7B9B4);
+    margin-right: 0.5rem;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem;
+    cursor: not-allowed;
+  }
+
+.youTubeId {
+    min-width: 30rem;
+    height: 3rem;
+    padding: 0.25rem 0.75rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: #FFF;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem;
+  }
+
+.youTubeId:hover {
+    border: 1px solid var(--TL-Grey-300, #D4D5D2);
+    background: var(--TL-Grey--100, #F4F4F3);
+  }
+
+.youTubeId:focus {
+    outline: 1px solid var(--TL-Green-500, #9AED59);
+    background: #FFF;
+  }
+
+  .button {
+    padding: 0.625rem 0.75rem;
+    background: var(--TL-Green-500, #9AED59);
+    border: none;
+  }
+
+  .buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cancel {
+    background: #D4D5D2;
+  }
+
+  .mainMessageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom:2rem;
+    margin-top: 2rem;
+  }
+
+  .wrapper {
+    justify-content: center;
+    align-items: center;
+  }

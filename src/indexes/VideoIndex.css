@@ -5,58 +5,8 @@
     justify-content: center;
 }
 
-.channelPills {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.channelPill {
-  display: flex;
-  padding: 0.5rem 0.75rem;
-  align-items: flex-start;
-  border-radius: 2.5rem;
-  background: var(--TL-Green-300, #C3F49C);
-}
-
-.videoUploadForm, .videoSearchForm{
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.title {
-font-size: 2.5rem;
-font-weight: 100;
-}
-
 .searchResultTitle {
   font-size: 2.5rem;
   font-weight: 100;
   margin-bottom: 2rem;
-}
-
-.resetButton {
-  padding: 10px 12px;
-  align-items: center;
-  background: var(--TL-Green-500, #9AED59);
-  border: none;
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.resetButtonWrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.searchFormContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0
-}
-
-.subtitle {
-  font-size: 1.8rem;
 }

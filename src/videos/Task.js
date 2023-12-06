@@ -8,8 +8,9 @@ import { useEffect } from "react";
 import keys from "../apiHooks/keys";
 import { useGetTask } from "../apiHooks/apiHooks";
 import { useQueryClient } from "@tanstack/react-query";
+import "./Task.css";
 
-export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
+function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const queryClient = useQueryClient();
   const { data: task, refetch } = useGetTask(taskId._id);
 
@@ -31,7 +32,7 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   }, [task, taskId._id]);
 
   return (
-    <Container className="indexingStatusContainer" key={taskId}>
+    <Container key={taskId}>
       {!task && (
         <div className="doNotLeaveMessageWrapper">
           <div className="doNotLeaveMessage">There is no task.</div>
@@ -44,15 +45,9 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
           resetKeys={[keys.TASK]}
         >
           <Suspense fallback={<LoadingSpinner />}>
-            <Container
-              variant="body2"
-              color="text.secondary"
-              display="flex"
-              alignitems="center"
-              className="indexingStatus"
-            >
+            <Container>
               {task.status === "ready" && (
-                <div className="statusMessage doneMessage">
+                <div className="statusMessage">
                   {completeIcon && (
                     <img src={completeIcon} alt="Icon" className="icon" />
                   )}
@@ -80,3 +75,5 @@ export function Task({ taskId, setCompleteTasks, setFailedTasks }) {
     </Container>
   );
 }
+
+export default Task;

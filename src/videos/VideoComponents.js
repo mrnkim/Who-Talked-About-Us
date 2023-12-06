@@ -1,20 +1,19 @@
 import { useState, Suspense, useEffect } from "react";
-import UploadYoutubeVideo from "./UploadYouTubeVideo";
 import { ErrorBoundary } from "react-error-boundary";
+import { useQueryClient } from "@tanstack/react-query";
+import { Container, Row } from "react-bootstrap";
+import { useGetVideos, useGetAllAuthors } from "../apiHooks/apiHooks";
+import UploadYoutubeVideo from "./UploadYouTubeVideo";
 import ErrorFallback from "../common/ErrorFallback";
 import keys from "../apiHooks/keys";
 import SearchForm from "../search/SearchForm";
 import SearchResultList from "../search/SearchResultList";
-import { PageNav } from "../common/PageNav";
+import PageNav from "../common/PageNav";
 import VideoList from "../videos/VideoList";
 import backIcon from "../svg/Back.svg";
 import infoIcon from "../svg/Info.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
-import { Container, Row } from "react-bootstrap";
-import { useGetVideos, useGetAllAuthors } from "../apiHooks/apiHooks";
-import { useQueryClient } from "@tanstack/react-query";
-
-import "../indexes/VideoIndex.css";
+import "./VideoComponents.css";
 
 const VID_PAGE_LIMIT = 12;
 
@@ -41,14 +40,13 @@ export function VideoComponents({
   const { data: authors } = useGetAllAuthors(currIndex);
 
   function reset() {
-    // setShowVideos(true);
     setSearchQuery("");
     setFinalSearchQuery("");
   }
 
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: [keys.VIDEOS, currIndex, vidPage],
+      queryKey: [[keys.VIDEOS, currIndex, vidPage], [keys.AUTHORS]],
     });
   }, [taskVideos, currIndex, vidPage]);
 
