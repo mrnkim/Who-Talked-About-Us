@@ -96,7 +96,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                                     md={6}
                                     lg={4}
                                     xl={3}
-                                    className="mb-4"
+                                    className="mb-4 mt-2"
                                     key={data.video_id + "-" + index}
                                   >
                                     <ReactPlayer
@@ -143,7 +143,6 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                 </div>
               );
             })}
-            
           {searchResults?.length > 0 && noResultAuthors.length > 0 && (
             <div className="channelPills">
               <div className="subtitle">No results from</div>
