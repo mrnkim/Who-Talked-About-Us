@@ -2,7 +2,7 @@ import { React, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { useGetVideoOfSearchResults } from "../apiHooks/apiHooks";
+import { useGetVideosOfSearchResults } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import ErrorFallback from "../common/ErrorFallback";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -13,9 +13,10 @@ import "./SearchResultList.css";
  *  VideoComponents -> SearchResultList
  *
  */
+
 function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
   const { searchResults, searchResultVideos, refetch } =
-    useGetVideoOfSearchResults(currIndex, finalSearchQuery);
+  useGetVideosOfSearchResults(currIndex, finalSearchQuery);
 
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {

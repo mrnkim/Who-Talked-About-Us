@@ -115,9 +115,9 @@ export function useGetTask(taskId) {
   });
 }
 
-export function useGetVideoOfSearchResults(indexId, query) {
-  const { data: searchVideoQuery, refetch } = useSearchVideo(indexId, query);
-  const searchResults = searchVideoQuery.data || [];
+export function useGetVideosOfSearchResults(indexId, query) {
+  const { data: useSearchVideoData, refetch } = useSearchVideo(indexId, query);
+  const searchResults = useSearchVideoData.data || [];
   const results = useQueries({
     queries: searchResults.map((result) => ({
       queryKey: [keys.SEARCH, indexId, result.video_id],

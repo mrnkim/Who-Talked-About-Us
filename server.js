@@ -90,7 +90,6 @@ app.get("/indexes/:indexId", async (request, response, next) => {
     response.json(apiResponse.data);
   } catch (error) {
     const errorResponse = { error: error.response.data };
-    console.log("🚀 > app.get > errorResponse=", errorResponse);
     response.json(errorResponse);
   }
 });
@@ -266,7 +265,7 @@ app.get(
   }
 );
 
-/** Updates a video */
+/** Updates a video's metadata */
 app.put("/update/:indexId/:videoId", async (request, response, next) => {
   const indexId = request.params.indexId;
   const videoId = request.params.videoId;
@@ -323,6 +322,7 @@ const indexVideo = async (videoPath, indexId) => {
   };
 
   const response = await TWELVE_LABS_API.post("/tasks", params, headers);
+
   return await response.data;
 };
 
@@ -427,15 +427,17 @@ app.post(
         );
 
         const chunkVideoIndexingResponses = await Promise.all(
-          chunkDownloadedVideos.map(async (videoInfo) => {
-            console.log(`Submitting ${videoInfo.videoPath} For Indexing...`);
+          chunkDownloadedVideos.map(async (chunkDownloadedVideo) => {
+            console.log(
+              `Submitting ${chunkDownloadedVideo.videoPath} For Indexing...`
+            );
             const indexingResponse = await indexVideo(
-              videoInfo.videoPath,
+              chunkDownloadedVideo.videoPath,
               request.body.index_id
             );
 
             // Add videoData to indexingResponse
-            indexingResponse.videoData = videoInfo.videoData;
+            indexingResponse.videoData = chunkDownloadedVideo.videoData;
 
             return indexingResponse;
           })
@@ -444,9 +446,11 @@ app.post(
         console.log("Indexing Submission Completed for Chunk | Task IDs:");
 
         processedVideosCount += videoChunk.length;
+
         console.log(
           `Processed ${processedVideosCount} out of ${totalVideos} videos`
         );
+
         videoIndexingResponses = videoIndexingResponses.concat(
           chunkVideoIndexingResponses
         );
