@@ -14,6 +14,8 @@ import ErrorFallback from "../common/ErrorFallback";
  */
 
 function VideoList({ videos, refetchVideos }) {
+  const numVideos = videos.length;
+
   return videos.map((video, index) => (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
@@ -22,12 +24,19 @@ function VideoList({ videos, refetchVideos }) {
       key={video._id + "-" + index}
     >
       <Suspense fallback={<LoadingSpinner />}>
-        <Col sm={12} md={6} lg={4} xl={3} className="mb-5 mt-3">
+        <Col
+          sm={12}
+          md={numVideos > 1 ? 6 : 12} 
+          lg={numVideos > 1 ? 4 : 12} 
+          xl={numVideos > 1 ? 3 : 12} 
+          className="mb-5 mt-3"
+        >
+          {" "}
           <ReactPlayer
             url={video.metadata.youtubeUrl}
             controls
             width="100%"
-            height="100%"
+            height="250px"
           />
           <div className="channelAndVideoName">
             <div className="channelPillSmall">{video.metadata.author}</div>

@@ -47,6 +47,8 @@ export function UploadYoutubeVideo({
   taskVideos,
   setTaskVideos,
   refetchVideos,
+  isSubmitting,
+  setIsSubmitting,
 }) {
   const [selectedJSON, setSelectedJSON] = useState(null);
   const [youtubeChannelId, setYoutubeChannelId] = useState("");
@@ -58,7 +60,6 @@ export function UploadYoutubeVideo({
   const [indexId, setIndexId] = useState(null);
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [mainMessage, setMainMessage] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleJSONSelect = (event) => {
     setSelectedJSON(event.target.files[0]);

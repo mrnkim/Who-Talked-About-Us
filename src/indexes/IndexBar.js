@@ -1,23 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import closeIcon from "../svg/Close.svg";
-import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteIndex } from "../apiHooks/apiHooks";
-import keys from "../apiHooks/keys";
 import "./IndexBar.css";
 
-export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
+export function IndexBar({ index, setIndexId, videosData }) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showIndexId, setShowIndexId] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
-  const queryClient = useQueryClient();
-
-  const videosData = queryClient.getQueryData([
-    keys.VIDEOS,
-    index?._id,
-    vidPage,
-  ]);
 
   const deleteIndexMutation = useDeleteIndex(setIndexId);
 
@@ -33,12 +23,6 @@ export function IndexBar({ vidPage, index, setIndexId, taskVideos }) {
     await deleteIndexMutation.mutateAsync(index._id);
     hideDeleteConfirmationMessage();
   }
-
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: [keys.VIDEOS, index._id, vidPage],
-    });
-  }, [taskVideos, index._id, vidPage]);
 
   return (
     <div

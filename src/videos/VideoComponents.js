@@ -13,20 +13,22 @@ import VideoList from "../videos/VideoList";
 import backIcon from "../svg/Back.svg";
 import infoIcon from "../svg/Info.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
+import { IndexBar } from "../indexes/IndexBar";
 import "./VideoComponents.css";
 
 const VID_PAGE_LIMIT = 12;
 
 export function VideoComponents({
+  index,
   currIndex,
   setIndexId,
   vidPage,
   setVidPage,
-  taskVideos,
-  setTaskVideos,
 }) {
+  const [taskVideos, setTaskVideos] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [finalSearchQuery, setFinalSearchQuery] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -46,12 +48,19 @@ export function VideoComponents({
 
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: [[keys.VIDEOS, currIndex, vidPage], [keys.AUTHORS]],
+      queryKey: [keys.VIDEOS, currIndex, vidPage],
     });
   }, [taskVideos, currIndex, vidPage]);
 
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: [keys.AUTHORS, currIndex],
+    });
+  }, [videos, currIndex]);
+
   return (
     <>
+      <IndexBar index={index} setIndexId={setIndexId} videosData={videosData} />
       {videos && videos.length === 0 && (
         <div>
           {!taskVideos && (
@@ -69,13 +78,9 @@ export function VideoComponents({
               taskVideos={taskVideos}
               setTaskVideos={setTaskVideos}
               refetchVideos={refetchVideos}
+              isSubmitting={isSubmitting}
+              setIsSubmitting={setIsSubmitting}
             />
-          </div>
-          <div className="resetButtonWrapper">
-            <button className="resetButton" onClick={() => setIndexId(null)}>
-              {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
-              &nbsp;Back to Start
-            </button>
           </div>
         </div>
       )}
@@ -93,6 +98,8 @@ export function VideoComponents({
               taskVideos={taskVideos}
               setTaskVideos={setTaskVideos}
               refetchVideos={refetchVideos}
+              isSubmitting={isSubmitting}
+              setIsSubmitting={setIsSubmitting}
             />
           </div>
 
@@ -142,18 +149,6 @@ export function VideoComponents({
                   </Container>
                 </Row>
               </Container>
-
-              <div className="resetButtonWrapper">
-                <button
-                  className="resetButton"
-                  onClick={() => setIndexId(null)}
-                >
-                  {backIcon && (
-                    <img src={backIcon} alt="Icon" className="icon" />
-                  )}
-                  &nbsp;Back to Start
-                </button>
-              </div>
             </div>
           )}
 
@@ -181,6 +176,14 @@ export function VideoComponents({
             </div>
           )}
         </ErrorBoundary>
+      )}
+      {!isSubmitting && (
+        <div className="resetButtonWrapper">
+          <button className="resetButton" onClick={() => setIndexId(null)}>
+            {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
+            &nbsp;Back to Start
+          </button>
+        </div>
       )}
     </>
   );

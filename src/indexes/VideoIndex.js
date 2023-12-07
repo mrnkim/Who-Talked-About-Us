@@ -6,7 +6,6 @@ import "./VideoIndex.css";
 import { useGetIndex } from "../apiHooks/apiHooks";
 import LoadingSpinner from "../common/LoadingSpinner";
 import keys from "../apiHooks/keys";
-import { IndexBar } from "./IndexBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { VideoComponents } from "../videos/VideoComponents";
 
@@ -19,7 +18,6 @@ import { VideoComponents } from "../videos/VideoComponents";
 
 function VideoIndex({ indexId, setIndexId }) {
   const [vidPage, setVidPage] = useState(1);
-  const [taskVideos, setTaskVideos] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -42,22 +40,13 @@ function VideoIndex({ indexId, setIndexId }) {
       >
         <Suspense fallback={<LoadingSpinner />}>
           {index && !index.error ? (
-            <div>
-              <IndexBar
-                vidPage={vidPage}
-                index={index}
-                setIndexId={setIndexId}
-                taskVideos={taskVideos}
-              />
-              <VideoComponents
-                currIndex={currIndex}
-                setIndexId={setIndexId}
-                vidPage={vidPage}
-                setVidPage={setVidPage}
-                taskVideos={taskVideos}
-                setTaskVideos={setTaskVideos}
-              />
-            </div>
+            <VideoComponents
+              index={index}
+              currIndex={currIndex}
+              setIndexId={setIndexId}
+              vidPage={vidPage}
+              setVidPage={setVidPage}
+            />
           ) : (
             index &&
             index.error && (
