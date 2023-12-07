@@ -46,6 +46,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
     });
   }
 
+  /** Authors whose videos are not part of the search results */
   const noResultAuthors = [];
   for (let author of allAuthors) {
     const resultAuthors = Object.keys(organizedResults);
@@ -142,6 +143,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                 </div>
               );
             })}
+            
           {searchResults?.length > 0 && noResultAuthors.length > 0 && (
             <div className="channelPills">
               <div className="subtitle">No results from</div>

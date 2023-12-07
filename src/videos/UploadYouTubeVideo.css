@@ -40,8 +40,13 @@
 }
 
 .taskVideo {
-  flex: 0 0 calc(25% - 16px);
+  flex: 0 0 calc(33.3333% - 16px);
   margin: 8px;
+}
+
+/* Style for one task video */
+.taskVideoContainer .taskVideo:only-child {
+  flex: 0 0 calc(100% - 16px);
 }
 
 .wrapper {
@@ -64,19 +69,6 @@
 .single-video {
   max-width: 500px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

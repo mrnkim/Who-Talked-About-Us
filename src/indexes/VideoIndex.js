@@ -12,7 +12,7 @@ import { VideoComponents } from "../videos/VideoComponents";
 /**
  * Show video list and videos, search form and search result list
  *
- * App -> VideoIndex -> { IndexBar, VideoComponents}
+ * App -> VideoIndex -> { VideoComponents}
  *
  */
 

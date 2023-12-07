@@ -10,6 +10,12 @@ import { useGetTask } from "../apiHooks/apiHooks";
 import { useQueryClient } from "@tanstack/react-query";
 import "./Task.css";
 
+/** Shows status of each task
+ *
+ *  UploadYouTubeVideo -> Task
+ *
+ */
+
 function Task({ taskId, setCompleteTasks, setFailedTasks }) {
   const queryClient = useQueryClient();
   const { data: task, refetch } = useGetTask(taskId._id);

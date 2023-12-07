@@ -38,7 +38,7 @@ const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
  *               ...
  *             ]
  *
- * App -> VideoIndex -> UploadYoutubeVideo
+ * App -> VideoComponents -> UploadYoutubeVideo
  *
  */
 
@@ -198,18 +198,6 @@ export function UploadYoutubeVideo({
     setTaskIds(json.taskIds);
   };
 
-  useEffect(() => {
-    if (
-      taskIds &&
-      taskVideos &&
-      taskIds.length === completeTasks.length + failedTasks.length
-    ) {
-      updateMetadata();
-      handleReset();
-      refetchVideos();
-    }
-  }, [taskIds, completeTasks, failedTasks]);
-
   async function updateMetadata() {
     const updatePromises = completeTasks.map(async (completeTask) => {
       const matchingVid = taskVideos.find(
@@ -244,6 +232,18 @@ export function UploadYoutubeVideo({
     });
     await Promise.all(updatePromises);
   }
+
+  useEffect(() => {
+    if (
+      taskIds &&
+      taskVideos &&
+      taskIds.length === completeTasks.length + failedTasks.length
+    ) {
+      updateMetadata();
+      handleReset();
+      refetchVideos();
+    }
+  }, [taskIds, completeTasks, failedTasks]);
 
   return (
     <div>

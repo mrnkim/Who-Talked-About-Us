@@ -1,6 +1,12 @@
 import { Container, Card } from "react-bootstrap";
 import "./TaskVideo.css";
 
+/** Shows each task video
+ *
+ *  UploadYouTubeVideo -> TaskVideo
+ *
+ */
+
 function TaskVideo({ taskVideo }) {
   return (
     <Container key={taskVideo.video_url || taskVideo.url} className="taskVideo">

@@ -18,6 +18,13 @@ import "./VideoComponents.css";
 
 const VID_PAGE_LIMIT = 12;
 
+/** Components that include interaction with videos
+ *
+ *  VideoIndex -> VideoComponents -> { IndexBar, UploadYouTubeVideo, VideoList,
+ *  PageNav, SearchForm, SearchResultList }
+ *
+ */
+
 export function VideoComponents({
   index,
   currIndex,

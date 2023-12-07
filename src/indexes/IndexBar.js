@@ -4,6 +4,12 @@ import closeIcon from "../svg/Close.svg";
 import { useDeleteIndex } from "../apiHooks/apiHooks";
 import "./IndexBar.css";
 
+/** Index bar that shows index name and number of total videos
+ *
+ *  VideoComponents -> IndexBar
+ *
+ */
+
 export function IndexBar({ index, setIndexId, videosData }) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showIndexId, setShowIndexId] = useState(false);

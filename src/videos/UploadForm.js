@@ -2,6 +2,12 @@ import { Container } from "react-bootstrap";
 import uploadIcon from "../svg/Upload.svg";
 import "./UploadForm.css";
 
+/** Video upload form
+ *
+ *  UploadYouTubeVideo -> UploadForm
+ *
+ */
+
 function UploadForm({
   selectedJSON,
   youtubeChannelId,
