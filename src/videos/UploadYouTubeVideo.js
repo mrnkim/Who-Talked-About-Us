@@ -49,6 +49,7 @@ export function UploadYoutubeVideo({
   refetchVideos,
   isSubmitting,
   setIsSubmitting,
+  reset,
 }) {
   const [selectedJSON, setSelectedJSON] = useState(null);
   const [youtubeChannelId, setYoutubeChannelId] = useState("");
@@ -56,7 +57,6 @@ export function UploadYoutubeVideo({
   const [taskIds, setTaskIds] = useState(null);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(null);
   const [indexId, setIndexId] = useState(null);
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [mainMessage, setMainMessage] = useState(null);
@@ -72,11 +72,11 @@ export function UploadYoutubeVideo({
     setYoutubeChannelId("");
     setYoutubePlaylistId("");
     setIndexId(null);
-    setSearchQuery(null);
     setTaskIds(null);
     setIsSubmitting(false);
     setCompleteTasks([]);
     setFailedTasks([]);
+    reset();
     setTaskVideos(null);
   };
 

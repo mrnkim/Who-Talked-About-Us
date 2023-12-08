@@ -42,7 +42,6 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         type="What are you looking for? (e.g., applying MAC gold highlighter)"
-        buttonText="Search"
         icon={searchIcon}
         value={searchQuery}
         className="searchTextField"

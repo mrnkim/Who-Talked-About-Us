@@ -87,6 +87,7 @@ export function VideoComponents({
               refetchVideos={refetchVideos}
               isSubmitting={isSubmitting}
               setIsSubmitting={setIsSubmitting}
+              reset={reset}
             />
           </div>
         </div>
@@ -107,6 +108,7 @@ export function VideoComponents({
               refetchVideos={refetchVideos}
               isSubmitting={isSubmitting}
               setIsSubmitting={setIsSubmitting}
+              reset={reset}
             />
           </div>
 
@@ -151,7 +153,7 @@ export function VideoComponents({
                       page={vidPage}
                       setPage={setVidPage}
                       data={videosData}
-                      inPreviousData={isPreviousData}
+                      isPreviousData={isPreviousData}
                     />
                   </Container>
                 </Row>
