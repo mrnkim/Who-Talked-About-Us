@@ -124,7 +124,7 @@ export function VideoComponents({
                   </div>
                 ))}
               </div>
-              <Container fluid className="mb-5">
+              <Container fluid className="mb-2">
                 <Row>
                   {videos && (
                     <Suspense fallback={<LoadingSpinner />}>
@@ -134,10 +134,7 @@ export function VideoComponents({
                       />
                     </Suspense>
                   )}
-                  <Container
-                    fluid
-                    className="my-5 d-flex justify-content-center"
-                  >
+                  <Container fluid className="d-flex justify-content-center">
                     <PageNav
                       page={vidPage}
                       setPage={setVidPage}

@@ -116,4 +116,5 @@ In the search results (see the image above), you can effortlessly identify video
 
 - Add more tests (or automate testing)
 - Improve error handling and add data validations
+- Make it mobile-friendly
 
