@@ -68,6 +68,20 @@ export function VideoComponents({
   return (
     <>
       <IndexBar index={index} setIndexId={setIndexId} videosData={videosData} />
+
+      <div className="videoUploadForm">
+        <div className="display-6 m-4">Upload New Videos</div>
+        <UploadYoutubeVideo
+          currIndex={currIndex}
+          taskVideos={taskVideos}
+          setTaskVideos={setTaskVideos}
+          refetchVideos={refetchVideos}
+          isSubmitting={isSubmitting}
+          setIsSubmitting={setIsSubmitting}
+          reset={reset}
+        />
+      </div>
+
       {videos && videos.length === 0 && (
         <div>
           {!taskVideos && (
@@ -78,18 +92,6 @@ export function VideoComponents({
               </div>
             </div>
           )}
-          <div className="videoUploadForm">
-            <div className="display-6 m-4">Upload New Videos</div>
-            <UploadYoutubeVideo
-              currIndex={currIndex}
-              taskVideos={taskVideos}
-              setTaskVideos={setTaskVideos}
-              refetchVideos={refetchVideos}
-              isSubmitting={isSubmitting}
-              setIsSubmitting={setIsSubmitting}
-              reset={reset}
-            />
-          </div>
         </div>
       )}
 
@@ -99,19 +101,6 @@ export function VideoComponents({
           onReset={() => refetchVideos()}
           resetKeys={[keys.VIDEOS]}
         >
-          <div className="videoUploadForm">
-            <div className="display-6 m-4">Upload New Videos</div>
-            <UploadYoutubeVideo
-              currIndex={currIndex}
-              taskVideos={taskVideos}
-              setTaskVideos={setTaskVideos}
-              refetchVideos={refetchVideos}
-              isSubmitting={isSubmitting}
-              setIsSubmitting={setIsSubmitting}
-              reset={reset}
-            />
-          </div>
-
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
             <div className="m-auto p-3 searchFormContainer">
@@ -186,6 +175,7 @@ export function VideoComponents({
           )}
         </ErrorBoundary>
       )}
+
       {!isSubmitting && (
         <div className="resetButtonWrapper">
           <button className="resetButton" onClick={() => setIndexId(null)}>
