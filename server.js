@@ -227,6 +227,10 @@ app.post("/search", async (request, response, next) => {
     index_id: request.body.indexId,
     search_options: ["visual", "conversation", "text_in_video", "logo"],
     query: request.body.query,
+    group_by: "video",
+    sort_option: "clip_count",
+    threshold: "medium",
+    page_limit: 3,
   };
 
   try {

@@ -156,6 +156,7 @@ export function VideoComponents({
                       currIndex={currIndex}
                       allAuthors={authors}
                       finalSearchQuery={finalSearchQuery}
+                      setIndexId={setIndexId}
                     />
                   </Suspense>
                 </Row>

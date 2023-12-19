@@ -118,15 +118,15 @@ export function useGetTask(taskId) {
 export function useGetVideosOfSearchResults(indexId, query) {
   const { data: useSearchVideoData, refetch } = useSearchVideo(indexId, query);
   const searchResults = useSearchVideoData.data || [];
-  const results = useQueries({
-    queries: searchResults.map((result) => ({
-      queryKey: [keys.SEARCH, indexId, result.video_id],
+  const resultVideos = useQueries({
+    queries: searchResults.map((searchResult) => ({
+      queryKey: [keys.SEARCH, indexId, searchResult.id],
       queryFn: () =>
         axiosInstance
-          .get(`${INDEXES_URL}/${indexId}/videos/${result.video_id}`)
+          .get(`${INDEXES_URL}/${indexId}/videos/${searchResult.id}`)
           .then((res) => res.data),
     })),
   });
-  const searchResultVideos = results.map(({ data }) => data);
-  return { searchResults, searchResultVideos, refetch };
+  const searchResultVideos = resultVideos.map(({ data }) => data);
+  return { useSearchVideoData, searchResults, searchResultVideos, refetch };
 }

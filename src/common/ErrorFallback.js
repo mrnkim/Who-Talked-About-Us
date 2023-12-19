@@ -8,11 +8,11 @@ function ErrorFallback({ error, setIndexId }) {
       <p>Something went wrong</p>
       <div className="warningMessageWrapper">
         <img src={WarningIcon} alt="WarningIcon" className="icon"></img>
-        <div className="warningMessage">{error.message}</div>
+        <div className="warningMessage">{error?.message || null}</div>
       </div>
-      <button className="resetButton" onClick={() => setIndexId(null)}>
+      {/* <button className="resetButton" onClick={() => setIndexId(null)}>
         Go back
-      </button>
+      </button> */}
     </div>
   );
 }

@@ -14,9 +14,16 @@ import "./SearchResultList.css";
  *
  */
 
-function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
-  const { searchResults, searchResultVideos, refetch } =
-  useGetVideosOfSearchResults(currIndex, finalSearchQuery);
+function SearchResultList({
+  currIndex,
+  finalSearchQuery,
+  allAuthors,
+  setIndexId,
+}) {
+  const { useSearchVideoData, searchResults, searchResultVideos, refetch } =
+    useGetVideosOfSearchResults(currIndex, finalSearchQuery);
+  console.log("🚀 > useSearchVideoData=", useSearchVideoData);
+  console.log("🚀 > searchResults=", searchResults);
 
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
@@ -27,25 +34,38 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  /** Organize search results by author and video_id */
+  /** Organize search results by author and video_id
+   *
+   * {vidAuthor: {videoTitle: results, videoTitle: results},
+   *  vidAuthor2: {videoTitle: results},
+   *  ...
+   * }
+   *
+   * results = {clips: [clip, clip2...], id: 'video_id'}
+   *
+   *
+   */
   const organizedResults = {};
   if (searchResults && searchResultVideos) {
-    searchResults.forEach((result) => {
-      const videoId = result.video_id;
-      const video = searchResultVideos.find((vid) => vid._id === videoId);
+    searchResults.forEach((searchResult) => {
+      const videoId = searchResult.id;
+      const video = searchResultVideos.find(
+        (searchResultVideo) => searchResultVideo._id === videoId
+      );
       if (video) {
-        const videoAuthor = video.metadata.author;
-        const videoTitle = video.metadata.filename.replace(".mp4", "");
+        const videoAuthor = video.metadata?.author;
+        const videoTitle = video.metadata?.filename.replace(".mp4", "");
         if (!organizedResults[videoAuthor]) {
           organizedResults[videoAuthor] = {};
         }
         if (!organizedResults[videoAuthor][videoTitle]) {
-          organizedResults[videoAuthor][videoTitle] = [];
+          organizedResults[videoAuthor][videoTitle] = {};
         }
-        organizedResults[videoAuthor][videoTitle].push(result);
+        organizedResults[videoAuthor][videoTitle] = searchResult;
       }
     });
   }
+  console.log("🚀 > organizedResults=", organizedResults);
 
   /** Authors whose videos are not part of the search results */
   const noResultAuthors = [];
@@ -68,7 +88,7 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
           {organizedResults &&
             Object.entries(organizedResults).map(([videoAuthor, authVids]) => {
               const totalSearchResults = Object.values(authVids).reduce(
-                (total, video) => total + (video.length || 0),
+                (total, results) => total + (results.clips.length || 0),
                 0
               );
               return (
@@ -87,49 +107,50 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                         {Object.entries(authVids).map(
                           ([videoTitle, results]) => (
                             <Container key={videoTitle} className="mt-2 mb-2">
-                              <h6 style={{ textAlign: "left" }}>
-                                {videoTitle} ({results.length})
+                              <h6
+                                style={{ textAlign: "left", fontWeight: "600" }}
+                              >
+                                {videoTitle} ({results.clips.length})
                               </h6>
                               <Row>
-                                {results.map((data, index) => (
+                                {results.clips.map((clip, index) => (
                                   <Col
                                     sm={12}
                                     md={6}
                                     lg={4}
                                     xl={3}
                                     className="mb-4 mt-2"
-                                    key={data.video_id + "-" + index}
+                                    key={clip.video_id + "-" + index}
                                   >
                                     <ReactPlayer
                                       url={
                                         `${
                                           searchResultVideos.find(
-                                            (vid) =>
-                                              vid._id === results[0].video_id
+                                            (vid) => vid._id === clip.video_id
                                           ).metadata.youtubeUrl
                                         }` +
-                                        `?start=${data.start}&end=${data.end}`
+                                        `?start=${clip.start}&end=${clip.end}`
                                       }
                                       controls
                                       width="100%"
                                       height="100%"
-                                      light={data.thumbnail_url}
+                                      light={clip.thumbnail_url}
                                     />
                                     <div className="resultDescription">
-                                      Start {formatTime(data.start)} | End{" "}
-                                      {formatTime(data.end)} |{" "}
+                                      Start {formatTime(clip.start)} | End{" "}
+                                      {formatTime(clip.end)} |{" "}
                                       <span
                                         className="confidence"
                                         style={{
                                           backgroundColor:
-                                            data.confidence === "high"
+                                            clip.confidence === "high"
                                               ? "#2EC29F"
-                                              : data.confidence === "medium"
+                                              : clip.confidence === "medium"
                                               ? "#FDC14E"
                                               : "#B7B9B4",
                                         }}
                                       >
-                                        {data.confidence}
+                                        {clip.confidence}
                                       </span>
                                     </div>
                                   </Col>
@@ -144,17 +165,18 @@ function SearchResultList({ currIndex, finalSearchQuery, allAuthors }) {
                 </div>
               );
             })}
-
-          {searchResults && searchResults.length > 0 && noResultAuthors.length > 0 && (
-            <div className="channelPills">
-              <div className="subtitle">No results from</div>
-              {Array.from(new Set(noResultAuthors)).map((author, index) => (
-                <div key={index} className="channelNoResultPill">
-                  {author}
-                </div>
-              ))}
-            </div>
-          )}
+          {searchResults &&
+            searchResults.length > 0 &&
+            noResultAuthors.length > 0 && (
+              <div className="channelPills">
+                <div className="subtitle">No results from</div>
+                {Array.from(new Set(noResultAuthors)).map((author, index) => (
+                  <div key={index} className="channelNoResultPill">
+                    {author}
+                  </div>
+                ))}
+              </div>
+            )}
         </div>
       )}
     </div>
