@@ -3,6 +3,7 @@ import {
   useQueries,
   useMutation,
   useQueryClient,
+  useInfiniteQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
 import keys from "./keys";
@@ -102,6 +103,37 @@ export function useSearchVideo(indexId, query) {
         .then((res) => res.data),
   });
 }
+export function useGetSearchResults(indexId, pageToken) {
+  return useInfiniteQuery({
+    queryKey: [keys.SEARCH, pageToken],
+    queryFn: () =>
+      axiosInstance.get(`${SEARCH_URL}/${pageToken}`).then(async (res) => {
+        const searchData = res.data;
+
+        // Fetch videos for each search result
+        const videosPromises = searchData.data.map(async (searchResult) => {
+          const videoResponse = await axiosInstance.get(
+            `${INDEXES_URL}/${indexId}/videos/${searchResult.id}`
+          );
+          return videoResponse.data;
+        });
+
+        // Wait for all video requests to complete
+        const videos = await Promise.all(videosPromises);
+
+        // Attach videos to the search result data
+        const searchDataWithVideos = {
+          ...searchData,
+          videos: videos,
+        };
+        return searchDataWithVideos;
+      }),
+    getNextPageParam: (lastPage) => {
+      const nextPageToken = lastPage.page_info.next_page_token || undefined;
+      return nextPageToken || null;
+    },
+  });
+}
 
 export function useGetTask(taskId) {
   return useQuery({
@@ -116,10 +148,14 @@ export function useGetTask(taskId) {
 }
 
 export function useGetVideosOfSearchResults(indexId, query) {
-  const { data: useSearchVideoData, refetch } = useSearchVideo(indexId, query);
-  const searchResults = useSearchVideoData.data || [];
+  const {
+    data: initialSearchData,
+    refetch,
+    isLoading,
+  } = useSearchVideo(indexId, query);
+  const initialSearchResults = initialSearchData.data || [];
   const resultVideos = useQueries({
-    queries: searchResults.map((searchResult) => ({
+    queries: initialSearchResults.map((searchResult) => ({
       queryKey: [keys.SEARCH, indexId, searchResult.id],
       queryFn: () =>
         axiosInstance
@@ -127,6 +163,12 @@ export function useGetVideosOfSearchResults(indexId, query) {
           .then((res) => res.data),
     })),
   });
-  const searchResultVideos = resultVideos.map(({ data }) => data);
-  return { useSearchVideoData, searchResults, searchResultVideos, refetch };
+  const initialSearchResultVideos = resultVideos.map(({ data }) => data);
+  return {
+    initialSearchData,
+    initialSearchResults,
+    initialSearchResultVideos,
+    refetch,
+    isLoading,
+  };
 }

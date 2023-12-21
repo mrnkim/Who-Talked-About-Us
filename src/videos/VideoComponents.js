@@ -7,7 +7,7 @@ import UploadYoutubeVideo from "./UploadYouTubeVideo";
 import ErrorFallback from "../common/ErrorFallback";
 import keys from "../apiHooks/keys";
 import SearchForm from "../search/SearchForm";
-import SearchResultList from "../search/SearchResultList";
+import SearchResults from "../search/SearchResults";
 import PageNav from "../common/PageNav";
 import VideoList from "../videos/VideoList";
 import backIcon from "../svg/Back.svg";
@@ -152,7 +152,7 @@ export function VideoComponents({
               <Container fluid className="m-3">
                 <Row>
                   <Suspense fallback={<LoadingSpinner />}>
-                    <SearchResultList
+                    <SearchResults
                       currIndex={currIndex}
                       allAuthors={authors}
                       finalSearchQuery={finalSearchQuery}
