@@ -18,6 +18,7 @@ export default function SearchResultList({
   authVids,
   searchResultVideos,
   forwardedRef,
+  loading,
 }) {
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
@@ -34,6 +35,7 @@ export default function SearchResultList({
         {videoAuthor} ({totalSearchResults}{" "}
         {totalSearchResults <= 1 ? "Result" : "Results"})
       </div>
+
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => refetch()}
@@ -61,7 +63,7 @@ export default function SearchResultList({
                           `${
                             searchResultVideos.find(
                               (vid) => vid._id === clip.video_id
-                            ).metadata.youtubeUrl
+                            )?.metadata.youtubeUrl
                           }` + `?start=${clip.start}&end=${clip.end}`
                         }
                         controls
@@ -91,6 +93,9 @@ export default function SearchResultList({
                 </Row>
               </Container>
             ))}
+            {loading && (
+              <LoadingSpinner style={{ margin: "20px", padding: "10px" }} />
+            )}{" "}
           </Row>
         </Suspense>
       </ErrorBoundary>

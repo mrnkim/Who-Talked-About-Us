@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import keys from "./keys";
 
+//TODO: Separate out URLs into a different file and combine with the ones in UploadYouTubeVideo
 const SERVER_BASE_URL = `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`;
 const axiosInstance = axios.create({ baseURL: SERVER_BASE_URL });
 const INDEXES_URL = "/indexes";
@@ -154,6 +155,7 @@ export function useGetVideosOfSearchResults(indexId, query) {
     isLoading,
   } = useSearchVideo(indexId, query);
   const initialSearchResults = initialSearchData.data || [];
+
   const resultVideos = useQueries({
     queries: initialSearchResults.map((searchResult) => ({
       queryKey: [keys.SEARCH, indexId, searchResult.id],
