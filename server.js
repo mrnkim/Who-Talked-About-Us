@@ -230,7 +230,7 @@ app.post("/search", async (request, response, next) => {
     group_by: "video",
     sort_option: "clip_count",
     threshold: "medium",
-    page_limit: 1,
+    page_limit: 2,
   };
 
   try {

@@ -1,26 +1,9 @@
-import {
-  React,
-  Suspense,
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-} from "react";
+import { React, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-
-import { ErrorBoundary } from "react-error-boundary";
-import { Col, Row, Container } from "react-bootstrap";
-import ReactPlayer from "react-player";
-import {
-  useGetSearchResults,
-  useGetVideosOfSearchResults,
-} from "../apiHooks/apiHooks";
+import { useGetVideosOfSearchResults } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
-import ErrorFallback from "../common/ErrorFallback";
-import LoadingSpinner from "../common/LoadingSpinner";
 import "./SearchResults.css";
 import SearchResultList from "./SearchResultList";
-import NextSearchResults from "./NextSearchResults";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
 
@@ -37,7 +20,9 @@ const INDEXES_URL = "/indexes";
 
 function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const queryClient = useQueryClient();
-  const { ref, inView } = useInView();
+  // const { ref, inView } = useInView();
+  // console.log("🚀 > SearchResults > inView=", inView);
+
   /** Get initial search results and corresponding videos */
   const {
     initialSearchData: {
@@ -48,8 +33,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     refetch,
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
-
-  console.log("🚀 > SearchResults > nextPageToken=", nextPageToken);
   // let nextPageToken =
 
   const [combinedSearchResults, setCombinedSearchResults] =
@@ -57,44 +40,8 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
     initialSearchResultVideos
   );
-  // const initialOrganizedResults = organizeResults(
-  //   combinedSearchResults,
-  //   combinedSearchResultVideos
-  // );
-  console.log(
-    "🚀 > SearchResults > combinedSearchResults=",
-    combinedSearchResults
-  );
   const [organizedResults, setOrganizedResults] = useState(null);
-  console.log("🚀 > SearchResults > organizedResults=", organizedResults);
   const [loading, setLoading] = useState(false); // Loading state
-
-  /** Get search result of specific page */
-  // const {
-  //   data: useGetSearchResultsResponse,
-  //   isSuccess,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  // } = useGetSearchResults(currIndex, nextPageToken);
-  // const observer = useRef();
-  // const lastSearchResultRef = useCallback(
-  //   (node) => {
-  //     if (isLoading) return;
-  //     if (observer.current) observer.current.disconnect();
-  //     observer.current = new IntersectionObserver((entries) => {
-  //       if (entries[0].isIntersecting && nextPageToken) {
-  //         return (
-  //           <NextSearchResults
-  //             useSearchVideoData={useSearchVideoData}
-  //             setCombinedSearchResults={setCombinedSearchResults}
-  //           />
-  //         );
-  //       }
-  //     });
-  //     if (node) observer.current.observe(node);
-  //   },
-  //   [isLoading, nextPageToken]
-  // );
 
   async function fetchNextPage(pageToken) {
     try {
@@ -208,18 +155,35 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     }
   }
 
+  const handleLoadMore = () => {
+    if (nextPageToken && !loading) {
+      console.log("Fetching next page...");
+      fetchNextPageAndConcat(nextPageToken);
+      console.log("Next page fetched successfully");
+    }
+  };
+
+  useEffect(() => {
+    setNextPageToken(initialNextPageToken);
+    setCombinedSearchResultVideos(initialSearchResultVideos);
+    setCombinedSearchResults(initialSearchResults);
+  }, [initialNextPageToken]);
+
   useEffect(() => {
     const fetchNextPageData = async () => {
-      if (!inView && nextPageToken) {
-        console.log("Fetching next page...");
-
-        await fetchNextPageAndConcat(nextPageToken);
-        console.log("Next page fetched successfully");
+      try {
+        if (nextPageToken && !loading) {
+          console.log("Fetching next page...");
+          await fetchNextPageAndConcat(nextPageToken);
+          console.log("Next page fetched successfully");
+        }
+      } catch (error) {
+        console.error("Error fetching next page:", error);
       }
     };
 
     fetchNextPageData();
-  }, [inView, nextPageToken]);
+  }, [nextPageToken, loading]);
 
   useEffect(() => {
     const organizedResults = organizeResults(
@@ -229,11 +193,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     setOrganizedResults(organizedResults);
   }, [combinedSearchResults, combinedSearchResultVideos]);
 
-  // useEffect(() => {
-  //   setCombinedSearchResults(initialSearchResults);
-  //   setCombinedSearchResultVideos(initialSearchResultVideos);
-  // }, []);
-
   useEffect(() => {
     queryClient.invalidateQueries({
       queryKey: [keys.SEARCH, currIndex, finalSearchQuery],
@@ -242,7 +201,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
 
   return (
     <div>
-      {/* Render loading spinner when showLoading is true */}
       {initialSearchResults && initialSearchResults.length === 0 && (
         <div className="title">No results. Let's try with other queries!</div>
       )}
@@ -264,25 +222,28 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                       refetch={refetch}
                       authVids={authVids}
                       searchResultVideos={combinedSearchResultVideos}
-                      forwardedRef={index === 0 ? ref : undefined}
+                      // forwardedRef={index === 0 ? ref : undefined}
                       loading={loading}
                     />
                   </div>
                 );
               }
             )}
-          {initialSearchResults &&
-            initialSearchResults.length > 0 &&
-            noResultAuthors.length > 0 && (
-              <div className="channelPills">
-                <div className="subtitle">No results from</div>
-                {Array.from(new Set(noResultAuthors)).map((author, index) => (
-                  <div key={index} className="channelNoResultPill">
-                    {author}
-                  </div>
-                ))}
-              </div>
-            )}
+          {nextPageToken === null && noResultAuthors.length > 0 && (
+            <div className="channelPills">
+              <div className="subtitle">No results from</div>
+              {Array.from(new Set(noResultAuthors)).map((author, index) => (
+                <div key={index} className="channelNoResultPill">
+                  {author}
+                </div>
+              ))}
+            </div>
+          )}
+          {nextPageToken !== null && (
+            <button onClick={handleLoadMore} disabled={loading}>
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          )}
         </div>
       )}
     </div>

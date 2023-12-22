@@ -30,7 +30,12 @@ export default function SearchResultList({
   }
 
   return (
-    <div key={videoAuthor} className="m-3" ref={forwardedRef}>
+    <div
+      key={videoAuthor}
+      className="m-3"
+      ref={forwardedRef}
+      style={{ minHeight: "50px" }}
+    >
       <div className="channelResultPill">
         {videoAuthor} ({totalSearchResults}{" "}
         {totalSearchResults <= 1 ? "Result" : "Results"})
@@ -93,9 +98,9 @@ export default function SearchResultList({
                 </Row>
               </Container>
             ))}
-            {loading && (
+            {/* {loading && (
               <LoadingSpinner style={{ margin: "20px", padding: "10px" }} />
-            )}{" "}
+            )}{" "} */}
           </Row>
         </Suspense>
       </ErrorBoundary>
