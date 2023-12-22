@@ -103,7 +103,7 @@ export function VideoComponents({
         >
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
-            <div className="m-auto p-3 searchFormContainer">
+            <div className="m-auto p-3">
               <SearchForm
                 setSearchQuery={setSearchQuery}
                 searchQuery={searchQuery}

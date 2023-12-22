@@ -4,7 +4,6 @@ import { useGetVideosOfSearchResults } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
 import SearchResult from "./SearchResult";
-import { useInView } from "react-intersection-observer";
 import axios from "axios";
 import upIcon from "../svg/ChevronUpMini.svg";
 
@@ -15,14 +14,12 @@ const INDEXES_URL = "/indexes";
 
 /** Shows the search result
  *
- *  VideoComponents -> SearchResults
+ *  VideoComponents -> SearchResults -> SearchResult
  *
  */
 
 function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const queryClient = useQueryClient();
-  const { ref, inView } = useInView();
-  console.log("🚀 > SearchResults > inView=", inView);
 
   /** Get initial search results and corresponding videos */
   const {
@@ -33,21 +30,15 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     initialSearchResultVideos,
     refetch,
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
-  console.log(
-    "🚀 > SearchResults > initialNextPageToken=",
-    initialNextPageToken
-  );
-  const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
-  // let nextPageToken =
 
+  const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
   const [combinedSearchResults, setCombinedSearchResults] =
     useState(initialSearchResults);
   const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
     initialSearchResultVideos
   );
   const [organizedResults, setOrganizedResults] = useState(null);
-  console.log("🚀 > SearchResults > organizedResults=", organizedResults);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
 
   async function fetchNextPage(pageToken) {
     try {
@@ -62,7 +53,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
 
   async function fetchNextPageAndConcat(token) {
     try {
-      setLoading(true); // Set loading to true before fetching the next page
+      setLoading(true);
       const nextPageResults = await fetchNextPage(token);
 
       const nextPageResultVideosPromises = nextPageResults.data.map(
@@ -78,7 +69,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         nextPageResultVideosPromises
       );
 
-      // Update state only after both asynchronous operations are completed
       setCombinedSearchResults((prevData) => [
         ...prevData,
         ...nextPageResults.data,
@@ -93,7 +83,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         setNextPageToken(nextPageResults.page_info?.next_page_token || null);
       }
 
-      // Organize results after updating state
       const organizedResultsData = organizeResults(
         combinedSearchResults,
         combinedSearchResultVideos
@@ -108,15 +97,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     }
   }
 
-  /** Function to convert seconds to "mm:ss" format */
-  function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-
   /** Organize search results by author and video_id
    *
    * {vidAuthor: {videoTitle: results, videoTitle: results},
@@ -125,7 +105,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
    * }
    *
    * results = {clips: [clip, clip2...], id: 'video_id'}
-   *
    *
    */
 
@@ -152,6 +131,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     }
     return organizedResults;
   }
+
   /** Authors whose videos are not part of the search results */
   const noResultAuthors = [];
   for (let author of allAuthors) {
@@ -163,9 +143,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
 
   const handleLoadMore = () => {
     if (nextPageToken && !loading) {
-      console.log("Fetching next page...");
       fetchNextPageAndConcat(nextPageToken);
-      console.log("Next page fetched successfully");
     }
   };
 
@@ -174,22 +152,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     setCombinedSearchResultVideos(initialSearchResultVideos);
     setCombinedSearchResults(initialSearchResults);
   }, [initialNextPageToken]);
-
-  useEffect(() => {
-    const fetchNextPageData = async () => {
-      try {
-        if (!inView && nextPageToken && !loading) {
-          console.log("Fetching next page...");
-          await fetchNextPageAndConcat(nextPageToken);
-          console.log("Next page fetched successfully");
-        }
-      } catch (error) {
-        console.error("Error fetching next page:", error);
-      }
-    };
-
-    fetchNextPageData();
-  }, [inView, nextPageToken, loading]);
 
   useEffect(() => {
     const organizedResults = organizeResults(
@@ -210,9 +172,13 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
       {initialSearchResults && initialSearchResults.length === 0 && (
         <div className="title">No results. Let's try with other queries!</div>
       )}
+
       {initialSearchResults && initialSearchResults.length > 0 && (
-        <div className="searchResultTitle">
-          Search Results for "{finalSearchQuery}"
+        <div>
+          <div className="searchResultTitle">
+            Search Results for "{finalSearchQuery}"
+          </div>
+
           {organizedResults &&
             Object.entries(organizedResults).map(
               ([videoAuthor, authVids], index) => {
@@ -228,22 +194,18 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                       refetch={refetch}
                       authVids={authVids}
                       searchResultVideos={combinedSearchResultVideos}
-                      forwardedRef={
-                        index === Object.keys(organizedResults).length - 1
-                          ? ref
-                          : undefined
-                      }
                       loading={loading}
                     />
                   </div>
                 );
               }
             )}
+
           {!nextPageToken && (
             <div className="channelPills">
               <div className="subtitle">
-              😊 {Object.keys(organizedResults).length} Influencers talked about{" "}
-                "{finalSearchQuery}"
+                😊 {Object.keys(organizedResults).length} Influencers talked
+                about "{finalSearchQuery}"
               </div>
               {Array.from(new Set(Object.keys(organizedResults))).map(
                 (author, index) => (
@@ -254,6 +216,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
               )}
             </div>
           )}
+
           {!nextPageToken && noResultAuthors.length > 0 && (
             <div className="channelPills">
               <div className="subtitle">
@@ -266,6 +229,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
               ))}
             </div>
           )}
+
           {nextPageToken && (
             <button
               onClick={handleLoadMore}

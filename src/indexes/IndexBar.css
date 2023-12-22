@@ -22,7 +22,7 @@
     cursor: pointer;
     display: flex;
     height: 3rem;
-    width: 75rem;
+    width: 90%;
     padding: 0.25rem 0.75rem;
     justify-content: center;
     align-items: center;
@@ -33,7 +33,7 @@
   .default-index:hover {
     display: flex;
     height: 3rem;
-    width: 75rem;
+    width: 90%;
     padding: 0.25rem 0.75rem;
     justify-content: center;
     align-items: center;

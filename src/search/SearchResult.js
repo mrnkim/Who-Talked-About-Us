@@ -1,11 +1,7 @@
-import { React, Suspense, useState, useRef, useCallback } from "react";
+import { React, Suspense} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import {
-  useGetSearchResults,
-  useGetVideosOfSearchResults,
-} from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import ErrorFallback from "../common/ErrorFallback";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -17,9 +13,8 @@ export default function SearchResult({
   refetch,
   authVids,
   searchResultVideos,
-  forwardedRef,
-  loading,
 }) {
+  
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -33,7 +28,6 @@ export default function SearchResult({
     <div
       key={videoAuthor}
       className="m-3"
-      ref={forwardedRef}
       style={{ minHeight: "50px" }}
     >
       <div className="channelResultPill">
@@ -98,9 +92,6 @@ export default function SearchResult({
                 </Row>
               </Container>
             ))}
-            {/* {loading && (
-              <LoadingSpinner style={{ margin: "20px", padding: "10px" }} />
-            )}{" "} */}
           </Row>
         </Suspense>
       </ErrorBoundary>
