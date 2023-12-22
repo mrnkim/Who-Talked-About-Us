@@ -3,9 +3,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useGetVideosOfSearchResults } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
-import SearchResultList from "./SearchResultList";
+import SearchResult from "./SearchResult";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
+import upIcon from "../svg/ChevronUpMini.svg";
 
 const SERVER_BASE_URL = `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`;
 const axiosInstance = axios.create({ baseURL: SERVER_BASE_URL });
@@ -14,14 +15,14 @@ const INDEXES_URL = "/indexes";
 
 /** Shows the search result
  *
- *  VideoComponents -> SearchResultList
+ *  VideoComponents -> SearchResults
  *
  */
 
 function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const queryClient = useQueryClient();
-  // const { ref, inView } = useInView();
-  // console.log("🚀 > SearchResults > inView=", inView);
+  const { ref, inView } = useInView();
+  console.log("🚀 > SearchResults > inView=", inView);
 
   /** Get initial search results and corresponding videos */
   const {
@@ -32,6 +33,10 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     initialSearchResultVideos,
     refetch,
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
+  console.log(
+    "🚀 > SearchResults > initialNextPageToken=",
+    initialNextPageToken
+  );
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
   // let nextPageToken =
 
@@ -41,6 +46,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     initialSearchResultVideos
   );
   const [organizedResults, setOrganizedResults] = useState(null);
+  console.log("🚀 > SearchResults > organizedResults=", organizedResults);
   const [loading, setLoading] = useState(false); // Loading state
 
   async function fetchNextPage(pageToken) {
@@ -172,7 +178,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   useEffect(() => {
     const fetchNextPageData = async () => {
       try {
-        if (nextPageToken && !loading) {
+        if (!inView && nextPageToken && !loading) {
           console.log("Fetching next page...");
           await fetchNextPageAndConcat(nextPageToken);
           console.log("Next page fetched successfully");
@@ -183,7 +189,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     };
 
     fetchNextPageData();
-  }, [nextPageToken, loading]);
+  }, [inView, nextPageToken, loading]);
 
   useEffect(() => {
     const organizedResults = organizeResults(
@@ -215,23 +221,44 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                   0
                 );
                 return (
-                  <div key={index}>
-                    <SearchResultList
+                  <div key={index} className="searchResultWrapper">
+                    <SearchResult
                       videoAuthor={videoAuthor}
                       totalSearchResults={totalSearchResults}
                       refetch={refetch}
                       authVids={authVids}
                       searchResultVideos={combinedSearchResultVideos}
-                      // forwardedRef={index === 0 ? ref : undefined}
+                      forwardedRef={
+                        index === Object.keys(organizedResults).length - 1
+                          ? ref
+                          : undefined
+                      }
                       loading={loading}
                     />
                   </div>
                 );
               }
             )}
-          {nextPageToken === null && noResultAuthors.length > 0 && (
+          {!nextPageToken && (
             <div className="channelPills">
-              <div className="subtitle">No results from</div>
+              <div className="subtitle">
+              😊 {Object.keys(organizedResults).length} Influencers talked about{" "}
+                "{finalSearchQuery}"
+              </div>
+              {Array.from(new Set(Object.keys(organizedResults))).map(
+                (author, index) => (
+                  <div key={index} className="channelResultPill">
+                    {author}
+                  </div>
+                )
+              )}
+            </div>
+          )}
+          {!nextPageToken && noResultAuthors.length > 0 && (
+            <div className="channelPills">
+              <div className="subtitle">
+                😢 {new Set(noResultAuthors).size} Influencers have not
+              </div>
               {Array.from(new Set(noResultAuthors)).map((author, index) => (
                 <div key={index} className="channelNoResultPill">
                   {author}
@@ -239,9 +266,19 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
               ))}
             </div>
           )}
-          {nextPageToken !== null && (
-            <button onClick={handleLoadMore} disabled={loading}>
-              {loading ? "Loading..." : "Load More"}
+          {nextPageToken && (
+            <button
+              onClick={handleLoadMore}
+              disabled={loading}
+              className="showMoreButton"
+            >
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>
+                  <img src={upIcon} alt="Icon" className="icon" /> Show More
+                </>
+              )}
             </button>
           )}
         </div>

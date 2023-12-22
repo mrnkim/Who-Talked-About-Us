@@ -21,7 +21,7 @@ const VID_PAGE_LIMIT = 12;
 /** Components that include interaction with videos
  *
  *  VideoIndex -> VideoComponents -> { IndexBar, UploadYouTubeVideo, VideoList,
- *  PageNav, SearchForm, SearchResultList }
+ *  PageNav, SearchForm, SearchResults }
  *
  */
 
@@ -116,7 +116,7 @@ export function VideoComponents({
             <div>
               <div className="channelPills">
                 <div className="subtitle">
-                  All Channels in Index ({authors?.length || 0}){" "}
+                  All Influencers in Index ({authors?.length || 0}){" "}
                 </div>
                 {authors.map((author) => (
                   <div key={author} className="channelPill">

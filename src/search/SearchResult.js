@@ -11,7 +11,7 @@ import ErrorFallback from "../common/ErrorFallback";
 import LoadingSpinner from "../common/LoadingSpinner";
 import "./SearchResults.css";
 
-export default function SearchResultList({
+export default function SearchResult({
   videoAuthor,
   totalSearchResults,
   refetch,
@@ -49,7 +49,7 @@ export default function SearchResultList({
         <Suspense fallback={<LoadingSpinner />}>
           <Row>
             {Object.entries(authVids).map(([videoTitle, results]) => (
-              <Container key={videoTitle} className="mt-2 mb-2">
+              <Container key={videoTitle} className="mt-3 mb-3">
                 <h6 style={{ textAlign: "left", fontWeight: "600" }}>
                   {videoTitle} ({results.clips.length})
                 </h6>
