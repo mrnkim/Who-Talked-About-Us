@@ -174,3 +174,73 @@ export function useGetVideosOfSearchResults(indexId, query) {
     isLoading,
   };
 }
+
+export function useFetchNextPage(pageToken, loading) {
+  console.log(
+    "🚀 > useFetchNextPage > pageToken, loading=",
+    pageToken,
+    loading
+  );
+  console.log(
+    "🚀 > useFetchNextPage > Boolean(pageToken && !loading)=",
+    Boolean(pageToken && !loading)
+  );
+  return useQuery({
+    queryKey: [keys.SEARCH, pageToken],
+    queryFn: async () => {
+      try {
+        if (pageToken && !loading) {
+          const response = await axiosInstance.get(
+            `${SEARCH_URL}/${pageToken}`
+          );
+          const data = response.data;
+          return data;
+        } else {
+          return {
+            data: null,
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching JSON video info:", error);
+        throw error;
+      }
+    },
+    enabled: Boolean(pageToken && !loading),
+    skip: !Boolean(pageToken && !loading), // Skip if pageToken is null or loading is true
+  });
+}
+
+export function useGetVideosOfNextSearchResults(pageToken, indexId, loading) {
+  const {
+    data: nextPageResultsData,
+    refetch,
+    isLoading,
+  } = useFetchNextPage(pageToken, loading);
+  console.log(
+    "🚀 > useGetVideosOfNextSearchResults > nextPageResultsData=",
+    nextPageResultsData
+  );
+  const nextPageResults = nextPageResultsData.data || [];
+  console.log(
+    "🚀 > useGetVideosOfNextSearchResults > nextPageResults=",
+    nextPageResults
+  );
+
+  const resultVideos = useQueries({
+    queries: nextPageResults.map((nextPageResult) => ({
+      queryKey: [keys.SEARCH, indexId, nextPageResult.id],
+      queryFn: () =>
+        axiosInstance
+          .get(`${INDEXES_URL}/${indexId}/videos/${nextPageResult.id}`)
+          .then((res) => res.data),
+    })),
+  });
+  const nextPageResultVideos = resultVideos.map(({ data }) => data);
+  return {
+    nextPageResultsData,
+    nextPageResults,
+    nextPageResultVideos,
+    refetch,
+    isLoading,
+  };
+}

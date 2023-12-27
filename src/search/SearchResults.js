@@ -1,6 +1,9 @@
 import { React, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetVideosOfSearchResults } from "../apiHooks/apiHooks";
+import {
+  useGetVideosOfSearchResults,
+  useGetVideosOfNextSearchResults,
+} from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
 import SearchResult from "./SearchResult";
@@ -32,47 +35,53 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
 
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
+  console.log("🚀 > SearchResults > nextPageToken=", nextPageToken);
   const [combinedSearchResults, setCombinedSearchResults] =
-    useState(initialSearchResults);
+  useState(initialSearchResults);
+  console.log("🚀 > SearchResults > combinedSearchResults=", combinedSearchResults)
   const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
     initialSearchResultVideos
   );
   const [organizedResults, setOrganizedResults] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showMoreClicked, setShowMoreClicked] = useState(false);
 
-  async function fetchNextPage(pageToken) {
-    try {
-      const response = await axiosInstance.get(`${SEARCH_URL}/${pageToken}`);
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching JSON video info:", error);
-      throw error;
-    }
-  }
+  const { nextPageResultsData, nextPageResults, nextPageResultVideos } =
+    useGetVideosOfNextSearchResults(nextPageToken, currIndex, loading);
+  // console.log("🚀 > nextPageResultVideos=", nextPageResultVideos);
+  // console.log("🚀 > nextPageResults=", nextPageResults);
+  // console.log("🚀 > nextPageResultsData=", nextPageResultsData);
+
+  // async function fetchNextPage(pageToken) {
+  //   try {
+  //     const response = await axiosInstance.get(`${SEARCH_URL}/${pageToken}`);
+  //     const data = response.data;
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching JSON video info:", error);
+  //     throw error;
+  //   }
+  // }
 
   async function fetchNextPageAndConcat(token) {
     try {
       setLoading(true);
-      const nextPageResults = await fetchNextPage(token);
+      // const nextPageResults = await fetchNextPage(token);
 
-      const nextPageResultVideosPromises = nextPageResults.data.map(
-        async (nextPageResult) => {
-          const videoResponses = await axiosInstance.get(
-            `${INDEXES_URL}/${currIndex}/videos/${nextPageResult.id}`
-          );
-          return videoResponses.data;
-        }
-      );
+      // const nextPageResultVideosPromises = nextPageResults.data.map(
+      //   async (nextPageResult) => {
+      //     const videoResponses = await axiosInstance.get(
+      //       `${INDEXES_URL}/${currIndex}/videos/${nextPageResult.id}`
+      //     );
+      //     return videoResponses.data;
+      //   }
+      // );
 
-      const nextPageResultVideos = await Promise.all(
-        nextPageResultVideosPromises
-      );
+      // const nextPageResultVideos = await Promise.all(
+      //   nextPageResultVideosPromises
+      // );
 
-      setCombinedSearchResults((prevData) => [
-        ...prevData,
-        ...nextPageResults.data,
-      ]);
+      setCombinedSearchResults((prevData) => [...prevData, ...nextPageResults]);
 
       setCombinedSearchResultVideos((prevData) => [
         ...prevData,
@@ -80,7 +89,9 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
       ]);
 
       if (nextPageResults) {
-        setNextPageToken(nextPageResults.page_info?.next_page_token || null);
+        setNextPageToken(
+          nextPageResultsData.page_info?.next_page_token || null
+        );
       }
 
       const organizedResultsData = organizeResults(
