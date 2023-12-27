@@ -2,18 +2,13 @@ import { React, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useGetVideosOfSearchResults,
-  useGetVideosOfNextSearchResults,
+  fetchNextPageSearchResults,
+  fetchNextPageSearchResultVideos,
 } from "../apiHooks/apiHooks";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
 import SearchResult from "./SearchResult";
-import axios from "axios";
 import upIcon from "../svg/ChevronUpMini.svg";
-
-const SERVER_BASE_URL = `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`;
-const axiosInstance = axios.create({ baseURL: SERVER_BASE_URL });
-const SEARCH_URL = "/search";
-const INDEXES_URL = "/indexes";
 
 /** Shows the search result
  *
@@ -35,54 +30,38 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
 
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
-  console.log("🚀 > SearchResults > nextPageToken=", nextPageToken);
   const [combinedSearchResults, setCombinedSearchResults] =
-  useState(initialSearchResults);
-  console.log("🚀 > SearchResults > combinedSearchResults=", combinedSearchResults)
+    useState(initialSearchResults);
   const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
     initialSearchResultVideos
   );
   const [organizedResults, setOrganizedResults] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showMoreClicked, setShowMoreClicked] = useState(false);
 
-  const { nextPageResultsData, nextPageResults, nextPageResultVideos } =
-    useGetVideosOfNextSearchResults(nextPageToken, currIndex, loading);
-  // console.log("🚀 > nextPageResultVideos=", nextPageResultVideos);
-  // console.log("🚀 > nextPageResults=", nextPageResults);
-  // console.log("🚀 > nextPageResultsData=", nextPageResultsData);
-
-  // async function fetchNextPage(pageToken) {
-  //   try {
-  //     const response = await axiosInstance.get(`${SEARCH_URL}/${pageToken}`);
-  //     const data = response.data;
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching JSON video info:", error);
-  //     throw error;
-  //   }
-  // }
-
-  async function fetchNextPageAndConcat(token) {
+  async function ConcatNextPageResults() {
     try {
       setLoading(true);
-      // const nextPageResults = await fetchNextPage(token);
 
-      // const nextPageResultVideosPromises = nextPageResults.data.map(
-      //   async (nextPageResult) => {
-      //     const videoResponses = await axiosInstance.get(
-      //       `${INDEXES_URL}/${currIndex}/videos/${nextPageResult.id}`
-      //     );
-      //     return videoResponses.data;
-      //   }
-      // );
-
-      // const nextPageResultVideos = await Promise.all(
-      //   nextPageResultVideosPromises
-      // );
+      const nextPageResultsData = await fetchNextPageSearchResults(
+        queryClient,
+        nextPageToken
+      );
+      const nextPageResults = nextPageResultsData.data;
+      const nextPageResultVideosPromises = nextPageResults.map(
+        async (nextPageResult) => {
+          const videoResponses = await fetchNextPageSearchResultVideos(
+            queryClient,
+            currIndex,
+            nextPageResult.id
+          );
+          return videoResponses;
+        }
+      );
+      const nextPageResultVideos = await Promise.all(
+        nextPageResultVideosPromises
+      );
 
       setCombinedSearchResults((prevData) => [...prevData, ...nextPageResults]);
-
       setCombinedSearchResultVideos((prevData) => [
         ...prevData,
         ...nextPageResultVideos,
@@ -94,11 +73,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         );
       }
 
-      const organizedResultsData = organizeResults(
-        combinedSearchResults,
-        combinedSearchResultVideos
-      );
-      setOrganizedResults(organizedResultsData);
     } catch (error) {
       console.error("Error fetching and concatenating next page:", error);
     } finally {
@@ -140,6 +114,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         }
       });
     }
+
     return organizedResults;
   }
 
@@ -154,7 +129,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
 
   const handleLoadMore = () => {
     if (nextPageToken && !loading) {
-      fetchNextPageAndConcat(nextPageToken);
+      ConcatNextPageResults();
     }
   };
 
