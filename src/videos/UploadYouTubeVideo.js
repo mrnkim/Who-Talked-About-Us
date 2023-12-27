@@ -11,6 +11,7 @@ import TaskVideo from "./TaskVideo";
 import Task from "./Task";
 import "./UploadYouTubeVideo.css";
 
+//TODO: Separate URLs into a different file 
 const SERVER_BASE_URL = new URL(
   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
 );

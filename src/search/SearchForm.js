@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import sanitize from "sanitize-filename";
+
 import InputForm from "../common/InputForm";
 import searchIcon from "../svg/Union.svg";
 import "./SearchForm.css";
@@ -23,12 +25,12 @@ function SearchForm({ searchQuery, setSearchQuery, setFinalSearchQuery }) {
   function handleSubmit(evt) {
     evt.preventDefault();
     if (searchQuery) {
-      const trimmedQuery = searchQuery.trim();
-      if (!trimmedQuery) {
+      const sanitizedQuery = sanitize(searchQuery);
+      if (!sanitizedQuery) {
         setError("Please enter the search term");
       } else {
         try {
-          setFinalSearchQuery(trimmedQuery);
+          setFinalSearchQuery(sanitizedQuery);
         } catch (error) {
           console.error(error);
         }

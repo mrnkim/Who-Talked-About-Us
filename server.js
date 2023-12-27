@@ -227,6 +227,10 @@ app.post("/search", async (request, response, next) => {
     index_id: request.body.indexId,
     search_options: ["visual", "conversation", "text_in_video", "logo"],
     query: request.body.query,
+    group_by: "video",
+    sort_option: "clip_count",
+    threshold: "medium",
+    page_limit: 2,
   };
 
   try {
@@ -264,6 +268,25 @@ app.get(
     }
   }
 );
+
+/** Get search results of a specific page */
+app.get("/search/:pageToken", async (request, response, next) => {
+  const pageToken = request.params.pageToken;
+
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": TWELVE_LABS_API_KEY,
+  };
+
+  try {
+    const apiResponse = await TWELVE_LABS_API.get(`/search/${pageToken}`, {
+      headers,
+    });
+    response.json(apiResponse.data);
+  } catch (error) {
+    return next(error);
+  }
+});
 
 /** Updates a video's metadata */
 app.put("/update/:indexId/:videoId", async (request, response, next) => {

@@ -7,7 +7,7 @@ import UploadYoutubeVideo from "./UploadYouTubeVideo";
 import ErrorFallback from "../common/ErrorFallback";
 import keys from "../apiHooks/keys";
 import SearchForm from "../search/SearchForm";
-import SearchResultList from "../search/SearchResultList";
+import SearchResults from "../search/SearchResults";
 import PageNav from "../common/PageNav";
 import VideoList from "../videos/VideoList";
 import backIcon from "../svg/Back.svg";
@@ -21,7 +21,7 @@ const VID_PAGE_LIMIT = 12;
 /** Components that include interaction with videos
  *
  *  VideoIndex -> VideoComponents -> { IndexBar, UploadYouTubeVideo, VideoList,
- *  PageNav, SearchForm, SearchResultList }
+ *  PageNav, SearchForm, SearchResults }
  *
  */
 
@@ -103,7 +103,7 @@ export function VideoComponents({
         >
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
-            <div className="m-auto p-3 searchFormContainer">
+            <div className="m-auto p-3">
               <SearchForm
                 setSearchQuery={setSearchQuery}
                 searchQuery={searchQuery}
@@ -116,7 +116,7 @@ export function VideoComponents({
             <div>
               <div className="channelPills">
                 <div className="subtitle">
-                  All Channels in Index ({authors?.length || 0}){" "}
+                  All Influencers in Index ({authors?.length || 0}){" "}
                 </div>
                 {authors.map((author) => (
                   <div key={author} className="channelPill">
@@ -152,10 +152,11 @@ export function VideoComponents({
               <Container fluid className="m-3">
                 <Row>
                   <Suspense fallback={<LoadingSpinner />}>
-                    <SearchResultList
+                    <SearchResults
                       currIndex={currIndex}
                       allAuthors={authors}
                       finalSearchQuery={finalSearchQuery}
+                      setIndexId={setIndexId}
                     />
                   </Suspense>
                 </Row>
