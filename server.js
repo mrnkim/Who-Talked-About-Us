@@ -217,6 +217,7 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 
 /** Search videos with a given query */
 app.post("/search", async (request, response, next) => {
+  console.log("CALLED!!!")
   const headers = {
     accept: "application/json",
     "Content-Type": "application/json",

@@ -72,7 +72,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
           nextPageResultsData.page_info?.next_page_token || null
         );
       }
-
     } catch (error) {
       console.error("Error fetching and concatenating next page:", error);
     } finally {
@@ -187,7 +186,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
               }
             )}
 
-          {!nextPageToken && (
+          {organizedResults && !nextPageToken && (
             <div className="channelPills">
               <div className="subtitle">
                 😊 {Object.keys(organizedResults).length} Influencers talked
@@ -203,7 +202,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
             </div>
           )}
 
-          {!nextPageToken && noResultAuthors.length > 0 && (
+          {organizedResults && !nextPageToken && noResultAuthors.length > 0 && (
             <div className="channelPills">
               <div className="subtitle">
                 😢 {new Set(noResultAuthors).size} Influencers have not
@@ -216,7 +215,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
             </div>
           )}
 
-          {nextPageToken && (
+          {organizedResults && nextPageToken && (
             <button
               onClick={handleLoadMore}
               disabled={loading}
