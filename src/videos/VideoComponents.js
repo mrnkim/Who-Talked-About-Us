@@ -96,11 +96,7 @@ export function VideoComponents({
       )}
 
       {videos && videos.length > 0 && (
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          onReset={() => refetchVideos()}
-          resetKeys={[keys.VIDEOS]}
-        >
+        <div>
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
             <div className="m-auto p-3">
@@ -127,12 +123,20 @@ export function VideoComponents({
               <Container fluid className="mb-2">
                 <Row>
                   {videos && (
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <VideoList
-                        videos={videos}
-                        refetchVideos={refetchVideos}
-                      />
-                    </Suspense>
+                    <ErrorBoundary
+                      FallbackComponent={({ error }) => (
+                        <ErrorFallback error={error} setIndexId={setIndexId} />
+                      )}
+                      onReset={() => refetchVideos()}
+                      resetKeys={[keys.VIDEOS]}
+                    >
+                      <Suspense fallback={<LoadingSpinner />}>
+                        <VideoList
+                          videos={videos}
+                          refetchVideos={refetchVideos}
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
                   )}
                   <Container fluid className="d-flex justify-content-center">
                     <PageNav
@@ -171,7 +175,7 @@ export function VideoComponents({
               </div>
             </div>
           )}
-        </ErrorBoundary>
+        </div>
       )}
 
       {!isSubmitting && (

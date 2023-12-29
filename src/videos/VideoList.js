@@ -9,7 +9,7 @@ import ErrorFallback from "../common/ErrorFallback";
 
 /** Shows list of the video in an index
  *
- *  VideoIndex -> VideoList
+ *  VideoComponents -> VideoList
  *
  */
 
@@ -20,15 +20,15 @@ function VideoList({ videos, refetchVideos }) {
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
       onReset={() => refetchVideos()}
-      resetKeys={[keys.VIDEOS]}
+      resetKeys={[keys.VIDEOS, index]}
       key={video._id + "-" + index}
     >
       <Suspense fallback={<LoadingSpinner />}>
         <Col
           sm={12}
-          md={numVideos > 1 ? 6 : 12} 
-          lg={numVideos > 1 ? 4 : 12} 
-          xl={numVideos > 1 ? 3 : 12} 
+          md={numVideos > 1 ? 6 : 12}
+          lg={numVideos > 1 ? 4 : 12}
+          xl={numVideos > 1 ? 3 : 12}
           className="mb-5 mt-3"
         >
           {" "}

@@ -1,14 +1,17 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, Suspense } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
 import {
   useGetVideosOfSearchResults,
   fetchNextPageSearchResults,
   fetchNextPageSearchResultVideos,
 } from "../apiHooks/apiHooks";
+import ErrorFallback from "../common/ErrorFallback";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
 import SearchResult from "./SearchResult";
 import upIcon from "../svg/ChevronUpMini.svg";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 /** Shows the search result
  *
@@ -16,7 +19,12 @@ import upIcon from "../svg/ChevronUpMini.svg";
  *
  */
 
-function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
+function SearchResults({
+  currIndex,
+  finalSearchQuery,
+  allAuthors,
+  setIndexId,
+}) {
   const queryClient = useQueryClient();
 
   /** Get initial search results and corresponding videos */
@@ -46,6 +54,10 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         queryClient,
         nextPageToken
       );
+      console.log(
+        "🚀 > ConcatNextPageResults > nextPageResultsData=",
+        nextPageResultsData
+      );
       const nextPageResults = nextPageResultsData.data;
       const nextPageResultVideosPromises = nextPageResults.map(
         async (nextPageResult) => {
@@ -73,7 +85,8 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         );
       }
     } catch (error) {
-      console.error("Error fetching and concatenating next page:", error);
+      setLoading(false);
+      throw error;
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -155,7 +168,9 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   return (
     <div>
       {initialSearchResults && initialSearchResults.length === 0 && (
-        <div className="title">No results. Let's try with other queries!</div>
+        <div className="title">
+          No results for "{finalSearchQuery}". Let's try with other queries!
+        </div>
       )}
 
       {initialSearchResults && initialSearchResults.length > 0 && (
@@ -173,62 +188,76 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                 );
                 return (
                   <div key={index} className="searchResultWrapper">
-                    <SearchResult
-                      videoAuthor={videoAuthor}
-                      totalSearchResults={totalSearchResults}
-                      refetch={refetch}
-                      authVids={authVids}
-                      searchResultVideos={combinedSearchResultVideos}
-                      loading={loading}
-                    />
+                    <ErrorBoundary
+                      FallbackComponent={({ error }) => (
+                        <ErrorFallback error={error} setIndexId={setIndexId} />
+                      )}
+                    >
+                      <Suspense fallback={<LoadingSpinner />}>
+                        <SearchResult
+                          videoAuthor={videoAuthor}
+                          totalSearchResults={totalSearchResults}
+                          refetch={refetch}
+                          authVids={authVids}
+                          searchResultVideos={combinedSearchResultVideos}
+                          loading={loading}
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
                   </div>
                 );
               }
             )}
 
           {organizedResults && !nextPageToken && (
-            <div className="channelPills">
-              <div className="subtitle">
-                😊 {Object.keys(organizedResults).length} Influencers talked
-                about "{finalSearchQuery}"
+            <Suspense fallback={<LoadingSpinner />}>
+              <div className="channelPills">
+                <div className="subtitle">
+                  😊 {Object.keys(organizedResults).length} Influencers talked
+                  about "{finalSearchQuery}"
+                </div>
+                {Array.from(new Set(Object.keys(organizedResults))).map(
+                  (author, index) => (
+                    <div key={index} className="channelResultPill">
+                      {author}
+                    </div>
+                  )
+                )}
               </div>
-              {Array.from(new Set(Object.keys(organizedResults))).map(
-                (author, index) => (
-                  <div key={index} className="channelResultPill">
-                    {author}
-                  </div>
-                )
-              )}
-            </div>
+            </Suspense>
           )}
 
           {organizedResults && !nextPageToken && noResultAuthors.length > 0 && (
-            <div className="channelPills">
-              <div className="subtitle">
-                😢 {new Set(noResultAuthors).size} Influencers have not
-              </div>
-              {Array.from(new Set(noResultAuthors)).map((author, index) => (
-                <div key={index} className="channelNoResultPill">
-                  {author}
+            <Suspense fallback={<LoadingSpinner />}>
+              <div className="channelPills">
+                <div className="subtitle">
+                  😢 {new Set(noResultAuthors).size} Influencers have not
                 </div>
-              ))}
-            </div>
+                {Array.from(new Set(noResultAuthors)).map((author, index) => (
+                  <div key={index} className="channelNoResultPill">
+                    {author}
+                  </div>
+                ))}
+              </div>
+            </Suspense>
           )}
 
           {organizedResults && nextPageToken && (
-            <button
-              onClick={handleLoadMore}
-              disabled={loading}
-              className="showMoreButton"
-            >
-              {loading ? (
-                "Loading..."
-              ) : (
-                <>
-                  <img src={upIcon} alt="Icon" className="icon" /> Show More
-                </>
-              )}
-            </button>
+            <Suspense fallback={<LoadingSpinner />}>
+              <button
+                onClick={handleLoadMore}
+                disabled={loading}
+                className="showMoreButton"
+              >
+                {loading ? (
+                  "Loading..."
+                ) : (
+                  <>
+                    <img src={upIcon} alt="Icon" className="icon" /> Show More
+                  </>
+                )}
+              </button>
+            </Suspense>
           )}
         </div>
       )}
