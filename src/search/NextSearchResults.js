@@ -7,6 +7,5 @@ export default function NextSearchResults({
   const { data } = useGetSearchResults(
     useSearchVideoData.page_info.next_page_token
   );
-  console.log("🚀 > data=", data);
   setCombinedSearchResults((prevData) => [...prevData, ...data.data]);
 }

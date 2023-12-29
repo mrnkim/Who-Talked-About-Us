@@ -3,13 +3,13 @@ import WarningIcon from "../svg/Warning.svg";
 import "./ErrorFallback.css";
 
 function ErrorFallback({ error, setIndexId }) {
-  console.log("🚀 > ErrorFallback > error=", error)
+  console.log("🚀 > ErrorFallback > error=", error);
   return (
     <div role="alert">
       <p>Something went wrong</p>
       <div className="warningMessageWrapper">
         <img src={WarningIcon} alt="WarningIcon" className="icon"></img>
-        <div className="warningMessage">{error?.message || null}</div>
+        <div className="warningMessage">{error?.message || error.error}</div>
       </div>
       <button className="resetButton" onClick={() => setIndexId(null)}>
         Go back

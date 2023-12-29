@@ -162,8 +162,7 @@ app.get("/indexes/:indexId/videos", async (request, response, next) => {
     response.json(apiResponse.data);
   } catch (error) {
     console.error("Error getting videos:", error);
-    const errorResponse = { error: error.response.data };
-    response.json(errorResponse);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -217,7 +216,6 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 
 /** Search videos with a given query */
 app.post("/search", async (request, response, next) => {
-  console.log("CALLED!!!")
   const headers = {
     accept: "application/json",
     "Content-Type": "application/json",
@@ -280,7 +278,7 @@ app.get("/search/:pageToken", async (request, response, next) => {
   };
 
   try {
-    const apiResponse = await TWELVE_LABS_API.get(`/search/${pageToken}`, {
+    const apiResponses = await TWELVE_LABS_API.get(`/search/${pageToken}`, {
       headers,
     });
     response.json(apiResponse.data);

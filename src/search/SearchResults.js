@@ -45,6 +45,7 @@ function SearchResults({
   );
   const [organizedResults, setOrganizedResults] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   async function ConcatNextPageResults() {
     try {
@@ -54,10 +55,7 @@ function SearchResults({
         queryClient,
         nextPageToken
       );
-      console.log(
-        "🚀 > ConcatNextPageResults > nextPageResultsData=",
-        nextPageResultsData
-      );
+
       const nextPageResults = nextPageResultsData.data;
       const nextPageResultVideosPromises = nextPageResults.map(
         async (nextPageResult) => {
@@ -85,8 +83,8 @@ function SearchResults({
         );
       }
     } catch (error) {
+      setError(error);
       setLoading(false);
-      throw error;
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -259,6 +257,8 @@ function SearchResults({
               </button>
             </Suspense>
           )}
+
+          {error && <ErrorFallback error={error} setIndexId={setIndexId} />}
         </div>
       )}
     </div>

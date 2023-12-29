@@ -22,7 +22,9 @@ function VideoIndex({ indexId, setIndexId }) {
   const queryClient = useQueryClient();
 
   const { data: index, refetch } = useGetIndex(indexId);
+
   const currIndex = index?._id;
+
   if (index.deleted) {
     index.error = { message: "This index no longer exists" };
   }
