@@ -11,7 +11,7 @@ import TaskVideo from "./TaskVideo";
 import Task from "./Task";
 import "./UploadYouTubeVideo.css";
 
-//TODO: Separate URLs into a different file 
+//TODO: Separate URLs into a different file
 const SERVER_BASE_URL = new URL(
   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
 );
@@ -58,7 +58,7 @@ export function UploadYoutubeVideo({
   const [taskIds, setTaskIds] = useState(null);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
-  const [indexId, setIndexId] = useState(null);
+  const [uploadIndexId, setUploadIndexId] = useState(null);
   const [pendingApiRequest, setPendingApiRequest] = useState(false);
   const [mainMessage, setMainMessage] = useState(null);
 
@@ -72,7 +72,7 @@ export function UploadYoutubeVideo({
     setSelectedJSON(null);
     setYoutubeChannelId("");
     setYoutubePlaylistId("");
-    setIndexId(null);
+    setUploadIndexId(null);
     setTaskIds(null);
     setIsSubmitting(false);
     setCompleteTasks([]);
@@ -195,7 +195,7 @@ export function UploadYoutubeVideo({
 
     const response = await fetch(DOWNLOAD_URL.toString(), data);
     const json = await response.json();
-    setIndexId(json.indexId);
+    setUploadIndexId(json.indexId);
     setTaskIds(json.taskIds);
   };
 
@@ -254,7 +254,7 @@ export function UploadYoutubeVideo({
           youtubeChannelId={youtubeChannelId}
           youtubePlaylistId={youtubePlaylistId}
           handleJSONSelect={handleJSONSelect}
-          indexId={indexId}
+          indexId={uploadIndexId}
           handleYoutubeChannelIdEntry={handleYoutubeChannelIdEntry}
           handleYoutubePlaylistIdEntry={handleYoutubePlaylistIdEntry}
           getInfo={getInfo}

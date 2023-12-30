@@ -1,4 +1,4 @@
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useContext } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useQueryClient } from "@tanstack/react-query";
 import { Container, Row } from "react-bootstrap";
@@ -15,6 +15,7 @@ import infoIcon from "../svg/Info.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { IndexBar } from "../indexes/IndexBar";
 import "./VideoComponents.css";
+import setIndexIdContext from "../common/setIndexIdContext";
 
 const VID_PAGE_LIMIT = 12;
 
@@ -25,17 +26,12 @@ const VID_PAGE_LIMIT = 12;
  *
  */
 
-export function VideoComponents({
-  index,
-  currIndex,
-  setIndexId,
-  vidPage,
-  setVidPage,
-}) {
+export function VideoComponents({ index, currIndex, vidPage, setVidPage }) {
   const [taskVideos, setTaskVideos] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setIndexId } = useContext(setIndexIdContext);
 
   const queryClient = useQueryClient();
 
@@ -46,7 +42,8 @@ export function VideoComponents({
   } = useGetVideos(currIndex, vidPage, VID_PAGE_LIMIT);
   const videos = videosData?.data;
 
-  const { data: authors } = useGetAllAuthors(currIndex);
+  const { data: authors, refetch: refetchAuthors } =
+    useGetAllAuthors(currIndex);
 
   function reset() {
     setSearchQuery("");
@@ -66,73 +63,80 @@ export function VideoComponents({
   }, [videos, currIndex]);
 
   return (
-    <ErrorBoundary
-      FallbackComponent={({ error }) => (
-        <ErrorFallback error={error} setIndexId={setIndexId} />
-      )}
-      onReset={() => refetchVideos()}
-      resetKeys={[keys.VIDEOS]}
-    >
-      <>
-        <IndexBar
-          index={index}
-          setIndexId={setIndexId}
-          videosData={videosData}
+    <>
+      <IndexBar index={index} videosData={videosData} />
+
+      <div className="videoUploadForm">
+        <div className="display-6 m-4">Upload New Videos</div>
+        <UploadYoutubeVideo
+          currIndex={currIndex}
+          taskVideos={taskVideos}
+          setTaskVideos={setTaskVideos}
+          refetchVideos={refetchVideos}
+          isSubmitting={isSubmitting}
+          setIsSubmitting={setIsSubmitting}
+          reset={reset}
         />
+      </div>
 
-        <div className="videoUploadForm">
-          <div className="display-6 m-4">Upload New Videos</div>
-          <UploadYoutubeVideo
-            currIndex={currIndex}
-            taskVideos={taskVideos}
-            setTaskVideos={setTaskVideos}
-            refetchVideos={refetchVideos}
-            isSubmitting={isSubmitting}
-            setIsSubmitting={setIsSubmitting}
-            reset={reset}
-          />
-        </div>
-
-        {videos && videos.length === 0 && (
-          <div>
-            {!taskVideos && (
-              <div className="doNotLeaveMessageWrapper">
-                <img src={infoIcon} alt="infoIcon" className="icon"></img>
-                <div className="doNotLeaveMessage">
-                  There are no videos. Start indexing ones!
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {videos && videos.length > 0 && (
-          <div>
-            <div className="videoSearchForm">
-              <div className="title">Search Videos</div>
-              <div className="m-auto p-3">
-                <SearchForm
-                  setSearchQuery={setSearchQuery}
-                  searchQuery={searchQuery}
-                  setFinalSearchQuery={setFinalSearchQuery}
-                />
+      {videos && videos.length === 0 && (
+        <div>
+          {!taskVideos && (
+            <div className="doNotLeaveMessageWrapper">
+              <img src={infoIcon} alt="infoIcon" className="icon"></img>
+              <div className="doNotLeaveMessage">
+                There are no videos. Start indexing ones!
               </div>
             </div>
+          )}
+        </div>
+      )}
 
-            {!finalSearchQuery && (
-              <div>
-                <div className="channelPills">
+      {videos && videos.length > 0 && (
+        <div>
+          <div className="videoSearchForm">
+            <div className="title">Search Videos</div>
+            <div className="m-auto p-3">
+              <SearchForm
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+                setFinalSearchQuery={setFinalSearchQuery}
+              />
+            </div>
+          </div>
+
+          {!finalSearchQuery && (
+            <div>
+              <div className="channelPills">
+                <ErrorBoundary
+                  FallbackComponent={({ error }) => (
+                    <ErrorFallback error={error} />
+                  )}
+                  onReset={() => refetchAuthors()}
+                  resetKeys={[keys.AUTHORS, currIndex]}
+                >
                   <div className="subtitle">
                     All Influencers in Index ({authors?.length || 0}){" "}
                   </div>
                   {authors.map((author) => (
                     <div key={author} className="channelPill">
-                      {author}
+                      <Suspense fallback={<LoadingSpinner />}>
+                        {author}
+                      </Suspense>
                     </div>
                   ))}
-                </div>
-                <Container fluid className="mb-2">
-                  <Row>
+                </ErrorBoundary>
+              </div>
+
+              <Container fluid className="mb-2">
+                <Row>
+                  <ErrorBoundary
+                    FallbackComponent={({ error }) => (
+                      <ErrorFallback error={error} />
+                    )}
+                    onReset={() => refetchVideos()}
+                    resetKeys={[keys.VIDEOS, currIndex, vidPage]}
+                  >
                     {videos && (
                       <Suspense fallback={<LoadingSpinner />}>
                         <VideoList
@@ -149,47 +153,44 @@ export function VideoComponents({
                         isPreviousData={isPreviousData}
                       />
                     </Container>
-                  </Row>
-                </Container>
-              </div>
-            )}
+                  </ErrorBoundary>
+                </Row>
+              </Container>
+            </div>
+          )}
 
-            {finalSearchQuery && (
-              <div>
-                <Container fluid className="m-3">
-                  <Row>
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <SearchResults
-                        currIndex={currIndex}
-                        allAuthors={authors}
-                        finalSearchQuery={finalSearchQuery}
-                        setIndexId={setIndexId}
-                      />
-                    </Suspense>
-                  </Row>
-                </Container>
-                <div className="resetButtonWrapper">
-                  <button className="resetButton" onClick={reset}>
-                    {backIcon && (
-                      <img src={backIcon} alt="Icon" className="icon" />
-                    )}
-                    &nbsp;Back to All Videos
-                  </button>
-                </div>
+          {finalSearchQuery && (
+            <div>
+              <Container fluid className="m-3">
+                <Row>
+                  <SearchResults
+                    currIndex={currIndex}
+                    allAuthors={authors}
+                    finalSearchQuery={finalSearchQuery}
+                  />
+                </Row>
+              </Container>
+              <div className="resetButtonWrapper">
+                <button className="resetButton" onClick={reset}>
+                  {backIcon && (
+                    <img src={backIcon} alt="Icon" className="icon" />
+                  )}
+                  &nbsp;Back to All Videos
+                </button>
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
+      )}
 
-        {!isSubmitting && (
-          <div className="resetButtonWrapper">
-            <button className="resetButton" onClick={() => setIndexId(null)}>
-              {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
-              &nbsp;Back to Start
-            </button>
-          </div>
-        )}
-      </>
-    </ErrorBoundary>
+      {!isSubmitting && (
+        <div className="resetButtonWrapper">
+          <button className="resetButton" onClick={() => setIndexId(null)}>
+            {backIcon && <img src={backIcon} alt="Icon" className="icon" />}
+            &nbsp;Back to Start
+          </button>
+        </div>
+      )}
+    </>
   );
 }

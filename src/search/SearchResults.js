@@ -19,12 +19,7 @@ import LoadingSpinner from "../common/LoadingSpinner";
  *
  */
 
-function SearchResults({
-  currIndex,
-  finalSearchQuery,
-  allAuthors,
-  setIndexId,
-}) {
+function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const queryClient = useQueryClient();
 
   /** Get initial search results and corresponding videos */
@@ -186,23 +181,23 @@ function SearchResults({
                 );
                 return (
                   <div key={index} className="searchResultWrapper">
-                    <ErrorBoundary
-                      FallbackComponent={({ error }) => (
-                        <ErrorFallback error={error} setIndexId={setIndexId} />
-                      )}
-                    >
+                      <ErrorBoundary
+                        FallbackComponent={({ error }) => (
+                          <ErrorFallback error={error} />
+                        )}
+                        onReset={() => refetch()}
+                        resetKeys={[keys.SEARCH, currIndex, finalSearchQuery]}
+                      >
                       <Suspense fallback={<LoadingSpinner />}>
                         <SearchResult
                           videoAuthor={videoAuthor}
                           totalSearchResults={totalSearchResults}
-                          refetch={refetch}
                           authVids={authVids}
                           searchResultVideos={combinedSearchResultVideos}
-                          loading={loading}
                         />
                       </Suspense>
-                    </ErrorBoundary>
-                  </div>
+                  </ErrorBoundary>
+                    </div>
                 );
               }
             )}
@@ -258,7 +253,7 @@ function SearchResults({
             </Suspense>
           )}
 
-          {error && <ErrorFallback error={error} setIndexId={setIndexId} />}
+          {error && <ErrorFallback error={error} />}
         </div>
       )}
     </div>

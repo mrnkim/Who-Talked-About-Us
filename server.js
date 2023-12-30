@@ -113,7 +113,6 @@ app.post("/indexes", async (request, response, next) => {
     });
     response.json(apiResponse.data);
   } catch (error) {
-    console.error("Server-side error:", error);
     response.json({ error });
   }
 });
@@ -278,7 +277,7 @@ app.get("/search/:pageToken", async (request, response, next) => {
   };
 
   try {
-    const apiResponses = await TWELVE_LABS_API.get(`/search/${pageToken}`, {
+    const apiResponse = await TWELVE_LABS_API.get(`/search/${pageToken}`, {
       headers,
     });
     response.json(apiResponse.data);

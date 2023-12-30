@@ -27,7 +27,7 @@ export function useGetIndexes(page, pageLimit) {
 
 export function useGetIndex(indexId) {
   return useQuery({
-    queryKey: [keys.INDEX],
+    queryKey: [keys.INDEX, indexId],
     queryFn: async () => {
       const response = await axiosInstance.get(`${INDEXES_URL}/${indexId}`);
       if (response.data.error) {
@@ -45,14 +45,13 @@ export function useCreateIndex(setIndexId) {
       axiosInstance.post(INDEXES_URL, { indexName }).then((res) => res.data),
     onSuccess: (newIndex) => {
       setIndexId(newIndex._id);
-      queryClient.invalidateQueries([keys.INDEX]);
+      queryClient.invalidateQueries([keys.INDEX, newIndex._id]);
     },
     mutationKey: "createIndex",
   });
 }
 
 export function useDeleteIndex(setIndexId) {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexId) =>
       axiosInstance
@@ -60,7 +59,6 @@ export function useDeleteIndex(setIndexId) {
         .then((res) => res.data),
     onSuccess: (indexId) => {
       setIndexId(null);
-      queryClient.invalidateQueries([keys.INDEX]);
     },
     mutationKey: "deleteIndex",
   });

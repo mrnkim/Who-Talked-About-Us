@@ -16,7 +16,7 @@ import { VideoComponents } from "../videos/VideoComponents";
  *
  */
 
-function VideoIndex({ indexId, setIndexId }) {
+function VideoIndex({ indexId }) {
   const [vidPage, setVidPage] = useState(1);
 
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ function VideoIndex({ indexId, setIndexId }) {
   }
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [keys.INDEX] });
+    queryClient.invalidateQueries({ queryKey: [keys.INDEX, indexId] });
   }, [index]);
 
   return (
@@ -38,24 +38,20 @@ function VideoIndex({ indexId, setIndexId }) {
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => refetch()}
-        resetKeys={[keys.INDEX]}
+        resetKeys={[keys.INDEX, indexId]}
       >
         <Suspense fallback={<LoadingSpinner />}>
           {index && !index.error ? (
             <VideoComponents
               index={index}
               currIndex={currIndex}
-              setIndexId={setIndexId}
               vidPage={vidPage}
               setVidPage={setVidPage}
             />
           ) : (
             index &&
             index.error && (
-              <ErrorFallback
-                error={{ message: index.error.message }}
-                setIndexId={setIndexId}
-              />
+              <ErrorFallback error={{ message: index.error.message }} />
             )
           )}
         </Suspense>

@@ -1,9 +1,11 @@
-import React from "react";
+import { React, useContext } from "react";
+import setIndexIdContext from "./setIndexIdContext";
 import WarningIcon from "../svg/Warning.svg";
 import "./ErrorFallback.css";
 
-function ErrorFallback({ error, setIndexId }) {
-  console.log("🚀 > ErrorFallback > error=", error);
+function ErrorFallback({ error }) {
+  const { setIndexId } = useContext(setIndexIdContext);
+
   return (
     <div role="alert">
       <p>Something went wrong</p>

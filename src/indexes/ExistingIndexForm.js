@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { React, useState, useContext } from "react";
+import setIndexIdContext from "../common/setIndexIdContext";
 import InputForm from "../common/InputForm";
 import icon from "../svg/Folder.svg";
 import "./IndexForm.css";
@@ -6,12 +7,13 @@ import "./IndexForm.css";
 /** Renders the input form for an index
  *
  * App -> ExistingIndexForm -> InputForm
- * 
+ *
  */
 
-function ExistingIndexForm({ setIndexId }) {
+function ExistingIndexForm() {
   const [inputIndexId, setInputIndexId] = useState("");
   const [error, setError] = useState("");
+  const { setIndexId } = useContext(setIndexIdContext);
 
   function handleChange(evt) {
     const input = evt.target;
