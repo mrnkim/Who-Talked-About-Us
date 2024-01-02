@@ -4,6 +4,7 @@ import prevIconDisabled from "../svg/ChevronLeftDisabled.svg";
 import nextIconDisabled from "../svg/ChevronRightDisabled.svg";
 import "./PageNav.css";
 
+/** Page navigation */
 function PageNav({ page, setPage, data, isPreviousData }) {
   const nextPage = () => setPage(page + 1);
 

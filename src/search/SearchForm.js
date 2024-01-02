@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import sanitize from "sanitize-filename";
-
 import InputForm from "../common/InputForm";
 import searchIcon from "../svg/Union.svg";
 import "./SearchForm.css";

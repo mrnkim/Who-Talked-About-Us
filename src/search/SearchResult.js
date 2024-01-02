@@ -4,6 +4,12 @@ import ReactPlayer from "react-player";
 import LoadingSpinner from "../common/LoadingSpinner";
 import "./SearchResults.css";
 
+/** Shows each search result with time blocks, confidence, and video player
+ *
+ * SearchResults -> SearchResult
+ *
+ */
+
 export default function SearchResult({
   videoAuthor,
   totalSearchResults,

@@ -10,19 +10,7 @@ import UploadConfirmation from "./UploadConfirmation";
 import TaskVideo from "./TaskVideo";
 import Task from "./Task";
 import "./UploadYouTubeVideo.css";
-
-//TODO: Separate URLs into a different file
-const SERVER_BASE_URL = new URL(
-  `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
-);
-const JSON_VIDEO_INFO_URL = new URL("/json-video-info", SERVER_BASE_URL);
-const CHANNEL_VIDEO_INFO_URL = new URL("/channel-video-info", SERVER_BASE_URL);
-const PLAYLIST_VIDEO_INFO_URL = new URL(
-  "/playlist-video-info",
-  SERVER_BASE_URL
-);
-const DOWNLOAD_URL = new URL("/download", SERVER_BASE_URL);
-const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
+import apiConfig from "../apiHooks/apiConfig";
 
 /** Implements video download, submission, and indexing
  *
@@ -39,7 +27,7 @@ const UPDATE_VIDEO_URL = new URL("/update", SERVER_BASE_URL);
  *               ...
  *             ]
  *
- * App -> VideoComponents -> UploadYoutubeVideo
+ * App -> VideoComponents -> UploadYoutubeVideo -> { UploadForm, UploadConfirmation, TaskVideo, Task}
  *
  */
 
@@ -126,7 +114,7 @@ export function UploadYoutubeVideo({
   };
 
   const getJsonVideoInfo = async (videoData) => {
-    const queryUrl = JSON_VIDEO_INFO_URL;
+    const queryUrl = apiConfig.JSON_VIDEO_INFO_URL;
     queryUrl.searchParams.set("URL", videoData.url);
     try {
       const response = await fetch(queryUrl.href);
@@ -139,7 +127,7 @@ export function UploadYoutubeVideo({
   };
 
   const getChannelVideoInfo = async () => {
-    const queryUrl = CHANNEL_VIDEO_INFO_URL;
+    const queryUrl = apiConfig.CHANNEL_VIDEO_INFO_URL;
     queryUrl.searchParams.set("CHANNEL_ID", youtubeChannelId);
     try {
       const response = await fetch(queryUrl.href);
@@ -152,7 +140,7 @@ export function UploadYoutubeVideo({
   };
 
   const getPlaylistVideoInfo = async () => {
-    const queryUrl = PLAYLIST_VIDEO_INFO_URL;
+    const queryUrl = apiConfig.PLAYLIST_VIDEO_INFO_URL;
     queryUrl.searchParams.set("PLAYLIST_ID", youtubePlaylistId);
     try {
       const response = await fetch(queryUrl.href);
@@ -193,7 +181,7 @@ export function UploadYoutubeVideo({
       body: JSON.stringify(requestData),
     };
 
-    const response = await fetch(DOWNLOAD_URL.toString(), data);
+    const response = await fetch(apiConfig.DOWNLOAD_URL.toString(), data);
     const json = await response.json();
     setUploadIndexId(json.indexId);
     setTaskIds(json.taskIds);
@@ -217,7 +205,7 @@ export function UploadYoutubeVideo({
         };
         try {
           await fetch(
-            `${UPDATE_VIDEO_URL}/${currIndex}/${completeTask.video_id}`,
+            `${apiConfig.UPDATE_VIDEO_URL}/${currIndex}/${completeTask.video_id}`,
             {
               method: "PUT",
               headers: {

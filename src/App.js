@@ -11,7 +11,7 @@ import "./App.css";
  *
  * - indexId: id of an index to work with
  *
- * App -> { IndexForm, VideoIndex }
+ * App -> { ExistingIndexForm, IndexForm, VideoIndex }
  */
 
 function App() {

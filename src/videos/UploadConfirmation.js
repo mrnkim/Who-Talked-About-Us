@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import "./UploadForm.css";
 
-/** Allow an user to either proceed to index video or go back
+/** Allows an user to either proceed to index video or go back
  *
  *  UploadYouTubeVideo -> UploadConfirmation
  *

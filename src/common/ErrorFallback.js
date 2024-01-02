@@ -3,6 +3,7 @@ import setIndexIdContext from "./setIndexIdContext";
 import WarningIcon from "../svg/Warning.svg";
 import "./ErrorFallback.css";
 
+/** Component to show when there is an error */
 function ErrorFallback({ error }) {
   const { setIndexId } = useContext(setIndexIdContext);
 

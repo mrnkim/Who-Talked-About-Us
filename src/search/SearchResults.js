@@ -42,6 +42,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  /** Fetch next page search results and update combined search results */
   async function ConcatNextPageResults() {
     try {
       setLoading(true);
@@ -132,6 +133,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
     }
   }
 
+  /** Load next page search result */
   const handleLoadMore = () => {
     if (nextPageToken && !loading) {
       ConcatNextPageResults();
@@ -181,13 +183,13 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                 );
                 return (
                   <div key={index} className="searchResultWrapper">
-                      <ErrorBoundary
-                        FallbackComponent={({ error }) => (
-                          <ErrorFallback error={error} />
-                        )}
-                        onReset={() => refetch()}
-                        resetKeys={[keys.SEARCH, currIndex, finalSearchQuery]}
-                      >
+                    <ErrorBoundary
+                      FallbackComponent={({ error }) => (
+                        <ErrorFallback error={error} />
+                      )}
+                      onReset={() => refetch()}
+                      resetKeys={[keys.SEARCH, currIndex, finalSearchQuery]}
+                    >
                       <Suspense fallback={<LoadingSpinner />}>
                         <SearchResult
                           videoAuthor={videoAuthor}
@@ -196,8 +198,8 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
                           searchResultVideos={combinedSearchResultVideos}
                         />
                       </Suspense>
-                  </ErrorBoundary>
-                    </div>
+                    </ErrorBoundary>
+                  </div>
                 );
               }
             )}
