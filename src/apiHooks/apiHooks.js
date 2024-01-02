@@ -5,23 +5,16 @@ import {
   useQueryClient,
   useInfiniteQuery,
 } from "@tanstack/react-query";
-import axios from "axios";
 import keys from "./keys";
-
-//TODO: Separate out URLs into a different file and combine with the ones in UploadYouTubeVideo
-const SERVER_BASE_URL = `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`;
-const axiosInstance = axios.create({ baseURL: SERVER_BASE_URL });
-const INDEXES_URL = "/indexes";
-const SEARCH_URL = "/search";
-const TASKS_URL = "/tasks";
+import apiConfig from "./apiConfig";
 
 export function useGetIndexes(page, pageLimit) {
   return useQuery({
     queryKey: [keys.INDEXES, page],
     queryFn: () =>
-      axiosInstance
-        .get(`${INDEXES_URL}?page=${page}&page_limit=${pageLimit}`)
-        .then((res) => res.data),
+      apiConfig.TWELVE_LABS_API.get(
+        `${apiConfig.INDEXES_URL}?page=${page}&page_limit=${pageLimit}`
+      ).then((res) => res.data),
   });
 }
 
@@ -29,7 +22,9 @@ export function useGetIndex(indexId) {
   return useQuery({
     queryKey: [keys.INDEX, indexId],
     queryFn: async () => {
-      const response = await axiosInstance.get(`${INDEXES_URL}/${indexId}`);
+      const response = await apiConfig.TWELVE_LABS_API.get(
+        `${apiConfig.INDEXES_URL}/${indexId}`
+      );
       if (response.data.error) {
         return { error: response.data.error };
       }
@@ -42,7 +37,9 @@ export function useCreateIndex(setIndexId) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (indexName) =>
-      axiosInstance.post(INDEXES_URL, { indexName }).then((res) => res.data),
+      apiConfig.TWELVE_LABS_API.post(apiConfig.INDEXES_URL, { indexName }).then(
+        (res) => res.data
+      ),
     onSuccess: (newIndex) => {
       setIndexId(newIndex._id);
       queryClient.invalidateQueries([keys.INDEX, newIndex._id]);
@@ -54,10 +51,10 @@ export function useCreateIndex(setIndexId) {
 export function useDeleteIndex(setIndexId) {
   return useMutation({
     mutationFn: (indexId) =>
-      axiosInstance
-        .delete(`${INDEXES_URL}?indexId=${indexId}`)
-        .then((res) => res.data),
-    onSuccess: (indexId) => {
+      apiConfig.TWELVE_LABS_API.delete(
+        `${apiConfig.INDEXES_URL}?indexId=${indexId}`
+      ).then((res) => res.data),
+    onSuccess: () => {
       setIndexId(null);
     },
     mutationKey: "deleteIndex",
@@ -69,8 +66,8 @@ export function useGetVideos(indexId, page, pageLimit) {
     queryKey: [keys.VIDEOS, indexId, page],
     queryFn: async () => {
       try {
-        const response = await axiosInstance.get(
-          `${INDEXES_URL}/${indexId}/videos`,
+        const response = await apiConfig.TWELVE_LABS_API.get(
+          `${apiConfig.INDEXES_URL}/${indexId}/videos`,
           {
             params: { page, page_limit: pageLimit },
           }
@@ -87,9 +84,9 @@ export function useGetAllAuthors(indexId) {
   return useQuery({
     queryKey: [keys.AUTHORS, indexId],
     queryFn: () =>
-      axiosInstance
-        .get(`${INDEXES_URL}/${indexId}/authors`)
-        .then((res) => res.data),
+      apiConfig.TWELVE_LABS_API.get(
+        `${apiConfig.INDEXES_URL}/${indexId}/authors`
+      ).then((res) => res.data),
   });
 }
 
@@ -97,22 +94,26 @@ export function useSearchVideo(indexId, query) {
   return useQuery({
     queryKey: [keys.SEARCH, indexId, query],
     queryFn: () =>
-      axiosInstance
-        .post(SEARCH_URL, { indexId, query })
-        .then((res) => res.data),
+      apiConfig.TWELVE_LABS_API.post(apiConfig.SEARCH_URL, {
+        indexId,
+        query,
+      }).then((res) => res.data),
   });
 }
+
 export function useGetSearchResults(indexId, pageToken) {
   return useInfiniteQuery({
     queryKey: [keys.SEARCH, pageToken],
     queryFn: () =>
-      axiosInstance.get(`${SEARCH_URL}/${pageToken}`).then(async (res) => {
+      apiConfig.TWELVE_LABS_API.get(
+        `${apiConfig.SEARCH_URL}/${pageToken}`
+      ).then(async (res) => {
         const searchData = res.data;
 
         // Fetch videos for each search result
         const videosPromises = searchData.data.map(async (searchResult) => {
-          const videoResponse = await axiosInstance.get(
-            `${INDEXES_URL}/${indexId}/videos/${searchResult.id}`
+          const videoResponse = await apiConfig.TWELVE_LABS_API.get(
+            `${apiConfig.INDEXES_URL}/${indexId}/videos/${searchResult.id}`
           );
           return videoResponse.data;
         });
@@ -138,7 +139,9 @@ export function useGetTask(taskId) {
   return useQuery({
     queryKey: [keys.TASK, taskId],
     queryFn: () =>
-      axiosInstance.get(`${TASKS_URL}/${taskId}`).then((res) => res.data),
+      apiConfig.TWELVE_LABS_API.get(`${apiConfig.TASKS_URL}/${taskId}`).then(
+        (res) => res.data
+      ),
     refetchInterval: (data) => {
       return data?.status === "ready" ? false : 5000;
     },
@@ -158,9 +161,9 @@ export function useGetVideosOfSearchResults(indexId, query) {
     queries: initialSearchResults.map((searchResult) => ({
       queryKey: [keys.SEARCH, indexId, searchResult.id],
       queryFn: () =>
-        axiosInstance
-          .get(`${INDEXES_URL}/${indexId}/videos/${searchResult.id}`)
-          .then((res) => res.data),
+        apiConfig.TWELVE_LABS_API.get(
+          `${apiConfig.INDEXES_URL}/${indexId}/videos/${searchResult.id}`
+        ).then((res) => res.data),
     })),
   });
   const initialSearchResultVideos = resultVideos.map(({ data }) => data);
@@ -178,8 +181,8 @@ export async function fetchNextPageSearchResults(queryClient, nextPageToken) {
     const response = await queryClient.fetchQuery({
       queryKey: [keys.SEARCH, nextPageToken],
       queryFn: async () => {
-        const response = await axiosInstance.get(
-          `${SEARCH_URL}/${nextPageToken}`
+        const response = await apiConfig.TWELVE_LABS_API.get(
+          `${apiConfig.SEARCH_URL}/${nextPageToken}`
         );
         const data = response.data;
         return data;
@@ -201,8 +204,8 @@ export async function fetchNextPageSearchResultVideos(
     const response = await queryClient.fetchQuery({
       queryKey: [keys.VIDEOS, currIndex, nextPageResultId],
       queryFn: async () => {
-        const response = await axiosInstance.get(
-          `${INDEXES_URL}/${currIndex}/videos/${nextPageResultId}`
+        const response = await apiConfig.TWELVE_LABS_API.get(
+          `${apiConfig.INDEXES_URL}/${currIndex}/videos/${nextPageResultId}`
         );
         const data = response.data;
         return data;

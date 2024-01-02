@@ -14,8 +14,9 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
-const API_BASE_URL = process.env.REACT_APP_API_URL;
-const TWELVE_LABS_API = axios.create({ baseURL: API_BASE_URL });
+const TWELVE_LABS_API = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+});
 const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
 const PAGE_LIMIT_MAX = 50;
 
