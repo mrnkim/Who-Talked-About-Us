@@ -30,19 +30,19 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 ## ✨ What is it for?
 
-In my years of experience in influencer partnerships within the beauty industry, a crucial lesson has emerged: the most successful collaborations often arise organically with influencers who genuinely embrace your brand or products. Identifying these influencers can be challenging, especially when your brand isn't explicitly mentioned in video titles or descriptions. This has been a personal pain point, such as when a YouTuber features your product in a video without explicitly naming your brand, making it hard to discover through conventional searches.
+After years of experience in influencer partnerships as a marketing professional in the beauty industry, I've learned a valuable lesson in selecting the ideal YouTube or TikTok influencer for a brand. (Yes, I’m a marketing professional turned software engineer 😉). The most successful collaborations tend to happen organically with influencers who are already genuine enthusiasts of your products or brand. However, identifying these influencers can be challenging, especially when your brand isn't explicitly mentioned in video titles or descriptions. This has been a personal pain point, such as when a YouTuber features your product in a video without explicitly naming your brand, making it hard to discover through conventional searches.
 
 That's where the Who Talked About Us with Twelve Labs API can be a game-changer. Unlike traditional YouTube or TikTok searches, this API enables deep contextual video searches by extracting various elements from videos, including movements, objects, people, sounds, on-screen text, and speech. By inputting keywords or specific descriptions, such as "_applying MAC gold highlighter_," you can uncover videos discussing your brand or products with precise moments of reference. This innovative approach empowers you to build a targeted list of influencers, complete with details about the products they've mentioned and the context, providing valuable insights for more effective engagement and meaningful connections.
 
-<img src="public/searchResult.png" alt="search result screenshot" style="border: 1px solid black;" />
+<img src="public/search_demonstration.gif" alt="search result screenshot" style="border: 1px solid black;" />
 
-In the search results (see the image above), you can effortlessly identify videos by Jean Watts, Allure, and Ssin that mention "_MAC gold highlighter_," along with the exact moments of reference. In contrast, the videos from Hindash, Risabae, and Vogue did not feature such mentions. Armed with this comprehensive result, you can strategically prioritize reaching out to influencers like Jean, Allure, and Ssin, armed with the right context for more impactful collaborations.
+From the bottom of the search results, you can effortlessly identify that Jean Watts, Risabae, Glamzilla, and Smitha Deepak mention "_MAC gold highlighter_," in their videos along with the exact moments of references. In contrast, the videos from 18 influencers including British Vogue did not feature such mentions. Armed with this comprehensive result, you can strategically prioritize reaching out to influencers like Jean and Risabe, armed with the right context for more impactful collaborations.
 
 ## 🚘 How to Use
 
-1. Either create a new index or provide an index id of the existing index that you already created/uploaded videos *through this app* before. You can look up the index ids by [listing indexes](https://docs.twelvelabs.io/v1.2/reference/list-indexes).
+1. Either create a new index or provide an index id of the existing index that you already created/uploaded videos _directly through this app_ before. You can look up the index ids by [listing indexes](https://docs.twelvelabs.io/v1.2/reference/list-indexes).
 
-   * This app *only* supports the videos uploaded/indexed directly through this app
+   - This app _only_ supports the videos uploaded/indexed directly through this app
 
 2. Once you are inside an index, Begin by uploading videos in bulk to the app using either YouTube [playlist ID](https://www.sociablekit.com/find-youtube-playlist-id/#:~:text=Go%20to%20your%20target%20YouTube,playlist%20ID%20is%20PLFs4vir_WsTwEd%2DnJgVJCZPNL3HALHHpF), [channel ID](https://mixedanalytics.com/blog/find-a-youtube-channel-id/), or JSON file.
 
@@ -90,8 +90,8 @@ In the search results (see the image above), you can effortlessly identify video
    - You can simply copy-paste the above and customize the values
    - `REACT_APP_API_URL`: This app supports v1.1
    - `REACT_APP_API_KEY`: Store the API Key that you generated in the previous step
-   - `REACT_APP_SERVER_URL`: It could be something like "http://localhost"
-   - `REACT_APP_PORT_NUMBER`: Set a port number you want to use (e.g., 4001)
+   - `REACT_APP_SERVER_URL`: It could be something like `http://localhost`
+   - `REACT_APP_PORT_NUMBER`: Set a port number you want to use (e.g., `4001`)
 
 ### Step 2. Start the App
 
@@ -119,4 +119,3 @@ In the search results (see the image above), you can effortlessly identify video
 - Add more tests (or automate testing)
 - Improve error handling and add data validations
 - Make it mobile-friendly
-
