@@ -12,7 +12,7 @@ import "./IndexBar.css";
  *
  */
 
-export function IndexBar({ index, videosData }) {
+export function IndexBar({ index }) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showIndexId, setShowIndexId] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -56,13 +56,7 @@ export function IndexBar({ index, videosData }) {
           <div className="indexBar">
             <i className="bi bi-folder"></i>
             <span className="indexName">{index.index_name}</span>
-            <span>
-              (
-              {videosData &&
-                videosData.page_info &&
-                videosData.page_info.total_results}{" "}
-              videos)
-            </span>
+            <span>({index && index.video_count} videos)</span>
             {showIndexId && <div className="indexId">Id: {index._id}</div>}
           </div>
 

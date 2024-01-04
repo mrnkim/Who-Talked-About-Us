@@ -13,7 +13,6 @@ import VideoList from "../videos/VideoList";
 import backIcon from "../svg/Back.svg";
 import infoIcon from "../svg/Info.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
-import { IndexBar } from "../indexes/IndexBar";
 import "./VideoComponents.css";
 import setIndexIdContext from "../common/setIndexIdContext";
 
@@ -21,13 +20,18 @@ const VID_PAGE_LIMIT = 12;
 
 /** Components that include interaction with videos
  *
- *  VideoIndex -> VideoComponents -> { IndexBar, UploadYouTubeVideo, VideoList,
- *  PageNav, SearchForm, SearchResults }
+ *  VideoIndex -> VideoComponents -> { UploadYouTubeVideo, VideoList, PageNav,
+ *  SearchForm, SearchResults }
  *
  */
 
-export function VideoComponents({ index, currIndex, vidPage, setVidPage }) {
-  const [taskVideos, setTaskVideos] = useState(null);
+export function VideoComponents({
+  currIndex,
+  vidPage,
+  setVidPage,
+  taskVideos,
+  setTaskVideos,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,8 +68,6 @@ export function VideoComponents({ index, currIndex, vidPage, setVidPage }) {
 
   return (
     <>
-      <IndexBar index={index} videosData={videosData} />
-
       <div className="videoUploadForm">
         <div className="display-6 m-4">Upload New Videos</div>
         <UploadYoutubeVideo
@@ -96,13 +98,13 @@ export function VideoComponents({ index, currIndex, vidPage, setVidPage }) {
         <div>
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
-            <div className="m-auto p-3">
+            {/* <div className="m-auto p-3"> */}
               <SearchForm
                 setSearchQuery={setSearchQuery}
                 searchQuery={searchQuery}
                 setFinalSearchQuery={setFinalSearchQuery}
               />
-            </div>
+            {/* </div> */}
           </div>
 
           {!finalSearchQuery && (

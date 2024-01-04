@@ -8,16 +8,18 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import keys from "../apiHooks/keys";
 import { useQueryClient } from "@tanstack/react-query";
 import { VideoComponents } from "../videos/VideoComponents";
+import { IndexBar } from "./IndexBar";
 
 /**
  * Show video list and videos, search form and search result list
  *
- * App -> VideoIndex -> { VideoComponents}
+ * App -> VideoIndex -> { IndexBar, VideoComponents}
  *
  */
 
 function VideoIndex({ indexId }) {
   const [vidPage, setVidPage] = useState(1);
+  const [taskVideos, setTaskVideos] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -31,7 +33,7 @@ function VideoIndex({ indexId }) {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: [keys.INDEX, indexId] });
-  }, [index]);
+  }, [index, taskVideos]);
 
   return (
     <Container className="m-auto defaultContainer">
@@ -42,12 +44,16 @@ function VideoIndex({ indexId }) {
       >
         <Suspense fallback={<LoadingSpinner />}>
           {index && !index.error ? (
-            <VideoComponents
-              index={index}
-              currIndex={currIndex}
-              vidPage={vidPage}
-              setVidPage={setVidPage}
-            />
+            <>
+              <IndexBar index={index} />
+              <VideoComponents
+                currIndex={currIndex}
+                vidPage={vidPage}
+                setVidPage={setVidPage}
+                taskVideos={taskVideos}
+                setTaskVideos={setTaskVideos}
+              />
+            </>
           ) : (
             index &&
             index.error && (

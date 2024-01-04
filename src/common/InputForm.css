@@ -1,6 +1,7 @@
 .inputContainer {
     display: flex;
     align-items: center;
+    width: 100%;
   }
 
   .primaryButton {
@@ -38,7 +39,8 @@
 
   .searchTextField {
     display: flex;
-    min-width: 60rem;
+    width: 100%;
+    max-width: 75rem;
     min-height: 4rem;
     padding-top: 12px;
     flex-direction: column;
