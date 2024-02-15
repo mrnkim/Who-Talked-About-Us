@@ -195,7 +195,7 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 
       if (apiResponse && apiResponse.data.length > 0) {
         apiResponse.data.forEach((video) => {
-          const sanitizedAuthor = sanitize(`${video.metadata.author}`);
+          const sanitizedAuthor = sanitize(`${video.user_metadata.author}`);
           authors.add(sanitizedAuthor);
         });
 

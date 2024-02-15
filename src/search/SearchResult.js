@@ -53,7 +53,7 @@ export default function SearchResult({
                         `${
                           searchResultVideos.find(
                             (vid) => vid._id === clip.video_id
-                          )?.metadata.youtubeUrl
+                          )?.user_metadata.youtubeUrl
                         }` + `?start=${clip.start}&end=${clip.end}`
                       }
                       controls
