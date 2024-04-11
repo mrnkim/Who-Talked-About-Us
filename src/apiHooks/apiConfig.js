@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const SERVER_BASE_URL = new URL(
-  `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`,
+  "https://8a7fb366-3782-4255-8662-e26c6fceea84-00-ljb8152puy0z.worf.replit.dev:3000",
 );
 
 const apiConfig = {
