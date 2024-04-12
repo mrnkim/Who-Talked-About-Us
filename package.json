@@ -16,7 +16,7 @@
     "bootstrap-icons": "^1.10.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "os": "^0.1.2",
