@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
-
-const SERVER_BASE_URL = new URL(`http://localhost:${PORT_NUMBER}`);
+const SERVER_BASE_URL = new URL(
+  `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
+);
 
 const apiConfig = {
   TWELVE_LABS_API: axios.create({
