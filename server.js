@@ -15,7 +15,7 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: "https://api.twelvelabs.io/v1.1",
 });
 const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
 const PAGE_LIMIT_MAX = 50;
@@ -44,7 +44,7 @@ process.on("uncaughtException", function (exception) {
 });
 
 /** Set up Express server to listen on port */
-app.listen(PORT_NUMBER, () => {
+app.listen(PORT_NUMBER, "0.0.0.0", () => {
   console.log(`Server Running. Listening on port ${PORT_NUMBER}`);
 });
 
