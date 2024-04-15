@@ -71,46 +71,64 @@ From the bottom of the search results, you can effortlessly identify that Jean W
 
 ## 🔑 Getting Started
 
-### Step 1. Generate API Key and Create .env File
+### Step 1. Generate Twelve Labs API Key
 
-1. Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate your API Key
-   - Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
+Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate your API Key
+
+- Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
+
+### Step 2. Start the App (Option 1 - Local Machine)
+
+1. Clone the current repo
+
+   ```sh
+   git clone git@github.com:mrnkim/Who-Talked-About-Us.git
+   ```
+
 2. Create `.env` file in the root directory and update the values for each key
 
    ```
     .env
 
-    REACT_APP_API_URL=https://api.twelvelabs.io/v1.1
     REACT_APP_API_KEY=<YOUR API KEY>
-    REACT_APP_SERVER_URL=<YOUR SERVER URL>
-    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER>
-
+    REACT_APP_SERVER_URL=<YOUR SERVER URL> //e.g., http://localhost
+    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER> //e.g., 4001
    ```
 
-   - You can simply copy-paste the above and customize the values
-   - `REACT_APP_API_URL`: This app supports v1.1
-   - `REACT_APP_API_KEY`: Store the API Key that you generated in the previous step
-   - `REACT_APP_SERVER_URL`: It could be something like `http://localhost`
-   - `REACT_APP_PORT_NUMBER`: Set a port number you want to use (e.g., `4001`)
-
-### Step 2. Start the App
-
-1. Clone the current repo
-   ```sh
-   git clone git@github.com:mrnkim/Who-Talked-About-Us.git
-   ```
-2. Start the server
+3. Start the server
 
    ```sh
-   nodemon server.js
+   node server.js
    ```
 
-3. Install and start the client
+4. Install and start the client
 
    ```sh
    npm install
    npm start
    ```
+
+### Step 2. Start the App (Option 2 - Replit)
+
+1. Click the button below and fork the repl
+
+   [![Run on Replit](https://replit.com/badge/github/mrnkim/Who-Talked-About-Us)](https://replit.com/@twelvelabs/Who-Talked-About-Us)
+
+2. Update Secrets (equivalent to .env)
+
+   ```
+   .env
+
+   REACT_APP_API_KEY=<YOUR API KEY>
+   REACT_APP_PORT_NUMBER=4000
+   ```
+
+3. Open "Shell" tab and run `node server.js`
+4. Open "Networking" tab and copy "Dev URL" excluding `/` at the end
+   (e.g., `https://8a7fb366-3782-4255-8662-e26c6fceea84-00-ljb8152puy0z.worf.replit.dev`)
+5. Open "apiConfig.js" file and replace
+   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}` in line 4 with `<YOUR DEV URL>:3000`
+6. Click Run again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
