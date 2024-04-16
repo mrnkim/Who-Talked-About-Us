@@ -17,7 +17,9 @@ const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
   baseURL: "https://api.twelvelabs.io/v1.1",
 });
-const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER;
+const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER
+  ? process.env.REACT_APP_PORT_NUMBER
+  : 4000;
 const PAGE_LIMIT_MAX = 50;
 
 /** Set up middleware for Express */

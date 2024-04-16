@@ -40,6 +40,8 @@ From the bottom of the search results, you can effortlessly identify that Jean W
 
 ## 🚘 How to Use
 
+[![Run on Replit](https://replit.com/badge/github/mrnkim/Who-Talked-About-Us)](https://replit.com/@twelvelabs/Who-Talked-About-Us)
+
 1. Either create a new index or provide an index id of the existing index that you already created/uploaded videos _directly through this app_ before. You can look up the index ids by [listing indexes](https://docs.twelvelabs.io/v1.2/reference/list-indexes).
 
    - This app _only_ supports the videos uploaded/indexed directly through this app
@@ -77,7 +79,21 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
 
 - Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
 
-### Step 2. Start the App (Option 1 - Local Machine)
+### Step 2 (Option 1). Start the App on Replit
+
+1. Click the button below and fork the repl
+
+   [![Run on Replit](https://replit.com/badge/github/mrnkim/Who-Talked-About-Us)](https://replit.com/@twelvelabs/Who-Talked-About-Us)
+
+2. Update Secrets (equivalent to .env)
+
+   ```
+   .env
+
+   REACT_APP_API_KEY=<YOUR API KEY>
+   ```
+
+### Step 2 (Option 2). Start the App Locally
 
 1. Clone the current repo
 
@@ -92,7 +108,7 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
 
     REACT_APP_API_KEY=<YOUR API KEY>
     REACT_APP_SERVER_URL=<YOUR SERVER URL> //e.g., http://localhost
-    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER> //e.g., 4001
+    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER> // Set as 4000 by default. Change the value as needed.
    ```
 
 3. Start the server
@@ -108,32 +124,10 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
    npm start
    ```
 
-### Step 2. Start the App (Option 2 - Replit)
-
-1. Click the button below and fork the repl
-
-   [![Run on Replit](https://replit.com/badge/github/mrnkim/Who-Talked-About-Us)](https://replit.com/@twelvelabs/Who-Talked-About-Us)
-
-2. Update Secrets (equivalent to .env)
-
-   ```
-   .env
-
-   REACT_APP_API_KEY=<YOUR API KEY>
-   REACT_APP_PORT_NUMBER=4000
-   ```
-
-3. Open "Shell" tab and run `node server.js`
-4. Open "Networking" tab and copy "Dev URL" excluding `/` at the end
-   (e.g., `https://8a7fb366-3782-4255-8662-e26c6fceea84-00-ljb8152puy0z.worf.replit.dev`)
-5. Open "apiConfig.js" file and replace
-   `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}` in line 4 with `<YOUR DEV URL>:3000`
-6. Click Run again!
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🎯 What is Next?
 
-- Add more tests (or automate testing)
+- Add more tests
 - Improve error handling and add data validations
 - Make it mobile-friendly
