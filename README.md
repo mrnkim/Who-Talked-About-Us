@@ -86,8 +86,6 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
 2. Update Secrets (equivalent to .env)
 
    ```
-   .env
-
    REACT_APP_API_KEY=<YOUR API KEY>
    ```
 
