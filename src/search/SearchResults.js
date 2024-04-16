@@ -51,7 +51,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         queryClient,
         nextPageToken
       );
-      console.log("🚀 > ConcatNextPageResults > nextPageResultsData=", nextPageResultsData)
 
       const nextPageResults = nextPageResultsData.data;
       const nextPageResultVideosPromises = nextPageResults.map(
