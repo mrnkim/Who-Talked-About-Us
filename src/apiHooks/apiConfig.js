@@ -3,8 +3,7 @@ import axios from "axios";
 const SERVER_BASE_URL = window.location.hostname?.includes("replit")
   ? new URL(`https://${window.location.hostname}:3000`)
   : new URL(
-      process.env.VERCEL_URL ||
-        `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`
+      `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_PORT_NUMBER}`,
     );
 
 const apiConfig = {

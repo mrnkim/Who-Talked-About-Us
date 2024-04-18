@@ -46,7 +46,7 @@ process.on("uncaughtException", function (exception) {
 });
 
 /** Set up Express server to listen on port */
-app.listen(PORT_NUMBER, () => {
+app.listen(PORT_NUMBER, "0.0.0.0", () => {
   console.log(`Server Running. Listening on port ${PORT_NUMBER}`);
 });
 
