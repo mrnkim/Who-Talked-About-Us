@@ -1,4 +1,4 @@
-import { React, Suspense } from "react";
+import { React, Suspense, useState } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -16,6 +16,8 @@ export default function SearchResult({
   authVids,
   searchResultVideos,
 }) {
+  const [thumbnailClicked, setThumbnailClicked] = useState(false);
+
   /** Function to convert seconds to "mm:ss" format */
   function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -48,19 +50,32 @@ export default function SearchResult({
                     className="mb-4 mt-2"
                     key={clip.video_id + "-" + index}
                   >
-                    <ReactPlayer
-                      url={
-                        `${
-                          searchResultVideos.find(
-                            (vid) => vid._id === clip.video_id
-                          )?.metadata.youtubeUrl
-                        }` + `?start=${clip.start}&end=${clip.end}`
-                      }
-                      controls
-                      width="100%"
-                      height="100%"
-                      light={clip.thumbnail_url}
-                    />
+                    <div
+                      onClick={() => setThumbnailClicked(true)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <ReactPlayer
+                        url={
+                          `${
+                            searchResultVideos.find(
+                              (vid) => vid._id === clip.video_id
+                            )?.metadata.youtubeUrl
+                          }` + `?start=${clip.start}&end=${clip.end}`
+                        }
+                        controls
+                        width="100%"
+                        height="100%"
+                        light={
+                          <img
+                            src={clip.thumbnail_url}
+                            width="100%"
+                            height="100%"
+                            alt="clipThumbnail"
+                          />
+                        }
+                        playing={thumbnailClicked}
+                      />
+                    </div>
                     <div className="resultDescription">
                       Start {formatTime(clip.start)} | End{" "}
                       {formatTime(clip.end)} |{" "}
