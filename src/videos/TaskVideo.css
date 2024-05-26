@@ -1,8 +1,23 @@
+.taskVideoContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 .taskVideo {
-    flex: 0 0 calc(25% - 16px);
-    margin: 8px;
-  }
+  flex: 0 0 calc(25% - 16px);
+  margin: 8px;
+  box-sizing: border-box;
+}
 
 .taskVideoTitle {
-    font-size: 0.75rem;
-  }
+  font-size: 0.75rem;
+}
+
+/* Ensure the task video has a consistent size */
+.taskVideoWrapper {
+  width: 100%;
+  max-width: 250px;
+  min-width: 200px;
+  margin: auto;
+}

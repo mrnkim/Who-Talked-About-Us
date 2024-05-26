@@ -15,7 +15,7 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
-  baseURL: "https://api.twelvelabs.io/v1.1",
+  baseURL: "https://api.twelvelabs.io/v1.2",
 });
 const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER
   ? process.env.REACT_APP_PORT_NUMBER
@@ -230,8 +230,9 @@ app.post("/search", async (request, response, next) => {
     query: request.body.query,
     group_by: "video",
     sort_option: "clip_count",
-    threshold: "medium",
-    page_limit: 2,
+    threshold: "high",
+    adjust_confidence_level: 1,
+    page_limit: 5,
   };
 
   try {
@@ -349,6 +350,27 @@ const indexVideo = async (videoPath, indexId) => {
 
   return await response.data;
 };
+
+/** Takes a YouTube url and initiates the indexing process */
+app.post("/indexVideo", async (request, response, next) => {
+  const data = request.body;
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": TWELVE_LABS_API_KEY,
+    accept: "application/json",
+  };
+
+  try {
+    const apiResponse = await TWELVE_LABS_API.post(
+      `/tasks/external-provider`,
+      data,
+      { headers }
+    );
+    response.json(apiResponse.data);
+  } catch (error) {
+    return next(error);
+  }
+});
 
 /**************************** OTHER CALLS *************************************/
 

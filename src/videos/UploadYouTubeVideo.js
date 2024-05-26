@@ -43,7 +43,7 @@ export function UploadYoutubeVideo({
   const [selectedJSON, setSelectedJSON] = useState(null);
   const [youtubeChannelId, setYoutubeChannelId] = useState("");
   const [youtubePlaylistId, setYoutubePlaylistId] = useState("");
-  const [taskIds, setTaskIds] = useState(null);
+  const [taskIds, setTaskIds] = useState([]);
   const [completeTasks, setCompleteTasks] = useState([]);
   const [failedTasks, setFailedTasks] = useState([]);
   const [uploadIndexId, setUploadIndexId] = useState(null);
@@ -158,77 +158,51 @@ export function UploadYoutubeVideo({
       "Do not refresh the page while videos are uploading. You can still do the search!"
     );
 
-    const videoData = taskVideos.map((taskVideo) => {
-      return {
-        url: taskVideo.video_url || taskVideo.url,
-        title: taskVideo.title,
-        authorName: taskVideo.author.name,
-        thumbnails: taskVideo.thumbnails,
-      };
-    });
+    try {
+      const results = await Promise.all(
+        taskVideos.map(async (taskVideo) => {
+          const response = await fetch(apiConfig.INDEX_URL.toString(), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              url: taskVideo.video_url || taskVideo.shortUrl,
+              index_id: currIndex,
+            }),
+          });
 
-    const requestData = {
-      videoData: videoData,
-      index_id: currIndex,
-    };
+          if (!response.ok) {
+            throw new Error(`Failed to index video: ${response.statusText}`);
+          }
 
-    const data = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    };
-
-    const response = await fetch(apiConfig.DOWNLOAD_URL.toString(), data);
-    const json = await response.json();
-    setUploadIndexId(json.indexId);
-    setTaskIds(json.taskIds);
-  };
-
-  async function updateMetadata() {
-    const updatePromises = completeTasks.map(async (completeTask) => {
-      const matchingVid = taskVideos.find(
-        (taskVid) =>
-          `${sanitize(taskVid.title)}.mp4` === completeTask.metadata.filename
-      );
-      if (matchingVid) {
-        const authorName = matchingVid.author.name;
-        const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
-        const data = {
-          metadata: {
-            author: authorName,
-            youtubeUrl: youtubeUrl,
-            whoTalkedAboutUs: true,
-          },
-        };
-        try {
-          await fetch(
-            `${apiConfig.UPDATE_VIDEO_URL}/${currIndex}/${completeTask.video_id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            }
+          const taskId = await response.json();
+          setUploadIndexId(currIndex);
+          const videoData = {
+            url: taskVideo.video_url || taskVideo.url,
+            title: taskVideo.title,
+            authorName: taskVideo.author.name,
+            thumbnails: taskVideo.thumbnails,
+          };
+          setTaskIds((prevIds) =>
+            Array.isArray(prevIds)
+              ? [...prevIds, { ...taskId, videoData }]
+              : [{ ...taskId, videoData }]
           );
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    });
-    await Promise.all(updatePromises);
-  }
+        })
+      );
+    } catch (error) {
+      console.error("Error indexing videos:", error);
+    }
+  };
 
   useEffect(() => {
     if (
       taskIds &&
       taskVideos &&
-      taskIds.length === completeTasks.length + failedTasks.length
+      taskIds?.length === completeTasks?.length + failedTasks?.length
     ) {
-      updateMetadata();
+      // updateMetadata();
       handleReset();
       refetchVideos();
     }
@@ -277,49 +251,44 @@ export function UploadYoutubeVideo({
         </>
       )}
 
-      {taskVideos && isSubmitting && !taskIds && (
+      {taskVideos && isSubmitting && (
         <div className="wrapper">
           <Container className="mainMessageWrapper">{mainMessage}</Container>
-
           <div className="taskVideoContainer">
-            {taskVideos.map((taskVideo) => (
-              <ErrorBoundary
-                FallbackComponent={ErrorFallback}
-                key={taskVideo.id || taskVideo.videoId}
-              >
-                <Suspense fallback={<LoadingSpinner />}>
-                  <div className="taskVideo">
-                    <TaskVideo taskVideo={taskVideo} />
-                    <div className="downloadSubmit">
-                      <LoadingSpinner />
-                      Downloading & Submitting
+            {taskVideos.map((taskVideo) => {
+              const matchingTaskId = taskIds?.find(
+                (taskId) =>
+                  taskId.videoData.url === taskVideo.video_url || taskVideo.url
+              );
+              return (
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallback}
+                  key={taskVideo.id || taskVideo.videoId}
+                >
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <div className="taskVideo">
+                      <TaskVideo taskVideo={taskVideo} />
+                      <div className="downloadSubmit">
+                        {/* <LoadingSpinner /> */}
+                        {matchingTaskId ? (
+                          <Task
+                            taskId={matchingTaskId}
+                            setCompleteTasks={setCompleteTasks}
+                            setFailedTasks={setFailedTasks}
+                          />
+                        ) : (
+                          <>
+                            <LoadingSpinner />
+                            Downloading & Submitting
+                          </>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            ))}
+                  </Suspense>
+                </ErrorBoundary>
+              );
+            })}
           </div>
-        </div>
-      )}
-
-      {taskVideos && isSubmitting && taskIds && (
-        <div className="taskVideoContainer">
-          {taskIds.map((taskId) => (
-            <ErrorBoundary FallbackComponent={ErrorFallback} key={taskId._id}>
-              <Suspense fallback={<LoadingSpinner />}>
-                <div className="taskVideo">
-                  <TaskVideo taskVideo={taskId.videoData} />
-                  <div className="downloadSubmit">
-                    <Task
-                      taskId={taskId}
-                      setCompleteTasks={setCompleteTasks}
-                      setFailedTasks={setFailedTasks}
-                    />
-                  </div>
-                </div>
-              </Suspense>
-            </ErrorBoundary>
-          ))}
         </div>
       )}
     </div>
