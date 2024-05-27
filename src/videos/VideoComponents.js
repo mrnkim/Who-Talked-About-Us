@@ -98,13 +98,11 @@ export function VideoComponents({
         <div>
           <div className="videoSearchForm">
             <div className="title">Search Videos</div>
-            {/* <div className="m-auto p-3"> */}
-              <SearchForm
-                setSearchQuery={setSearchQuery}
-                searchQuery={searchQuery}
-                setFinalSearchQuery={setFinalSearchQuery}
-              />
-            {/* </div> */}
+            <SearchForm
+              setSearchQuery={setSearchQuery}
+              searchQuery={searchQuery}
+              setFinalSearchQuery={setFinalSearchQuery}
+            />
           </div>
 
           {!finalSearchQuery && (
@@ -144,6 +142,7 @@ export function VideoComponents({
                         <VideoList
                           videos={videos}
                           refetchVideos={refetchVideos}
+                          currIndex={currIndex}
                         />
                       </Suspense>
                     )}

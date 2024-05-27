@@ -80,6 +80,25 @@ export function useGetVideos(indexId, page, pageLimit) {
   });
 }
 
+export async function fetchVideo(queryClient, indexId, videoId) {
+  try {
+    const response = await queryClient.fetchQuery({
+      queryKey: [keys.VIDEO, indexId, videoId],
+      queryFn: async () => {
+        const response = await apiConfig.TWELVE_LABS_API.get(
+          `${apiConfig.INDEXES_URL}/${indexId}/videos/${videoId}`
+        );
+        const data = response.data;
+        return data;
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching next page of search results:", error);
+    throw error;
+  }
+}
+
 export function useGetAllAuthors(indexId) {
   return useQuery({
     queryKey: [keys.AUTHORS, indexId],

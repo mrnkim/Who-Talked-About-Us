@@ -150,7 +150,6 @@ app.get("/indexes/:indexId/videos", async (request, response, next) => {
   const params = {
     page: request.query.page,
     page_limit: request.query.page_limit,
-    whoTalkedAboutUs: true,
   };
 
   try {
