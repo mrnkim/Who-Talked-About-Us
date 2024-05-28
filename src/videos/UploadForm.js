@@ -100,7 +100,9 @@ function UploadForm({
           Cancel
         </button>
       </Container>
-      <Container className="mainMessageWrapper">{mainMessage}</Container>
+      {mainMessage && (
+        <Container className="mainMessageWrapper">{mainMessage}</Container>
+      )}
     </Container>
   );
 }

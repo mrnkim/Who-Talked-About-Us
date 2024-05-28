@@ -214,24 +214,24 @@ export async function fetchNextPageSearchResults(queryClient, nextPageToken) {
   }
 }
 
-export async function fetchIndexingTask(queryClient, nextPageToken) {
-  try {
-    const response = await queryClient.fetchQuery({
-      queryKey: [keys.SEARCH, nextPageToken],
-      queryFn: async () => {
-        const response = await apiConfig.TWELVE_LABS_API.get(
-          `${apiConfig.SEARCH_URL}/${nextPageToken}`
-        );
-        const data = response.data;
-        return data;
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error("Error fetching next page of search results:", error);
-    throw error;
-  }
-}
+// export async function fetchIndexingTask(queryClient, nextPageToken) {
+//   try {
+//     const response = await queryClient.fetchQuery({
+//       queryKey: [keys.SEARCH, nextPageToken],
+//       queryFn: async () => {
+//         const response = await apiConfig.TWELVE_LABS_API.get(
+//           `${apiConfig.SEARCH_URL}/${nextPageToken}`
+//         );
+//         const data = response.data;
+//         return data;
+//       },
+//     });
+//     return response;
+//   } catch (error) {
+//     console.error("Error fetching next page of search results:", error);
+//     throw error;
+//   }
+// }
 
 export async function fetchNextPageSearchResultVideos(
   queryClient,

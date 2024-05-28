@@ -154,9 +154,9 @@ export function UploadYoutubeVideo({
 
   const indexYouTubeVideos = async () => {
     setIsSubmitting(true);
-    updateMainMessage(
-      "Do not refresh the page while videos are uploading. You can still do the search!"
-    );
+    // updateMainMessage(
+    //   "Do not refresh the page while videos are 'Uploading'. You can still do the search!"
+    // );
 
     try {
       const results = await Promise.all(
@@ -279,7 +279,7 @@ export function UploadYoutubeVideo({
                         ) : (
                           <>
                             <LoadingSpinner />
-                            Downloading & Submitting
+                            Uploading...
                           </>
                         )}
                       </div>

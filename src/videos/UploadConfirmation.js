@@ -41,8 +41,9 @@ function UploadConfirmation({
           </button>
         </Container>
       </Container>
-
-      <Container className="mainMessageWrapper">{mainMessage}</Container>
+      {mainMessage && (
+        <Container className="mainMessageWrapper">{mainMessage}</Container>
+      )}{" "}
     </Container>
   );
 }

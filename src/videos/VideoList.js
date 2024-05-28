@@ -43,11 +43,14 @@ function VideoList({ videos, refetchVideos, currIndex }) {
     return <LoadingSpinner />;
   }
 
+  const filteredVideosInfo = videosInfo.filter(
+    (videoInfo) => videoInfo?.indexed_at
+  );
   const numVideos = videosInfo.length;
 
   return (
     <>
-      {videosInfo?.map((videoInfo, index) => (
+      {filteredVideosInfo?.map((videoInfo, index) => (
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onReset={() => refetchVideos()}

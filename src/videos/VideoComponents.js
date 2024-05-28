@@ -118,7 +118,7 @@ export function VideoComponents({
                   <div className="subtitle">
                     All Influencers in Index ({authors?.length || 0}){" "}
                   </div>
-                  {authors.map((author) => (
+                  {authors.sort().map((author) => (
                     <div key={author} className="channelPill">
                       <Suspense fallback={<LoadingSpinner />}>
                         {author}
