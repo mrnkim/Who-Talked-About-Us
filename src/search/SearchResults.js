@@ -108,7 +108,7 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
           (searchResultVideo) => searchResultVideo._id === videoId
         );
         if (video) {
-          const videoAuthor = video.metadata?.author;
+          const videoAuthor = video.source?.name || video.metadata?.author;
           const videoTitle = video.metadata?.filename.replace(".mp4", "");
           if (!organizedResults[videoAuthor]) {
             organizedResults[videoAuthor] = {};

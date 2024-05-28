@@ -57,9 +57,9 @@ export default function SearchResult({
                       <ReactPlayer
                         url={
                           `${
-                            searchResultVideos.find(
-                              (vid) => vid._id === clip.video_id
-                            )?.metadata.youtubeUrl
+                            searchResultVideos.find((vid) => {
+                              return vid._id === clip.video_id;
+                            })?.source?.url
                           }` + `?start=${clip.start}&end=${clip.end}`
                         }
                         controls
@@ -70,11 +70,10 @@ export default function SearchResult({
                             src={clip.thumbnail_url}
                             width="100%"
                             height="100%"
-                            alt="clipThumbnail"
                           />
                         }
                         playing={thumbnailClicked}
-                      />
+                      ></ReactPlayer>
                     </div>
                     <div className="resultDescription">
                       Start {formatTime(clip.start)} | End{" "}
