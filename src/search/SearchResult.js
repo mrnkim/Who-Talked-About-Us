@@ -70,6 +70,7 @@ export default function SearchResult({
                             src={clip.thumbnail_url}
                             width="100%"
                             height="100%"
+                            alt="clip thumbnail"
                           />
                         }
                         playing={thumbnailClicked}

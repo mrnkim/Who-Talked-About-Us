@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Container } from "react-bootstrap";
-import sanitize from "sanitize-filename";
 import ErrorFallback from "../common/ErrorFallback";
 import infoIcon from "../svg/Info.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -154,9 +153,6 @@ export function UploadYoutubeVideo({
 
   const indexYouTubeVideos = async () => {
     setIsSubmitting(true);
-    // updateMainMessage(
-    //   "Do not refresh the page while videos are 'Uploading'. You can still do the search!"
-    // );
 
     try {
       const results = await Promise.all(
@@ -202,7 +198,6 @@ export function UploadYoutubeVideo({
       taskVideos &&
       taskIds?.length === completeTasks?.length + failedTasks?.length
     ) {
-      // updateMetadata();
       handleReset();
       refetchVideos();
     }

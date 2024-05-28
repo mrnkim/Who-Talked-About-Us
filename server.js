@@ -3,14 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const ytdl = require("ytdl-core");
 const ytpl = require("ytpl");
-const fs = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
 const axios = require("axios").default;
 const ytch = require("yt-channel-info");
-const sanitize = require("sanitize-filename");
-const util = require("util");
-const streamPipeline = util.promisify(require("stream").pipeline);
 
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
@@ -173,7 +169,6 @@ app.get("/indexes/:indexId/videos", async (request, response, next) => {
 });
 
 /** Get all authors of an index */
-/** Get all authors of an index */
 app.get("/indexes/:indexId/authors", async (request, response, next) => {
   const indexId = request.params.indexId;
   const headers = {
@@ -299,28 +294,6 @@ app.get("/search/:pageToken", async (request, response, next) => {
   }
 });
 
-/** Updates a video's metadata */
-app.put("/update/:indexId/:videoId", async (request, response, next) => {
-  const indexId = request.params.indexId;
-  const videoId = request.params.videoId;
-  const data = request.body;
-  const headers = {
-    "Content-Type": "application/json",
-    "x-api-key": TWELVE_LABS_API_KEY,
-  };
-
-  try {
-    const apiResponse = await TWELVE_LABS_API.put(
-      `/indexes/${indexId}/videos/${videoId}`,
-      data,
-      { headers }
-    );
-    response.json(apiResponse.data);
-  } catch (error) {
-    return next(error);
-  }
-});
-
 /** Check the status of a specific indexing task */
 app.get("/tasks/:taskId", async (request, response, next) => {
   const taskId = request.params.taskId;
@@ -338,27 +311,6 @@ app.get("/tasks/:taskId", async (request, response, next) => {
     return next(error);
   }
 });
-
-/** Takes a downloaded video and initiates the indexing process */
-const indexVideo = async (videoPath, indexId) => {
-  const headers = {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "multipart/form-data",
-      "x-api-key": TWELVE_LABS_API_KEY,
-    },
-  };
-
-  let params = {
-    index_id: indexId,
-    video_file: fs.createReadStream(videoPath),
-    language: "en",
-  };
-
-  const response = await TWELVE_LABS_API.post("/tasks", params, headers);
-
-  return await response.data;
-};
 
 /** Takes a YouTube url and initiates the indexing process */
 app.post("/indexVideo", async (request, response, next) => {
@@ -426,106 +378,3 @@ app.get("/playlist-video-info", async (request, response, next) => {
     return next(error);
   }
 });
-
-/** Download and index videos for analysis, returning task IDs and index ID */
-app.post(
-  "/download",
-  bodyParser.urlencoded(),
-  async (request, response, next) => {
-    try {
-      // Step 1: Extract video data and index information from the request
-      const jsonVideos = request.body.videoData;
-      const totalVideos = jsonVideos.length;
-      let processedVideosCount = 0;
-      const chunk_size = 5;
-      let videoIndexingResponses = [];
-      console.log("Downloading Videos...");
-
-      // Step 2: Download videos in chunks
-      for (let i = 0; i < totalVideos; i += chunk_size) {
-        const videoChunk = jsonVideos.slice(i, i + chunk_size);
-        const chunkDownloadedVideos = [];
-
-        // Download each video in the current chunk.
-        await Promise.all(
-          videoChunk.map(async (videoData) => {
-            try {
-              // Generate a safe file name for the downloaded video
-              const safeName = sanitize(videoData.title);
-              const videoPath = `videos/${safeName}.mp4`;
-
-              // Download the video from the provided URL
-              const stream = ytdl(videoData.url, {
-                filter: "videoandaudio",
-                format: ".mp4",
-              });
-              await streamPipeline(stream, fs.createWriteStream(videoPath));
-
-              console.log(`${videoPath} -- finished downloading`);
-
-              chunkDownloadedVideos.push({
-                videoPath: videoPath,
-                videoData: videoData,
-              });
-            } catch (error) {
-              console.log(`Error downloading ${videoData.title}`);
-              console.error(error);
-            }
-          })
-        );
-
-        // Step 3: Submit downloaded videos for indexing
-        console.log(
-          `Submitting Videos For Indexing | Chunk ${
-            Math.floor(i / chunk_size) + 1
-          }`
-        );
-
-        const chunkVideoIndexingResponses = await Promise.all(
-          chunkDownloadedVideos.map(async (chunkDownloadedVideo) => {
-            console.log(
-              `Submitting ${chunkDownloadedVideo.videoPath} For Indexing...`
-            );
-            const indexingResponse = await indexVideo(
-              chunkDownloadedVideo.videoPath,
-              request.body.index_id
-            );
-
-            // Add videoData to indexingResponse
-            indexingResponse.videoData = chunkDownloadedVideo.videoData;
-
-            return indexingResponse;
-          })
-        ).catch(next);
-
-        console.log("Indexing Submission Completed for Chunk | Task IDs:");
-
-        processedVideosCount += videoChunk.length;
-
-        console.log(
-          `Processed ${processedVideosCount} out of ${totalVideos} videos`
-        );
-
-        videoIndexingResponses = videoIndexingResponses.concat(
-          chunkVideoIndexingResponses
-        );
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-
-      // Step 4: Respond with task IDs for the indexing tasks and the index ID
-      console.log(
-        "Indexing Submission For All Videos Completed With Task IDs:"
-      );
-
-      console.log(videoIndexingResponses);
-
-      response.json({
-        taskIds: videoIndexingResponses,
-        indexId: request.body.index_id,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);

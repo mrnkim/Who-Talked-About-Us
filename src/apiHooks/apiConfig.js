@@ -18,7 +18,6 @@ const apiConfig = {
   PLAYLIST_VIDEO_INFO_URL: new URL("/playlist-video-info", SERVER_BASE_URL),
   DOWNLOAD_URL: new URL("/download", SERVER_BASE_URL),
   INDEX_URL: new URL("/indexVideo", SERVER_BASE_URL),
-  UPDATE_VIDEO_URL: new URL("/update", SERVER_BASE_URL),
 };
 
 export default apiConfig;
