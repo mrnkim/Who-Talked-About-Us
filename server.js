@@ -15,7 +15,7 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 /** Define constants and configure TL API endpoints */
 const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
-  baseURL: "https://api.twelvelabs.io/v1.1",
+  baseURL: "https://api.twelvelabs.io/v1.3",
 });
 const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER
   ? process.env.REACT_APP_PORT_NUMBER
