@@ -4,6 +4,7 @@ const cors = require("cors");
 const ytdl = require("ytdl-core");
 const ytpl = require("ytpl");
 const fs = require("fs");
+const FormData = require("form-data");
 const bodyParser = require("body-parser");
 const app = express();
 const axios = require("axios").default;
@@ -99,7 +100,6 @@ app.get("/indexes/:indexId", async (request, response, next) => {
 
 /** Creates an index */
 app.post("/indexes", async (request, response, next) => {
-
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": TWELVE_LABS_API_KEY,
@@ -201,7 +201,7 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 
       if (apiResponse && apiResponse.data.length > 0) {
         apiResponse.data.forEach((video) => {
-          const sanitizedAuthor = sanitize(`${video.metadata.author}`);
+          const sanitizedAuthor = sanitize(`${video.user_metadata.author}`);
           authors.add(sanitizedAuthor);
         });
 
@@ -336,22 +336,33 @@ app.get("/tasks/:taskId", async (request, response, next) => {
 /** Takes a downloaded video and initiates the indexing process */
 const indexVideo = async (videoPath, indexId) => {
   const headers = {
-    headers: {
-      accept: "application/json",
-      "Content-Type": "multipart/form-data",
-      "x-api-key": TWELVE_LABS_API_KEY,
-    },
+    accept: "application/json",
+    "Content-Type": "multipart/form-data",
+    "x-api-key": TWELVE_LABS_API_KEY,
   };
 
-  let params = {
-    index_id: indexId,
-    video_file: fs.createReadStream(videoPath),
-    language: "en",
-  };
+  // Create FormData
+  const formData = new FormData();
+  formData.append("index_id", indexId);
+  formData.append("video_file", fs.createReadStream(videoPath));
+  formData.append("language", "en");
 
-  const response = await TWELVE_LABS_API.post("/tasks", params, headers);
-
-  return await response.data;
+  try {
+    console.log(`Uploading video to TwelveLabs: ${videoPath}`);
+    const response = await TWELVE_LABS_API.post("/tasks", formData, {
+      headers,
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+    });
+    console.log(`Successfully uploaded video: ${videoPath}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error uploading video ${videoPath} to TwelveLabs:`,
+      error.response?.data || error
+    );
+    throw error;
+  }
 };
 
 /**************************** OTHER CALLS *************************************/
@@ -429,8 +440,18 @@ app.post(
 
               // Download the video from the provided URL
               const stream = ytdl(videoData.url, {
-                filter: "videoandaudio",
-                format: ".mp4",
+                quality: "highest",
+                filter: "audioandvideo",
+                requestOptions: {
+                  headers: {
+                    "User-Agent":
+                      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    Accept:
+                      "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    "Accept-Language": "en-US,en;q=0.9",
+                    "Sec-Fetch-Mode": "navigate",
+                  },
+                },
               });
               await streamPipeline(stream, fs.createWriteStream(videoPath));
 

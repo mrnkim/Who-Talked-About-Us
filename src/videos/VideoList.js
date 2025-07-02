@@ -33,15 +33,15 @@ function VideoList({ videos, refetchVideos }) {
         >
           {" "}
           <ReactPlayer
-            url={video.metadata.youtubeUrl}
+            url={video.user_metadata.youtubeUrl}
             controls
             width="100%"
             height="250px"
           />
           <div className="channelAndVideoName">
-            <div className="channelPillSmall">{video.metadata.author}</div>
+            <div className="channelPillSmall">{video.user_metadata.author}</div>
             <div className="filename-text">
-              {video.metadata.filename.replace(".mp4", "")}
+              {video.system_metadata.filename.replace(".mp4", "")}
             </div>
           </div>
         </Col>

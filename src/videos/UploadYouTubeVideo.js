@@ -191,13 +191,13 @@ export function UploadYoutubeVideo({
     const updatePromises = completeTasks.map(async (completeTask) => {
       const matchingVid = taskVideos.find(
         (taskVid) =>
-          `${sanitize(taskVid.title)}.mp4` === completeTask.metadata.filename
+          `${sanitize(taskVid.title)}.mp4` === completeTask.system_metadata.filename
       );
       if (matchingVid) {
         const authorName = matchingVid.author.name;
         const youtubeUrl = matchingVid.video_url || matchingVid.shortUrl;
         const data = {
-          metadata: {
+          user_metadata: {
             author: authorName,
             youtubeUrl: youtubeUrl,
             whoTalkedAboutUs: true,
