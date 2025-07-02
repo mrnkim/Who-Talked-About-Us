@@ -99,15 +99,17 @@ app.get("/indexes/:indexId", async (request, response, next) => {
 
 /** Creates an index */
 app.post("/indexes", async (request, response, next) => {
+
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": TWELVE_LABS_API_KEY,
   };
 
+  // Forward the correct fields to TwelveLabs API
   const data = {
-    engine_id: "marengo2.5",
-    index_options: ["visual", "conversation", "text_in_video", "logo"],
-    index_name: request.body.indexName,
+    index_name: request.body.index_name,
+    models: request.body.models,
+    ...(request.body.addons ? { addons: request.body.addons } : {}),
   };
 
   try {
@@ -116,7 +118,9 @@ app.post("/indexes", async (request, response, next) => {
     });
     response.json(apiResponse.data);
   } catch (error) {
-    response.json({ error });
+    response
+      .status(error.response?.status || 500)
+      .json(error.response?.data || { error: "Unknown error" });
   }
 });
 

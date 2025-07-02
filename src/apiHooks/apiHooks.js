@@ -36,10 +36,18 @@ export function useGetIndex(indexId) {
 export function useCreateIndex(setIndexId) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (indexName) =>
-      apiConfig.TWELVE_LABS_API.post(apiConfig.INDEXES_URL, { indexName }).then(
-        (res) => res.data
-      ),
+    mutationFn: ({ indexName, models, addons }) => {
+      return apiConfig.TWELVE_LABS_API.post(apiConfig.INDEXES_URL, {
+        index_name: indexName,
+        models,
+        ...(addons ? { addons } : {}),
+      })
+        .then((res) => res.data)
+        .catch((error) => {
+          console.error("Error creating index:", error);
+          throw error;
+        });
+    },
     onSuccess: (newIndex) => {
       setIndexId(newIndex._id);
       queryClient.invalidateQueries([keys.INDEX, newIndex._id]);
