@@ -79,3 +79,10 @@
   .icon {
     margin-right: 0.3rem;
   }
+
+  .submitButton {
+    border: none;
+    background: none;
+    padding: 3;
+    cursor: pointer;
+  }

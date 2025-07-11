@@ -130,3 +130,22 @@
     justify-content: center;
     align-items: center;
   }
+
+  .input-field-container {
+    margin-bottom: 1rem;
+  }
+
+  .inputWithInfo {
+    gap: 1rem;
+  }
+
+  .json-input-container {
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .buttons-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }

@@ -1,12 +1,6 @@
 import React from "react";
-import { useState } from "react";
 import "./InputForm.css";
-
-/** User input form
- *
- * { IndexForm, ExistingIndexForm, SearchForm } -> InputForm
- *
- */
+import infoIcon from "../svg/Info.svg";
 
 function InputForm({
   handleSubmit,
@@ -15,36 +9,30 @@ function InputForm({
   type,
   icon,
   className,
+  helpLink,
 }) {
-  const [isInputFocused, setInputFocused] = useState(false);
-
-  const handleInputFocus = () => {
-    setInputFocused(true);
-  };
-
-  const handleInputBlur = () => {
-    setInputFocused(false);
-  };
-
   return (
-    <form className="inputForm" onSubmit={handleSubmit}>
-      <div className={`inputContainer ${isInputFocused ? "inputFocused" : ""}`}>
-        <button className="primaryButton" type="submit">
-          {icon && <img src={icon} alt="Icon" className="icon" />}
-        </button>
+    <form onSubmit={handleSubmit} className="inputForm">
+      <div className="inputContainer">
         <input
-          type={type}
-          id={type}
-          name={type}
-          placeholder={type}
           onChange={handleChange}
           value={value}
-          aria-label={type}
-          data-testid="search-input"
+          placeholder={type}
           className={className}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
         />
+        <button type="submit" className="submitButton">
+          <img src={icon} alt="Submit" />
+        </button>
+        {helpLink && (
+          <a
+            href={helpLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="helpLink"
+          >
+            <img src={infoIcon} alt="Help" className="infoIcon" />
+          </a>
+        )}
       </div>
     </form>
   );

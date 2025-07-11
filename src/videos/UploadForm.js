@@ -1,5 +1,6 @@
 import { Container } from "react-bootstrap";
 import uploadIcon from "../svg/Upload.svg";
+import infoIcon from "../svg/Info.svg";
 import "./UploadForm.css";
 
 /** Video upload form
@@ -22,18 +23,8 @@ function UploadForm({
   pendingApiRequest,
 }) {
   return (
-    <Container
-      display="flex"
-      justifycontent="center"
-      alignitems="center"
-      direction="column"
-    >
-      <Container
-        style={{ marginBottom: "1rem" }}
-        display="flex"
-        justifycontent="center"
-        alignitems="center"
-      >
+    <Container className="upload-form-container">
+      <Container className="json-input-container">
         <label
           htmlFor="jsonFileInput"
           className={
@@ -61,35 +52,55 @@ function UploadForm({
         </span>
       </Container>
 
-      <Container display="flex" xs={3} style={{ marginBottom: "1rem" }}>
-        <input
-          className={
-            !!selectedJSON || !!indexId || !!youtubePlaylistId
-              ? "customDisabled"
-              : "youTubeId"
-          }
-          placeholder="YouTube Channel ID"
-          onChange={handleYoutubeChannelIdEntry}
-          disabled={!!selectedJSON || !!youtubePlaylistId}
-          value={youtubeChannelId}
-        />
+      <Container className="input-field-container">
+        <div className="inputWithInfo">
+          <input
+            className={
+              !!selectedJSON || !!indexId || !!youtubePlaylistId
+                ? "customDisabled"
+                : "youTubeId"
+            }
+            placeholder="YouTube Channel ID"
+            onChange={handleYoutubeChannelIdEntry}
+            disabled={!!selectedJSON || !!youtubePlaylistId}
+            value={youtubeChannelId}
+          />
+          <a
+            href="https://mixedanalytics.com/blog/find-a-youtube-channel-id/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="helpLink"
+          >
+            <img src={infoIcon} alt="Help" className="infoIcon" />
+          </a>
+        </div>
       </Container>
 
-      <Container display="flex" xs={3} style={{ marginBottom: "1rem" }}>
-        <input
-          className={
-            !!selectedJSON || !!indexId || !!youtubeChannelId
-              ? "customDisabled"
-              : "youTubeId"
-          }
-          placeholder="YouTube Playlist ID"
-          onChange={handleYoutubePlaylistIdEntry}
-          disabled={!!selectedJSON || !!youtubeChannelId}
-          value={youtubePlaylistId}
-        />
+      <Container className="input-field-container">
+        <div className="inputWithInfo">
+          <input
+            className={
+              !!selectedJSON || !!indexId || !!youtubeChannelId
+                ? "customDisabled"
+                : "youTubeId"
+            }
+            placeholder="YouTube Playlist ID"
+            onChange={handleYoutubePlaylistIdEntry}
+            disabled={!!selectedJSON || !!youtubeChannelId}
+            value={youtubePlaylistId}
+          />
+          <a
+            href="https://www.sociablekit.com/find-youtube-playlist-id/#:~:text=Go%20to%20your%20target%20YouTube,playlist%20ID%20is%20PLFs4vir_WsTwEd%2DnJgVJCZPNL3HALHHpF"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="helpLink"
+          >
+            <img src={infoIcon} alt="Help" className="infoIcon" />
+          </a>
+        </div>
       </Container>
 
-      <Container display="flex" className="buttons">
+      <Container className="buttons-container">
         <button className="button" onClick={getInfo}>
           {uploadIcon && (
             <img src={uploadIcon} alt="Icon" className="uploadIcon" />
