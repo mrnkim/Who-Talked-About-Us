@@ -24,6 +24,7 @@
     min-width: 27rem;
     min-height: 4rem;
     padding-top: 12px;
+    padding-left: 0.5rem;
     flex-direction: column;
     text-wrap:wrap;
     gap: 0.625rem;
