@@ -20,7 +20,7 @@ const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
   baseURL: "https://api.twelvelabs.io/v1.3",
 });
-const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER || 4000;
+const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER || 4001;
 const PAGE_LIMIT_MAX = 50;
 
 /** Set up middleware for Express */
@@ -256,7 +256,7 @@ app.post("/search", upload.none(), async (request, response, next) => {
   formData.append("sort_option", "clip_count");
   formData.append("threshold", "medium");
   formData.append("page_limit", "2");
-  formData.append("adjust_confidence_level", "0.6");
+  formData.append("adjust_confidence_level", "0.7");
 
   try {
     console.log("Sending search request to TwelveLabs API:", {
