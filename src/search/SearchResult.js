@@ -27,6 +27,19 @@ export default function SearchResult({
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
+  /** Function to get video URL safely */
+  function getVideoUrl(videoId) {
+    const video = searchResultVideos?.find((vid) => vid._id === videoId);
+    const videoUrl = video?.hls?.video_url;
+
+    if (!videoUrl) {
+      console.warn(`No video URL found for video ${videoId}`);
+      return null;
+    }
+
+    return videoUrl;
+  }
+
   return (
     <div key={videoAuthor} className="m-3" style={{ minHeight: "50px" }}>
       <div className="channelResultPill">
@@ -41,60 +54,87 @@ export default function SearchResult({
                 {videoTitle} ({results.clips.length})
               </h6>
               <Row>
-                {results.clips.map((clip, index) => (
-                  <Col
-                    sm={12}
-                    md={6}
-                    lg={4}
-                    xl={3}
-                    className="mb-4 mt-2"
-                    key={clip.video_id + "-" + index}
-                  >
-                    <div
-                      onClick={() => setThumbnailClicked(true)}
-                      style={{ cursor: "pointer" }}
+                {results.clips.map((clip, index) => {
+                  const videoUrl = getVideoUrl(clip.video_id);
+
+                  return (
+                    <Col
+                      sm={12}
+                      md={6}
+                      lg={4}
+                      xl={3}
+                      className="mb-4 mt-2"
+                      key={clip.video_id + "-" + index}
                     >
-                      <ReactPlayer
-                        url={
-                          `${
-                            searchResultVideos.find(
-                              (vid) => vid._id === clip.video_id
-                            )?.metadata.youtubeUrl
-                          }` + `?start=${clip.start}&end=${clip.end}`
-                        }
-                        controls
-                        width="100%"
-                        height="100%"
-                        light={
+                      <div
+                        onClick={() => setThumbnailClicked(true)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {videoUrl ? (
+                          <ReactPlayer
+                            url={videoUrl}
+                            controls
+                            width="100%"
+                            height="100%"
+                            light={
+                              <img
+                                src={clip.thumbnail_url}
+                                width="100%"
+                                height="100%"
+                                alt="clipThumbnail"
+                              />
+                            }
+                            playing={thumbnailClicked}
+                            onProgress={(state) => {
+                              if (state.playedSeconds >= clip.end) {
+                                const player = document.querySelector("video");
+                                if (player) {
+                                  player.currentTime = clip.start;
+                                }
+                              }
+                            }}
+                            onPlay={() => {
+                              const player = document.querySelector("video");
+                              if (player) {
+                                player.currentTime = clip.start;
+                              }
+                            }}
+                            config={{
+                              file: {
+                                forceHLS: true,
+                              },
+                            }}
+                          />
+                        ) : (
                           <img
                             src={clip.thumbnail_url}
                             width="100%"
                             height="100%"
                             alt="clipThumbnail"
+                            style={{ objectFit: "cover" }}
                           />
-                        }
-                        playing={thumbnailClicked}
-                      />
-                    </div>
-                    <div className="resultDescription">
-                      Start {formatTime(clip.start)} | End{" "}
-                      {formatTime(clip.end)} |{" "}
-                      <span
-                        className="confidence"
-                        style={{
-                          backgroundColor:
-                            clip.confidence === "high"
-                              ? "#2EC29F"
-                              : clip.confidence === "medium"
-                              ? "#FDC14E"
-                              : "#B7B9B4",
-                        }}
-                      >
-                        {clip.confidence}
-                      </span>
-                    </div>
-                  </Col>
-                ))}
+                        )}
+                      </div>
+                      <div className="resultDescription">
+                        Start {formatTime(clip.start)} | End{" "}
+                        {formatTime(clip.end)} |{" "}
+                        <span
+                          className="confidence"
+                          style={{
+                            backgroundColor:
+                              clip.confidence === "high"
+                                ? "#2EC29F"
+                                : clip.confidence === "medium"
+                                ? "#FDC14E"
+                                : "#B7B9B4",
+                          }}
+                        >
+                          {clip.confidence}
+                        </span>
+                      </div>
+                    </Col>
+                  );
+                })}
               </Row>
             </Container>
           ))}

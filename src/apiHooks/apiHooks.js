@@ -101,11 +101,46 @@ export function useGetAllAuthors(indexId) {
 export function useSearchVideo(indexId, query) {
   return useQuery({
     queryKey: [keys.SEARCH, indexId, query],
-    queryFn: () =>
-      apiConfig.TWELVE_LABS_API.post(apiConfig.SEARCH_URL, {
-        indexId,
-        query,
-      }).then((res) => res.data),
+    queryFn: async () => {
+      try {
+        if (!indexId || !query) {
+          throw new Error("Index ID and query are required");
+        }
+
+        // Create FormData
+        const formData = new FormData();
+        formData.append("index_id", indexId);
+        formData.append("query_text", query);
+
+        console.log("Sending search request:", { indexId, query });
+
+        const response = await apiConfig.TWELVE_LABS_API.post(
+          apiConfig.SEARCH_URL,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (!response.data) {
+          throw new Error("No data received from search");
+        }
+
+        console.log("Search response:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Search error:", {
+          message: error.message,
+          response: error.response?.data,
+        });
+        throw error.response?.data || error;
+      }
+    },
+    retry: 1,
+    retryDelay: 1000,
+    enabled: Boolean(indexId && query),
   });
 }
 
@@ -159,28 +194,37 @@ export function useGetTask(taskId) {
 
 export function useGetVideosOfSearchResults(indexId, query) {
   const {
-    data: initialSearchData,
-    refetch,
+    data: searchData,
+    error,
     isLoading,
+    refetch,
   } = useSearchVideo(indexId, query);
-  const initialSearchResults = initialSearchData.data || [];
+
+  const searchResults = searchData?.data || [];
 
   const resultVideos = useQueries({
-    queries: initialSearchResults.map((searchResult) => ({
+    queries: searchResults.map((searchResult) => ({
       queryKey: [keys.SEARCH, indexId, searchResult.id],
       queryFn: () =>
         apiConfig.TWELVE_LABS_API.get(
           `${apiConfig.INDEXES_URL}/${indexId}/videos/${searchResult.id}`
         ).then((res) => res.data),
+      enabled: Boolean(searchResult.id),
     })),
   });
-  const initialSearchResultVideos = resultVideos.map(({ data }) => data);
+
+  const searchResultVideos = resultVideos
+    .filter((result) => result.data)
+    .map((result) => result.data);
+
   return {
-    initialSearchData,
-    initialSearchResults,
-    initialSearchResultVideos,
-    refetch,
+    data: {
+      ...searchData,
+      videos: searchResultVideos,
+    },
+    error,
     isLoading,
+    refetch,
   };
 }
 

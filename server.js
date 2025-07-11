@@ -6,6 +6,8 @@ const ytpl = require("ytpl");
 const fs = require("fs");
 const FormData = require("form-data");
 const bodyParser = require("body-parser");
+const multer = require("multer");
+const upload = multer();
 const app = express();
 const axios = require("axios").default;
 const ytch = require("yt-channel-info");
@@ -18,9 +20,7 @@ const TWELVE_LABS_API_KEY = process.env.REACT_APP_API_KEY;
 const TWELVE_LABS_API = axios.create({
   baseURL: "https://api.twelvelabs.io/v1.3",
 });
-const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER
-  ? process.env.REACT_APP_PORT_NUMBER
-  : 4000;
+const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER || 4000;
 const PAGE_LIMIT_MAX = 50;
 
 /** Set up middleware for Express */
@@ -221,30 +221,61 @@ app.get("/indexes/:indexId/authors", async (request, response, next) => {
 });
 
 /** Search videos with a given query */
-app.post("/search", async (request, response, next) => {
+app.post("/search", upload.none(), async (request, response, next) => {
   const headers = {
     accept: "application/json",
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     "x-api-key": TWELVE_LABS_API_KEY,
   };
 
-  const data = {
-    index_id: request.body.indexId,
-    search_options: ["visual", "conversation", "text_in_video", "logo"],
-    query: request.body.query,
-    group_by: "video",
-    sort_option: "clip_count",
-    threshold: "medium",
-    page_limit: 2,
-  };
+  console.log("Received search request:", request.body);
+
+  if (!request.body.index_id || !request.body.query_text) {
+    return response.status(400).json({
+      error:
+        "Missing required parameters: index_id and query_text are required",
+    });
+  }
+
+  // Create FormData for TwelveLabs API
+  const formData = new FormData();
+  formData.append("index_id", request.body.index_id);
+  formData.append("query_text", request.body.query_text);
+  formData.append("search_options", "visual");
+  formData.append("search_options", "audio");
+  formData.append("group_by", "video");
+  formData.append("sort_option", "clip_count");
+  formData.append("threshold", "medium");
+  formData.append("page_limit", "2");
+  formData.append("adjust_confidence_level", "0.6");
 
   try {
-    const apiResponse = await TWELVE_LABS_API.post("/search", data, {
+    console.log("Sending search request to TwelveLabs API:", {
+      index_id: request.body.index_id,
+      query_text: request.body.query_text,
+    });
+
+    const apiResponse = await TWELVE_LABS_API.post("/search", formData, {
       headers,
     });
+
+    console.log("Search response received:", {
+      status: apiResponse.status,
+      data_length: apiResponse.data?.data?.length || 0,
+    });
+
     response.json(apiResponse.data);
   } catch (error) {
-    return next(error);
+    console.error("Search error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+
+    response.status(error.response?.status || 500).json({
+      error: error.response?.data || "Search failed",
+      message: error.message,
+    });
   }
 });
 

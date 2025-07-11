@@ -2,12 +2,16 @@ import axios from "axios";
 
 const PORT_NUMBER = process.env.REACT_APP_PORT_NUMBER || "4000";
 const SERVER_BASE_URL = window.location.hostname?.includes("replit")
-  ? new URL(`https://${window.location.hostname}:3000`)
+  ? new URL(`https://${window.location.hostname}`)
   : new URL(`http://localhost:${PORT_NUMBER}`);
 
 const apiConfig = {
   TWELVE_LABS_API: axios.create({
     baseURL: SERVER_BASE_URL.toString(),
+    timeout: 30000,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   }),
   INDEXES_URL: "/indexes",
   SEARCH_URL: "/search",

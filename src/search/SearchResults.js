@@ -24,21 +24,25 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
 
   /** Get initial search results and corresponding videos */
   const {
-    initialSearchData: {
-      page_info: { next_page_token: initialNextPageToken } = {},
-    } = {},
-    initialSearchResults,
-    initialSearchResultVideos,
+    data: initialSearchData,
+    isLoading,
+    error: searchError,
     refetch,
   } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
+
+  const initialNextPageToken = initialSearchData?.page_info?.next_page_token;
+  const initialSearchResults = initialSearchData?.data || [];
+  const initialSearchResultVideos = initialSearchData?.videos || [];
 
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
   const [combinedSearchResults, setCombinedSearchResults] =
     useState(initialSearchResults);
+  console.log("🚀 > SearchResults > combinedSearchResults=", combinedSearchResults)
   const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
     initialSearchResultVideos
   );
   const [organizedResults, setOrganizedResults] = useState(null);
+  console.log("🚀 > SearchResults > organizedResults=", organizedResults)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -107,9 +111,10 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
         const video = combinedSearchResultVideos.find(
           (searchResultVideo) => searchResultVideo._id === videoId
         );
+        console.log("🚀 > combinedSearchResults.forEach > video=", video)
         if (video) {
-          const videoAuthor = video.metadata?.author;
-          const videoTitle = video.metadata?.filename.replace(".mp4", "");
+          const videoAuthor = video.user_metadata?.author;
+          const videoTitle = video.system_metadata?.filename.replace(".mp4", "");
           if (!organizedResults[videoAuthor]) {
             organizedResults[videoAuthor] = {};
           }
@@ -139,12 +144,6 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
       ConcatNextPageResults();
     }
   };
-
-  useEffect(() => {
-    setNextPageToken(initialNextPageToken);
-    setCombinedSearchResultVideos(initialSearchResultVideos);
-    setCombinedSearchResults(initialSearchResults);
-  }, [initialNextPageToken]);
 
   useEffect(() => {
     const organizedResults = organizeResults(
