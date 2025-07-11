@@ -9,9 +9,6 @@ const apiConfig = {
   TWELVE_LABS_API: axios.create({
     baseURL: SERVER_BASE_URL.toString(),
     timeout: 30000,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
   }),
   INDEXES_URL: "/indexes",
   SEARCH_URL: "/search",

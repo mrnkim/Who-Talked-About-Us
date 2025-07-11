@@ -100,6 +100,7 @@ app.get("/indexes/:indexId", async (request, response, next) => {
 
 /** Creates an index */
 app.post("/indexes", async (request, response, next) => {
+  console.log("🚀 > app.post > request.body=", request.body);
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": TWELVE_LABS_API_KEY,
@@ -109,8 +110,15 @@ app.post("/indexes", async (request, response, next) => {
   const data = {
     index_name: request.body.index_name,
     models: request.body.models,
-    ...(request.body.addons ? { addons: request.body.addons } : {}),
+    addons: request.body.addons,
   };
+  console.log("🚀 > app.post > data=", data);
+
+  if (!data.index_name) {
+    return response.status(400).json({
+      error: "index_name is required",
+    });
+  }
 
   try {
     const apiResponse = await TWELVE_LABS_API.post("/indexes", data, {
@@ -118,6 +126,7 @@ app.post("/indexes", async (request, response, next) => {
     });
     response.json(apiResponse.data);
   } catch (error) {
+    console.error("Error creating index:", error.response?.data || error);
     response
       .status(error.response?.status || 500)
       .json(error.response?.data || { error: "Unknown error" });

@@ -30,25 +30,13 @@ function IndexForm() {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
+    console.log("🚀 > handleSubmit > trimmedIndexName=", trimmedIndexName);
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
-      const defaultModels = [
-        {
-          model_name: "marengo2.7",
-          model_options: ["visual", "audio"],
-        },
-        {
-          model_name: "pegasus1.2",
-          model_options: ["visual", "audio"],
-        },
-      ];
-      const addons = ["thumbnail"];
       try {
         const { error } = await createIndexMutation.mutateAsync({
           indexName: trimmedIndexName,
-          models: defaultModels,
-          addons,
         });
         if (error) {
           setError(
