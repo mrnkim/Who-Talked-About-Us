@@ -256,7 +256,7 @@ app.post("/search", upload.none(), async (request, response, next) => {
   formData.append("sort_option", "clip_count");
   formData.append("threshold", "medium");
   formData.append("page_limit", "2");
-  formData.append("adjust_confidence_level", "0.6");
+  formData.append("adjust_confidence_level", "0.7");
 
   try {
     console.log("Sending search request to TwelveLabs API:", {

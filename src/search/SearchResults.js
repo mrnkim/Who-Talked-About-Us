@@ -1,11 +1,11 @@
-import { React, useState, useEffect, Suspense } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { React, useState, Suspense } from "react";
+import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import {
-  useGetVideosOfSearchResults,
   fetchNextPageSearchResults,
   fetchNextPageSearchResultVideos,
 } from "../apiHooks/apiHooks";
+import apiConfig from "../apiHooks/apiConfig";
 import ErrorFallback from "../common/ErrorFallback";
 import keys from "../apiHooks/keys";
 import "./SearchResults.css";
@@ -13,197 +13,181 @@ import SearchResult from "./SearchResult";
 import upIcon from "../svg/ChevronUpMini.svg";
 import LoadingSpinner from "../common/LoadingSpinner";
 
-/** Shows the search result
- *
- *  VideoComponents -> SearchResults -> SearchResult
- *
- */
-
 function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
   const queryClient = useQueryClient();
-
-  /** Get initial search results and corresponding videos */
-  const {
-    data: initialSearchData,
-    isLoading,
-    error: searchError,
-    refetch,
-  } = useGetVideosOfSearchResults(currIndex, finalSearchQuery);
-
-  const initialNextPageToken = initialSearchData?.page_info?.next_page_token;
-  const initialSearchResults = initialSearchData?.data || [];
-  const initialSearchResultVideos = initialSearchData?.videos || [];
-
-  const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
-  const [combinedSearchResults, setCombinedSearchResults] =
-    useState(initialSearchResults);
-  console.log("🚀 > SearchResults > combinedSearchResults=", combinedSearchResults)
-  const [combinedSearchResultVideos, setCombinedSearchResultVideos] = useState(
-    initialSearchResultVideos
-  );
-  const [organizedResults, setOrganizedResults] = useState(null);
-  console.log("🚀 > SearchResults > organizedResults=", organizedResults)
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /** Fetch next page search results and update combined search results */
-  async function ConcatNextPageResults() {
-    try {
-      setLoading(true);
+  const {
+    data: searchData,
+    isLoading,
+    error: searchError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: [keys.SEARCH, currIndex, finalSearchQuery],
+    queryFn: async ({ pageParam = null }) => {
+      try {
+        if (!pageParam) {
+          // Initial search
+          if (!currIndex || !finalSearchQuery) {
+            throw new Error("Index ID and query are required");
+          }
 
-      const nextPageResultsData = await fetchNextPageSearchResults(
-        queryClient,
-        nextPageToken
-      );
+          // Create FormData
+          const formData = new FormData();
+          formData.append("index_id", currIndex);
+          formData.append("query_text", finalSearchQuery);
 
-      const nextPageResults = nextPageResultsData.data;
-      const nextPageResultVideosPromises = nextPageResults.map(
-        async (nextPageResult) => {
-          const videoResponses = await fetchNextPageSearchResultVideos(
-            queryClient,
-            currIndex,
-            nextPageResult.id
+          const response = await apiConfig.TWELVE_LABS_API.post(
+            apiConfig.SEARCH_URL,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
           );
-          return videoResponses;
+
+          if (!response.data) {
+            throw new Error("No data received from search");
+          }
+
+          // Fetch videos for initial results
+          const videosPromises = response.data.data.map((result) =>
+            fetchNextPageSearchResultVideos(queryClient, currIndex, result.id)
+          );
+          const videos = await Promise.all(videosPromises);
+
+          return {
+            ...response.data,
+            videos,
+            nextPageToken: response.data.page_info?.next_page_token,
+          };
         }
-      );
-      const nextPageResultVideos = await Promise.all(
-        nextPageResultVideosPromises
-      );
 
-      setCombinedSearchResults((prevData) => [...prevData, ...nextPageResults]);
-      setCombinedSearchResultVideos((prevData) => [
-        ...prevData,
-        ...nextPageResultVideos,
-      ]);
-
-      if (nextPageResults) {
-        setNextPageToken(
-          nextPageResultsData.page_info?.next_page_token || null
+        // Fetch next page
+        const nextPageData = await fetchNextPageSearchResults(
+          queryClient,
+          pageParam
         );
+        const nextPageVideos = await Promise.all(
+          nextPageData.data.map((result) =>
+            fetchNextPageSearchResultVideos(queryClient, currIndex, result.id)
+          )
+        );
+
+        return {
+          ...nextPageData,
+          videos: nextPageVideos,
+          nextPageToken: nextPageData.page_info?.next_page_token,
+        };
+      } catch (error) {
+        console.error("Search error:", error);
+        throw error;
       }
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    }
-  }
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+    enabled: Boolean(currIndex && finalSearchQuery),
+  });
 
-  /** Organize search results by author and video_id
-   *
-   * {vidAuthor: {videoTitle: results, videoTitle: results},
-   *  vidAuthor2: {videoTitle: results},
-   *  ...
-   * }
-   *
-   * results = {clips: [clip, clip2...], id: 'video_id'}
-   *
-   */
+  // Combine all pages of results
+  const allResults = searchData?.pages.reduce(
+    (acc, page) => ({
+      data: [...(acc.data || []), ...(page.data || [])],
+      videos: [...(acc.videos || []), ...(page.videos || [])],
+    }),
+    { data: [], videos: [] }
+  );
 
-  function organizeResults(combinedSearchResults, combinedSearchResultVideos) {
-    const organizedResults = {};
-    if (combinedSearchResults && combinedSearchResultVideos) {
-      combinedSearchResults.forEach((searchResult) => {
-        const videoId = searchResult.id;
-        const video = combinedSearchResultVideos.find(
-          (searchResultVideo) => searchResultVideo._id === videoId
-        );
-        console.log("🚀 > combinedSearchResults.forEach > video=", video)
-        if (video) {
-          const videoAuthor = video.user_metadata?.author;
-          const videoTitle = video.system_metadata?.filename.replace(".mp4", "");
-          if (!organizedResults[videoAuthor]) {
-            organizedResults[videoAuthor] = {};
-          }
-          if (!organizedResults[videoAuthor][videoTitle]) {
-            organizedResults[videoAuthor][videoTitle] = {};
-          }
-          organizedResults[videoAuthor][videoTitle] = searchResult;
+  // Organize results by author and video
+  const organizedResults = {};
+  if (allResults?.data && allResults?.videos) {
+    allResults.data.forEach((searchResult) => {
+      const videoId = searchResult.id;
+      const video = allResults.videos.find(
+        (searchResultVideo) => searchResultVideo._id === videoId
+      );
+      if (video) {
+        const videoAuthor = video.user_metadata?.author;
+        const videoTitle = video.system_metadata?.filename.replace(".mp4", "");
+        if (!organizedResults[videoAuthor]) {
+          organizedResults[videoAuthor] = {};
         }
-      });
-    }
-
-    return organizedResults;
+        if (!organizedResults[videoAuthor][videoTitle]) {
+          organizedResults[videoAuthor][videoTitle] = {};
+        }
+        organizedResults[videoAuthor][videoTitle] = searchResult;
+      }
+    });
   }
 
-  /** Authors whose videos are not part of the search results */
-  const noResultAuthors = [];
-  for (let author of allAuthors) {
-    const resultAuthors = organizedResults ? Object.keys(organizedResults) : [];
-    if (!resultAuthors.includes(author)) {
-      noResultAuthors.push(author);
-    }
-  }
+  // Find authors with no results
+  const noResultAuthors = allAuthors.filter(
+    (author) => !Object.keys(organizedResults).includes(author)
+  );
 
-  /** Load next page search result */
-  const handleLoadMore = () => {
-    if (nextPageToken && !loading) {
-      ConcatNextPageResults();
+  /** Load next page search results */
+  const handleLoadMore = async () => {
+    if (isFetchingNextPage) return;
+    try {
+      await fetchNextPage();
+    } catch (err) {
+      console.error("Error loading more results:", err);
+      setError(err);
     }
   };
 
-  useEffect(() => {
-    const organizedResults = organizeResults(
-      combinedSearchResults,
-      combinedSearchResultVideos
-    );
-    setOrganizedResults(organizedResults);
-  }, [combinedSearchResults, combinedSearchResultVideos]);
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: [keys.SEARCH, currIndex, finalSearchQuery],
-    });
-  }, [currIndex, finalSearchQuery]);
+  if (searchError) {
+    return <ErrorFallback error={searchError} />;
+  }
 
   return (
     <div>
-      {initialSearchResults && initialSearchResults.length === 0 && (
+      {(!allResults?.data || allResults.data.length === 0) && (
         <div className="title">
           No results for "{finalSearchQuery}". Let's try with other queries!
         </div>
       )}
 
-      {initialSearchResults && initialSearchResults.length > 0 && (
+      {allResults?.data && allResults.data.length > 0 && (
         <div>
           <div className="searchResultTitle">
             Search Results for "{finalSearchQuery}"
           </div>
 
-          {organizedResults &&
-            Object.entries(organizedResults).map(
-              ([videoAuthor, authVids], index) => {
-                const totalSearchResults = Object.values(authVids).reduce(
-                  (total, results) => total + (results.clips.length || 0),
-                  0
-                );
-                return (
-                  <div key={index} className="searchResultWrapper">
-                    <ErrorBoundary
-                      FallbackComponent={({ error }) => (
-                        <ErrorFallback error={error} />
-                      )}
-                      onReset={() => refetch()}
-                      resetKeys={[keys.SEARCH, currIndex, finalSearchQuery]}
-                    >
-                      <Suspense fallback={<LoadingSpinner />}>
-                        <SearchResult
-                          videoAuthor={videoAuthor}
-                          totalSearchResults={totalSearchResults}
-                          authVids={authVids}
-                          searchResultVideos={combinedSearchResultVideos}
-                        />
-                      </Suspense>
-                    </ErrorBoundary>
-                  </div>
-                );
-              }
-            )}
+          {Object.entries(organizedResults).map(
+            ([videoAuthor, authVids], index) => {
+              const totalSearchResults = Object.values(authVids).reduce(
+                (total, results) => total + (results.clips?.length || 0),
+                0
+              );
+              return (
+                <div key={index} className="searchResultWrapper">
+                  <ErrorBoundary
+                    FallbackComponent={({ error }) => (
+                      <ErrorFallback error={error} />
+                    )}
+                  >
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <SearchResult
+                        videoAuthor={videoAuthor}
+                        totalSearchResults={totalSearchResults}
+                        authVids={authVids}
+                        searchResultVideos={allResults.videos}
+                      />
+                    </Suspense>
+                  </ErrorBoundary>
+                </div>
+              );
+            }
+          )}
 
-          {organizedResults && !nextPageToken && (
+          {!hasNextPage && (
             <Suspense fallback={<LoadingSpinner />}>
               <div className="channelPills">
                 <div className="subtitle">
@@ -221,13 +205,13 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
             </Suspense>
           )}
 
-          {organizedResults && !nextPageToken && noResultAuthors.length > 0 && (
+          {!hasNextPage && noResultAuthors.length > 0 && (
             <Suspense fallback={<LoadingSpinner />}>
               <div className="channelPills">
                 <div className="subtitle">
-                  😢 {new Set(noResultAuthors).size} Influencers have not
+                  😢 {noResultAuthors.length} Influencers have not
                 </div>
-                {Array.from(new Set(noResultAuthors)).map((author, index) => (
+                {noResultAuthors.map((author, index) => (
                   <div key={index} className="channelNoResultPill">
                     {author}
                   </div>
@@ -236,14 +220,14 @@ function SearchResults({ currIndex, finalSearchQuery, allAuthors }) {
             </Suspense>
           )}
 
-          {organizedResults && nextPageToken && (
+          {hasNextPage && (
             <Suspense fallback={<LoadingSpinner />}>
               <button
                 onClick={handleLoadMore}
-                disabled={loading}
+                disabled={isFetchingNextPage}
                 className="showMoreButton"
               >
-                {loading ? (
+                {isFetchingNextPage ? (
                   "Loading..."
                 ) : (
                   <>
