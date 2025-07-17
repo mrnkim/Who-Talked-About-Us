@@ -30,9 +30,9 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 ## ✨ What is it for?
 
-After years of experience in influencer partnerships as a marketing professional in the beauty industry, I've learned a valuable lesson in selecting the ideal YouTube or TikTok influencer for a brand. (Yes, I’m a marketing professional turned software engineer 😉). The most successful collaborations tend to happen organically with influencers who are already genuine enthusiasts of your products or brand. However, identifying these influencers can be challenging, especially when your brand isn't explicitly mentioned in video titles or descriptions. This has been a personal pain point, such as when a YouTuber features your product in a video without explicitly naming your brand, making it hard to discover through conventional searches.
+After years in beauty influencer marketing (now turned software engineer 😉), one lesson stands out: the best partnerships come from creators who genuinely love your brand. But finding them isn’t always easy—especially when your brand isn't named in the video title or description. I’ve personally struggled with this, like when a YouTuber features a product organically but it’s nearly impossible to find via traditional search.
 
-That's where the Who Talked About Us with Twelve Labs API can be a game-changer. Unlike traditional YouTube or TikTok searches, this API enables deep contextual video searches by extracting various elements from videos, including movements, objects, people, sounds, on-screen text, and speech. By inputting keywords or specific descriptions, such as "_applying MAC gold highlighter_," you can uncover videos discussing your brand or products with precise moments of reference. This innovative approach empowers you to build a targeted list of influencers, complete with details about the products they've mentioned and the context, providing valuable insights for more effective engagement and meaningful connections.
+That’s why Who Talked About Us with Twelve Labs API is a game-changer. It goes beyond titles and tags to analyze video content—detecting objects, actions, speech, and on-screen text. You can search phrases like “applying MAC gold highlighter” and uncover exactly when and where your product appears. This helps you build a list of authentic brand advocates, complete with rich context for smarter, more meaningful outreach.
 
 <img src="public/search_demonstration.gif" alt="search result screenshot" style="border: 1px solid black;" />
 
@@ -40,9 +40,7 @@ From the bottom of the search results, you can effortlessly identify that Jean W
 
 ## 🚘 How to Use
 
-1. Either create a new index or provide an index id of the existing index that you already created/uploaded videos _directly through this app_ before. You can look up the index ids by [listing indexes](https://docs.twelvelabs.io/v1.2/reference/list-indexes).
-
-   - This app _only_ supports the videos uploaded/indexed directly through this app
+1. Please create a new index or enter the index ID of a video you uploaded through _this app_. (❗️Only videos indexed _via this app_ are supported)
 
 2. Once you are inside an index, Begin by uploading videos in bulk to the app using either YouTube [playlist ID](https://www.sociablekit.com/find-youtube-playlist-id/#:~:text=Go%20to%20your%20target%20YouTube,playlist%20ID%20is%20PLFs4vir_WsTwEd%2DnJgVJCZPNL3HALHHpF), [channel ID](https://mixedanalytics.com/blog/find-a-youtube-channel-id/), or JSON file.
 
@@ -77,21 +75,7 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
 
 - Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
 
-### Step 2 (Option 1). Start the App on Replit
-
-1. Click the button below and fork the repl
-
-   [![Run on Replit](https://replit.com/badge/github/mrnkim/Who-Talked-About-Us)](https://replit.com/@twelvelabs/Who-Talked-About-Us)
-
-2. Update Secrets (equivalent to .env)
-
-   ```
-   REACT_APP_API_KEY=<YOUR API KEY>
-   ```
-
-3. Stop and Run the Repl
-
-### Step 2 (Option 2). Start the App Locally
+### Step 2. Start the App Locally
 
 1. Clone the current repo
 
@@ -105,27 +89,25 @@ Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate yo
     .env
 
     REACT_APP_API_KEY=<YOUR API KEY>
-    REACT_APP_SERVER_URL=<YOUR SERVER URL> //e.g., http://localhost
-    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER> // Optional (set to 4000 by default if you do not set this variable)
+    REACT_APP_PORT_NUMBER=<YOUR PORT NUMBER> // Optional (set to 4000 by default)
    ```
 
-3. Start the server
+3. Install dependencies
+
+   ```sh
+   npm install
+   ```
+
+4. Start the server
 
    ```sh
    node server.js
    ```
 
-4. Install and start the client
+5. Start the client (in a separate terminal)
 
    ```sh
-   npm install
    npm start
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## 🎯 What is Next?
-
-- Add more tests
-- Improve error handling and add data validations
-- Make it mobile-friendly
+   <p align="right">(<a href="#readme-top">back to top</a>)</p>
