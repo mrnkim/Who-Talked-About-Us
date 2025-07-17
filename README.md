@@ -13,7 +13,9 @@
 
 This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for the rich, contextual video search. Twelve Labs is an AI-powered video understanding platform that extracts various types of information from videos, such as movement and actions, objects and people, sound, text on screen, and speech.
 
-  <img src="public/frontPage.png" alt="frontPage screenshot" />
+📌 Check out the [Demo](https://who-talked-about-us-vercel-v2-deplo-one.vercel.app/)! (Please note: This is a simplified version of the app)
+
+  <img src="public/demo.png" alt="demo screenshot" />
 
 ### Built With
 
@@ -30,13 +32,13 @@ This application utilizes [Twelve Labs API](https://docs.twelvelabs.io/docs) for
 
 ## ✨ What is it for?
 
-After years in beauty influencer marketing (now turned software engineer 😉), one lesson stands out: the best partnerships come from creators who genuinely love your brand. But finding them isn’t always easy—especially when your brand isn't named in the video title or description. I’ve personally struggled with this, like when a YouTuber features a product organically but it’s nearly impossible to find via traditional search.
+After years in beauty influencer marketing (now turned software engineer 😉), one thing is clear: the best partnerships come from creators who genuinely love your brand. But finding them is tough—especially when your brand isn't mentioned in video titles or descriptions. I’ve struggled with this myself when a YouTuber featured a product but never named it explicitly.
 
-That’s why Who Talked About Us with Twelve Labs API is a game-changer. It goes beyond titles and tags to analyze video content—detecting objects, actions, speech, and on-screen text. You can search phrases like “applying MAC gold highlighter” and uncover exactly when and where your product appears. This helps you build a list of authentic brand advocates, complete with rich context for smarter, more meaningful outreach.
+That’s where Who Talked About Us, powered by Twelve Labs API, changes the game. It searches inside video content—detecting visuals, speech, and on-screen text—so you can find exact moments like “applying MAC gold highlighter.”
 
 <img src="public/search_demonstration.gif" alt="search result screenshot" style="border: 1px solid black;" />
 
-From the bottom of the search results, you can effortlessly identify that Jean Watts, Risabae, Glamzilla, and Smitha Deepak mention "_MAC gold highlighter_," in their videos along with the exact moments of references. In contrast, the videos from 18 influencers including British Vogue did not feature such mentions. Armed with this comprehensive result, you can strategically prioritize reaching out to influencers like Jean and Risabe, armed with the right context for more impactful collaborations.
+Take this example: the search reveals that Jean Watts, Risabae, Glamzilla, and Smitha Deepak did mention the product, while 18 others didn’t. With this context, you can confidently prioritize outreach to the right creators for more meaningful collaborations.
 
 ## 🚘 How to Use
 
@@ -71,9 +73,7 @@ From the bottom of the search results, you can effortlessly identify that Jean W
 
 ### Step 1. Generate Twelve Labs API Key
 
-Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate your API Key
-
-- Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
+Visit [Twelve Labs Playground](https://playground.twelvelabs.io/) to generate your API Key. Once you sign up, you'll receive complimentary credits allowing you to index up to 10 hours of video content!
 
 ### Step 2. Start the App Locally
 
