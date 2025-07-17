@@ -49,6 +49,20 @@ function ExistingIndexForm() {
         className="textField"
       />
       {error && <div className="errorMessage">{error}</div>}
+      <div
+        style={{
+          color: "red",
+          fontSize: "0.95em",
+          marginTop: "0.5em",
+          width: "100%",
+          maxWidth: "420px",
+          wordBreak: "break-word",
+          textAlign: "left",
+        }}
+      >
+        * You can create an index anywhere, but videos must be indexed/processed
+        through this app for them to display and work properly here.
+      </div>
     </div>
   );
 }

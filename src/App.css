@@ -10,9 +10,9 @@
 
 .formContainer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
   margin-top: 5rem;
 }
 

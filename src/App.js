@@ -27,10 +27,10 @@ function App() {
 
         {!indexId && (
           <div className="formContainer">
-            <Container className="m-auto p-3 indexFormContainer">
+            <Container className="indexFormContainer">
               <IndexForm />
             </Container>
-            <Container className="m-auto p-3 indexFormContainer">
+            <Container className="indexFormContainer">
               <ExistingIndexForm />
             </Container>
           </div>
