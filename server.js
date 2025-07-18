@@ -100,7 +100,6 @@ app.get("/indexes/:indexId", async (request, response, next) => {
 
 /** Creates an index */
 app.post("/indexes", async (request, response, next) => {
-  console.log("🚀 > app.post > request.body=", request.body);
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": TWELVE_LABS_API_KEY,
@@ -112,7 +111,6 @@ app.post("/indexes", async (request, response, next) => {
     models: request.body.models,
     addons: request.body.addons,
   };
-  console.log("🚀 > app.post > data=", data);
 
   if (!data.index_name) {
     return response.status(400).json({

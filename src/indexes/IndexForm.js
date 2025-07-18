@@ -30,7 +30,6 @@ function IndexForm() {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const trimmedIndexName = indexName.trim();
-    console.log("🚀 > handleSubmit > trimmedIndexName=", trimmedIndexName);
     if (!trimmedIndexName) {
       setError("Please enter the name of an index");
     } else {
